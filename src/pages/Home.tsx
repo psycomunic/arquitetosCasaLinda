@@ -134,7 +134,7 @@ export const Home: React.FC = () => {
             <div className="relative">
               <div className="glass-dark p-2 rounded-2xl rotate-2 shadow-2xl overflow-hidden group">
                 <img
-                  src="https://images.unsplash.com/photo-1549490349-8643362247b5?q=80&w=1000&auto=format&fit=crop"
+                  src="/arte-exemplo.png"
                   className="w-full h-auto rounded-xl opacity-80 group-hover:opacity-100 transition-opacity duration-700"
                   alt="Arte Canvas"
                 />
