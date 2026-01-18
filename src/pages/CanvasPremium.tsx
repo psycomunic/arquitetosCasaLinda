@@ -90,8 +90,8 @@ export const CanvasPremium: React.FC = () => {
                             }
                         ].map((type, i) => (
                             <div key={i} className="glass group overflow-hidden">
-                                <div className="aspect-square overflow-hidden">
-                                    <img src={type.image} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000 opacity-60 group-hover:opacity-100" />
+                                <div className="aspect-square overflow-hidden bg-black/20">
+                                    <img src={type.image} className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-1000 opacity-60 group-hover:opacity-100" />
                                 </div>
                                 <div className="p-10 space-y-4">
                                     <h4 className="text-2xl font-serif text-white">{type.title}</h4>
