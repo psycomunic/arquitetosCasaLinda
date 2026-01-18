@@ -76,17 +76,17 @@ export const CanvasPremium: React.FC = () => {
                             {
                                 title: "Borda Infinita",
                                 desc: "O excesso de tecido é dobrado sobre a borda do chassi, criando uma continuidade da imagem que envolve toda a peça. Com proteção UV.",
-                                image: "/borda-infinita.jpg"
+                                image: "/images/frames/borda-infinita.jpg"
                             },
                             {
                                 title: "Moldura Canaleta",
                                 desc: "Moldura estilo caixa com perfil de 5 cm de profundidade, fabricadas em madeira nobre de reflorestamento revestida.",
-                                image: "/moldura-canaleta.png"
+                                image: "/images/frames/moldura-canaleta.png"
                             },
                             {
                                 title: "Premium com Vidro",
                                 desc: "Acabamento com vidro float 3mm incolor de alta transparência. Obras que podem durar mais de 200 anos.",
-                                image: "/premium-vidro.png"
+                                image: "/images/frames/premium-vidro.png"
                             }
                         ].map((type, i) => (
                             <div key={i} className="glass group overflow-hidden">

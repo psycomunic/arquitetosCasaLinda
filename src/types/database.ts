@@ -8,6 +8,12 @@ export interface Architect {
     logo_url: string | null;
     commission_rate: number;
     total_earnings: number;
+    is_admin: boolean;
+    approval_status: 'pending' | 'approved' | 'rejected';
+    city: string | null;
+    state: string | null;
+    approved_at: string | null;
+    approved_by: string | null;
     created_at: string;
     updated_at: string;
 }
@@ -45,6 +51,8 @@ export interface Sale {
     commission_value: number;
     commission_rate: number;
     status: 'pending' | 'paid' | 'cancelled';
+    city: string | null;
+    state: string | null;
     paid_at: string | null;
     created_at: string;
     updated_at: string;

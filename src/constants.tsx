@@ -2,7 +2,7 @@ import { ArtPiece, Sale, Frame, Finish } from './types';
 
 export const FRAMES: Frame[] = [
   // Sem Moldura
-  { id: 'sm1', name: 'Sem Moldura (Borda Infinita)', price: 0, category: 'Sem Moldura', allowsGlass: true, thumbnailUrl: '/images/frames/borda-infinita.png' },
+  { id: 'sm1', name: 'Sem Moldura (Borda Infinita)', price: 0, category: 'Sem Moldura', allowsGlass: true, thumbnailUrl: '/images/frames/borda-infinita.jpg' },
 
   // Caixa
   { id: 'c1', name: 'Caixa Preta', price: 250, category: 'Caixa', allowsGlass: true, thumbnailUrl: '/images/frames/caixa-preta.png' },
@@ -23,16 +23,16 @@ export const FRAMES: Frame[] = [
   { id: 'p8', name: 'Barroco Imperial', price: 700, category: 'Premium', subCategory: 'Luxo', allowsGlass: true },
 
   // Premium - Flutuante/Canaleta
-  { id: 'p9', name: 'Flutuante Preta', price: 400, category: 'Premium', subCategory: 'Flutuante/Canaleta', allowsGlass: false },
-  { id: 'p10', name: 'Flutuante Branca', price: 400, category: 'Premium', subCategory: 'Flutuante/Canaleta', allowsGlass: false },
-  { id: 'p11', name: 'Flutuante Dourada', price: 450, category: 'Premium', subCategory: 'Flutuante/Canaleta', allowsGlass: false },
-  { id: 'p12', name: 'Flutuante Madeira', price: 420, category: 'Premium', subCategory: 'Flutuante/Canaleta', allowsGlass: false },
+  { id: 'p9', name: 'Flutuante Preta', price: 400, category: 'Premium', subCategory: 'Flutuante/Canaleta', allowsGlass: false, thumbnailUrl: '/images/frames/moldura-canaleta.png' },
+  { id: 'p10', name: 'Flutuante Branca', price: 400, category: 'Premium', subCategory: 'Flutuante/Canaleta', allowsGlass: false, thumbnailUrl: '/images/frames/moldura-canaleta.png' },
+  { id: 'p11', name: 'Flutuante Dourada', price: 450, category: 'Premium', subCategory: 'Flutuante/Canaleta', allowsGlass: false, thumbnailUrl: '/images/frames/moldura-canaleta.png' },
+  { id: 'p12', name: 'Flutuante Madeira', price: 420, category: 'Premium', subCategory: 'Flutuante/Canaleta', allowsGlass: false, thumbnailUrl: '/images/frames/moldura-canaleta.png' },
 
   // Premium - Côncava
-  { id: 'p13', name: 'Côncava Preta', price: 350, category: 'Premium', subCategory: 'Côncava', allowsGlass: true },
-  { id: 'p14', name: 'Côncava Branca', price: 350, category: 'Premium', subCategory: 'Côncava', allowsGlass: true },
-  { id: 'p15', name: 'Côncava Dourada', price: 380, category: 'Premium', subCategory: 'Côncava', allowsGlass: true },
-  { id: 'p16', name: 'Côncava Madeira', price: 360, category: 'Premium', subCategory: 'Côncava', allowsGlass: true },
+  { id: 'p13', name: 'Côncava Preta', price: 350, category: 'Premium', subCategory: 'Côncava', allowsGlass: true, thumbnailUrl: '/images/frames/premium-vidro.png' },
+  { id: 'p14', name: 'Côncava Branca', price: 350, category: 'Premium', subCategory: 'Côncava', allowsGlass: true, thumbnailUrl: '/images/frames/premium-vidro.png' },
+  { id: 'p15', name: 'Côncava Dourada', price: 380, category: 'Premium', subCategory: 'Côncava', allowsGlass: true, thumbnailUrl: '/images/frames/premium-vidro.png' },
+  { id: 'p16', name: 'Côncava Madeira', price: 360, category: 'Premium', subCategory: 'Côncava', allowsGlass: true, thumbnailUrl: '/images/frames/premium-vidro.png' },
 
   // Premium - Inox
   { id: 'p17', name: 'Inox', price: 800, category: 'Premium', allowsGlass: true }
