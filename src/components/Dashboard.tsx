@@ -393,7 +393,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ onExit }) => {
       <aside className="no-print w-80 glass border-r-0 flex flex-col fixed h-full z-20 shadow-2xl">
         <div className="p-12 h-full flex flex-col">
           <div className="mb-20 cursor-pointer" onClick={onExit}>
-            <img src="/logo.png" alt="Casa Linda" className="h-6 object-contain" />
+            <img src="/logo.png" alt="Casa Linda" className="h-10 object-contain" />
           </div>
 
           <div className="space-y-16 flex-1">
@@ -513,7 +513,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ onExit }) => {
                 <p>{profile.officeName} & Casa Linda Decorações</p>
               </div>
               <div className="text-xl font-serif tracking-[0.4em] uppercase">
-                <img src="/logo.png" alt="Casa Linda" className="h-6 object-contain grayscale" />
+                <img src="/logo.png" alt="Casa Linda" className="h-10 object-contain grayscale" />
               </div>
             </div>
           </div>

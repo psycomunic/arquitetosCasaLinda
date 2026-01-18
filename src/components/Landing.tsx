@@ -46,7 +46,7 @@ export const Landing: React.FC<LandingProps> = ({ onEnter }) => {
       <nav className={`fixed top-0 w-full z-50 px-6 md:px-12 py-5 flex justify-between items-center transition-all duration-700 ${scrolled ? 'glass-dark py-4' : 'bg-transparent'
         }`}>
         <div className="cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-          <img src="/logo.png" alt="Casa Linda" className="h-4 md:h-6 object-contain" />
+          <img src="/logo.png" alt="Casa Linda" className="h-8 md:h-12 object-contain" />
         </div>
 
         <div className="hidden lg:flex gap-10 text-[9px] uppercase tracking-[0.3em] font-medium text-zinc-500">
@@ -252,7 +252,7 @@ export const Landing: React.FC<LandingProps> = ({ onEnter }) => {
         <div className="flex flex-col md:flex-row justify-between items-start gap-16">
           <div className="space-y-8">
             <div className="cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-              <img src="/logo.png" alt="Casa Linda" className="h-6 md:h-8 object-contain" />
+              <img src="/logo.png" alt="Casa Linda" className="h-10 md:h-16 object-contain" />
             </div>
             <div className="space-y-2">
               <p className="text-[10px] text-zinc-500 uppercase tracking-widest leading-relaxed">Desde 2020 elevando o design nacional.</p>

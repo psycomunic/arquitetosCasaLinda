@@ -37,7 +37,7 @@ export const Home: React.FC = () => {
           className="cursor-pointer"
           onClick={() => navigate('/')}
         >
-          <img src="/logo.png" alt="Casa Linda" className="h-4 md:h-6 object-contain" />
+          <img src="/logo.png" alt="Casa Linda" className="h-8 md:h-12 object-contain" />
         </div>
 
         <div className="hidden lg:flex gap-10 text-[9px] uppercase tracking-[0.3em] font-medium text-zinc-500">
@@ -246,7 +246,7 @@ export const Home: React.FC = () => {
               className="cursor-pointer"
               onClick={() => navigate('/')}
             >
-              <img src="/logo.png" alt="Casa Linda" className="h-6 md:h-8 object-contain" />
+              <img src="/logo.png" alt="Casa Linda" className="h-10 md:h-20 object-contain" />
             </div>
             <div className="space-y-2">
               <p className="text-[10px] text-zinc-500 uppercase tracking-widest leading-relaxed">Desde 2020 elevando o design nacional.</p>

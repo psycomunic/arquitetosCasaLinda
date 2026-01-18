@@ -38,7 +38,7 @@ export const PortalLayout: React.FC<PortalLayoutProps> = ({ children, profile })
                         className="mb-20 cursor-pointer"
                         onClick={() => navigate('/')}
                     >
-                        <img src="/logo.png" alt="Casa Linda" className="h-6 object-contain" />
+                        <img src="/logo.png" alt="Casa Linda" className="h-10 object-contain" />
                     </div>
 
                     <div className="space-y-16 flex-1">

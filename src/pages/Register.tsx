@@ -22,7 +22,7 @@ export const Register: React.FC = () => {
                         className="cursor-pointer flex justify-center"
                         onClick={() => navigate('/')}
                     >
-                        <img src="/logo.png" alt="Casa Linda" className="h-8 md:h-10 object-contain" />
+                        <img src="/logo.png" alt="Casa Linda" className="h-12 md:h-16 object-contain" />
                     </div>
                     <p className="text-[10px] text-zinc-500 uppercase tracking-[0.5em] font-bold">Solicitação de Parceria Private</p>
                 </div>
