@@ -1,0 +1,7 @@
+{
+  "name": "Casa Linda Decorações - Portal do Arquiteto",
+  "description": "Uma plataforma premium exclusiva para arquitetos parceiros da Casa Linda Decorações, oferecendo comissões de 20%, painel de vendas e gerador de propostas personalizadas.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
