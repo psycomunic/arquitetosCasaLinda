@@ -8,6 +8,11 @@ import { ProposalGenerator } from './pages/ProposalGenerator';
 import { Earnings } from './pages/Earnings';
 import { Settings } from './pages/Settings';
 import { PortalLayout } from './layouts/PortalLayout';
+import { CanvasPremium } from './pages/CanvasPremium';
+import { Sustentabilidade } from './pages/Sustentabilidade';
+import { Artesanato } from './pages/Artesanato';
+import { TermosComissao } from './pages/TermosComissao';
+import { SuportePrivate } from './pages/SuportePrivate';
 
 const App: React.FC = () => {
   // Mock profile data - in a real app this would come from a context or auth hook
@@ -24,6 +29,11 @@ const App: React.FC = () => {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/canvas-premium" element={<CanvasPremium />} />
+        <Route path="/sustentabilidade" element={<Sustentabilidade />} />
+        <Route path="/artesanato" element={<Artesanato />} />
+        <Route path="/termos-comissao" element={<TermosComissao />} />
+        <Route path="/suporte-private" element={<SuportePrivate />} />
 
         {/* Portal Routes */}
         <Route path="/dashboard" element={

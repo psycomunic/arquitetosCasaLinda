@@ -259,16 +259,16 @@ export const Home: React.FC = () => {
               <h5 className="text-gold text-[9px] uppercase tracking-widest font-bold">Parceria</h5>
               <ul className="text-[10px] text-zinc-500 space-y-4 uppercase tracking-widest">
                 <li className="hover:text-white cursor-pointer transition-colors" onClick={() => navigate('/login')}>Portal Arquiteto</li>
-                <li className="hover:text-white cursor-pointer transition-colors">Termos de Comissão</li>
-                <li className="hover:text-white cursor-pointer transition-colors">Suporte Private</li>
+                <li className="hover:text-white cursor-pointer transition-colors" onClick={() => navigate('/termos-comissao')}>Termos de Comissão</li>
+                <li className="hover:text-white cursor-pointer transition-colors" onClick={() => navigate('/suporte-private')}>Suporte Private</li>
               </ul>
             </div>
             <div className="space-y-6">
               <h5 className="text-gold text-[9px] uppercase tracking-widest font-bold">Processo</h5>
               <ul className="text-[10px] text-zinc-500 space-y-4 uppercase tracking-widest">
-                <li className="hover:text-white cursor-pointer transition-colors">Canvas Premium</li>
-                <li className="hover:text-white cursor-pointer transition-colors">Sustentabilidade</li>
-                <li className="hover:text-white cursor-pointer transition-colors">Artesanato</li>
+                <li className="hover:text-white cursor-pointer transition-colors" onClick={() => navigate('/canvas-premium')}>Canvas Premium</li>
+                <li className="hover:text-white cursor-pointer transition-colors" onClick={() => navigate('/sustentabilidade')}>Sustentabilidade</li>
+                <li className="hover:text-white cursor-pointer transition-colors" onClick={() => navigate('/artesanato')}>Artesanato</li>
               </ul>
             </div>
             <div className="space-y-6">
