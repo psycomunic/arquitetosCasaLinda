@@ -1,15 +1,15 @@
 
 import React, { useState, useRef, useMemo } from 'react';
-import { 
-  LayoutDashboard, 
-  FilePlus, 
-  History, 
-  Settings, 
-  LogOut, 
-  Plus, 
-  Printer, 
-  DollarSign, 
-  TrendingUp, 
+import {
+  LayoutDashboard,
+  FilePlus,
+  History,
+  Settings,
+  LogOut,
+  Plus,
+  Printer,
+  DollarSign,
+  TrendingUp,
   Users,
   Star,
   Image as ImageIcon,
@@ -48,7 +48,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ onExit }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const filteredArts = useMemo(() => {
-    return MOCK_ARTS.filter(art => 
+    return MOCK_ARTS.filter(art =>
       art.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       art.category.toLowerCase().includes(searchTerm.toLowerCase())
     );
@@ -88,7 +88,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ onExit }) => {
             <TrendingUp size={12} /> +22% Performance
           </div>
         </div>
-        
+
         <div className="glass p-10 border-l-2 border-gold relative">
           <p className="text-[10px] uppercase tracking-[0.4em] font-bold text-zinc-500 mb-6">Taxa de Parceria</p>
           <div className="flex items-baseline gap-3">
@@ -161,27 +161,27 @@ export const Dashboard: React.FC<DashboardProps> = ({ onExit }) => {
               <h3 className="font-serif text-3xl text-white">Selecione o Acervo</h3>
               <div className="relative w-full md:w-96">
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-600" size={16} />
-                <input 
-                  type="text" 
-                  placeholder="Buscar obra, série ou estilo..." 
+                <input
+                  type="text"
+                  placeholder="Buscar obra, série ou estilo..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="w-full pl-12 pr-6 py-4 text-xs border border-white/5 focus:outline-none focus:border-gold transition-all glass-dark text-white rounded-lg"
                 />
               </div>
             </div>
-            
+
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-10">
               {filteredArts.map((art) => (
                 <div key={art.id} className="group relative flex flex-col glass overflow-hidden hover:border-gold/30 transition-all">
                   <div className="aspect-[4/5] bg-zinc-900 relative overflow-hidden">
-                    <img 
-                      src={art.imageUrl} 
-                      alt={art.title} 
-                      className="w-full h-full object-cover group-hover:scale-110 grayscale group-hover:grayscale-0 transition-all duration-1000" 
+                    <img
+                      src={art.imageUrl}
+                      alt={art.title}
+                      className="w-full h-full object-cover group-hover:scale-110 grayscale group-hover:grayscale-0 transition-all duration-1000"
                     />
                     <div className="absolute inset-0 bg-black/40 group-hover:bg-black/10 transition-all duration-500" />
-                    <button 
+                    <button
                       onClick={() => handleAddArtToProposal(art)}
                       className="absolute bottom-6 right-6 w-14 h-14 bg-white text-black flex items-center justify-center rounded-full shadow-2xl scale-0 group-hover:scale-100 transition-transform duration-500 hover:bg-gold hover:text-white"
                     >
@@ -206,12 +206,12 @@ export const Dashboard: React.FC<DashboardProps> = ({ onExit }) => {
               <h3 className="font-serif text-3xl text-white">Sua Proposta</h3>
               <div className="w-12 h-1 bg-gold"></div>
             </div>
-            
+
             <div className="space-y-6">
               <div>
                 <label className="block text-[9px] font-bold text-zinc-500 uppercase tracking-[0.4em] mb-4">Projeto / Ambiente</label>
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   value={clientName}
                   onChange={(e) => setClientName(e.target.value)}
                   placeholder="Ex: Apartamento Ibirapuera"
@@ -247,16 +247,16 @@ export const Dashboard: React.FC<DashboardProps> = ({ onExit }) => {
                 <span className="text-zinc-500 text-[10px] font-bold uppercase tracking-[0.4em]">Subtotal do Projeto</span>
                 <span className="text-3xl font-serif text-white">R$ {totalProposalValue.toLocaleString('pt-BR')}</span>
               </div>
-              
+
               <div className="bg-white/5 p-6 rounded-lg border border-white/5">
                 <div className="flex justify-between items-center mb-2">
-                   <span className="text-zinc-500 text-[9px] font-bold uppercase tracking-[0.4em]">Seu Repasse (20%)</span>
-                   <Zap size={14} className="text-gold" />
+                  <span className="text-zinc-500 text-[9px] font-bold uppercase tracking-[0.4em]">Seu Repasse (20%)</span>
+                  <Zap size={14} className="text-gold" />
                 </div>
                 <span className="font-serif text-gold text-2xl">R$ {(totalProposalValue * 0.2).toLocaleString('pt-BR')}</span>
               </div>
-              
-              <button 
+
+              <button
                 onClick={() => setShowPrintPreview(true)}
                 disabled={proposalItems.length === 0 || !clientName}
                 className="w-full bg-white text-black py-6 font-bold flex items-center justify-center gap-4 hover:bg-gold transition-all disabled:opacity-10 disabled:grayscale disabled:cursor-not-allowed uppercase tracking-[0.4em] text-[10px] shadow-[0_0_30px_rgba(255,255,255,0.05)]"
@@ -285,7 +285,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ onExit }) => {
           </button>
         </div>
       </div>
-      
+
       <div className="glass overflow-hidden border border-white/5">
         <table className="w-full text-left">
           <thead>
@@ -327,7 +327,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ onExit }) => {
           <h3 className="font-serif text-5xl text-white mb-4">Branding Private</h3>
           <p className="text-zinc-500 text-sm font-light uppercase tracking-widest leading-relaxed">Personalize seu ambiente de trabalho e o material que seus clientes recebem.</p>
         </div>
-        
+
         <div className="space-y-10">
           <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-[0.5em]">Logo do Escritório (White Label)</label>
           <div className="flex flex-col md:flex-row items-center gap-16">
@@ -339,18 +339,18 @@ export const Dashboard: React.FC<DashboardProps> = ({ onExit }) => {
               )}
             </div>
             <div className="space-y-6 text-center md:text-left">
-              <button 
+              <button
                 onClick={() => fileInputRef.current?.click()}
                 className="bg-white text-black px-12 py-5 text-[10px] font-bold hover:bg-gold transition-all uppercase tracking-[0.4em] shadow-xl"
               >
                 Upload Novo Branding
               </button>
               <p className="text-[9px] text-zinc-600 uppercase tracking-widest">Formato PNG Transparente | JPG | SVG</p>
-              <input 
-                type="file" 
-                ref={fileInputRef} 
-                onChange={handleLogoUpload} 
-                className="hidden" 
+              <input
+                type="file"
+                ref={fileInputRef}
+                onChange={handleLogoUpload}
+                className="hidden"
                 accept="image/*"
               />
             </div>
@@ -360,19 +360,19 @@ export const Dashboard: React.FC<DashboardProps> = ({ onExit }) => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
           <div className="space-y-4">
             <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-[0.5em]">Responsável Técnico</label>
-            <input 
-              type="text" 
+            <input
+              type="text"
               value={profile.name}
-              onChange={(e) => setProfile({...profile, name: e.target.value})}
+              onChange={(e) => setProfile({ ...profile, name: e.target.value })}
               className="w-full px-6 py-5 border border-white/5 focus:outline-none focus:border-gold transition-all text-xs glass-dark text-white rounded-lg"
             />
           </div>
           <div className="space-y-4">
             <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-[0.5em]">Nome da Empresa / Studio</label>
-            <input 
-              type="text" 
+            <input
+              type="text"
               value={profile.officeName}
-              onChange={(e) => setProfile({...profile, officeName: e.target.value})}
+              onChange={(e) => setProfile({ ...profile, officeName: e.target.value })}
               className="w-full px-6 py-5 border border-white/5 focus:outline-none focus:border-gold transition-all text-xs glass-dark text-white rounded-lg"
             />
           </div>
@@ -392,10 +392,10 @@ export const Dashboard: React.FC<DashboardProps> = ({ onExit }) => {
       {/* Dark Sidebar with Glass Blur */}
       <aside className="no-print w-80 glass border-r-0 flex flex-col fixed h-full z-20 shadow-2xl">
         <div className="p-12 h-full flex flex-col">
-          <div className="text-2xl font-serif tracking-[0.4em] uppercase mb-20 cursor-pointer text-white" onClick={onExit}>
-            CASA <span className="italic font-light text-gold">LINDA</span>
+          <div className="mb-20 cursor-pointer" onClick={onExit}>
+            <img src="/logo.png" alt="Casa Linda" className="h-6 object-contain" />
           </div>
-          
+
           <div className="space-y-16 flex-1">
             <div className="flex items-center gap-5 p-4 glass rounded-xl border-white/5">
               <div className="w-14 h-14 glass flex items-center justify-center grayscale overflow-hidden rounded-lg">
@@ -414,12 +414,11 @@ export const Dashboard: React.FC<DashboardProps> = ({ onExit }) => {
                 { id: 'sales', icon: <History size={16} />, label: 'Repasses' },
                 { id: 'settings', icon: <Settings size={16} />, label: 'Branding' }
               ].map((item) => (
-                <button 
+                <button
                   key={item.id}
                   onClick={() => setActiveTab(item.id as any)}
-                  className={`w-full flex items-center gap-6 px-6 py-5 text-[9px] font-bold uppercase tracking-[0.3em] transition-all rounded-lg ${
-                    activeTab === item.id ? 'bg-gold text-black shadow-[0_10px_30px_rgba(197,160,89,0.3)]' : 'text-zinc-500 hover:text-white hover:bg-white/5'
-                  }`}
+                  className={`w-full flex items-center gap-6 px-6 py-5 text-[9px] font-bold uppercase tracking-[0.3em] transition-all rounded-lg ${activeTab === item.id ? 'bg-gold text-black shadow-[0_10px_30px_rgba(197,160,89,0.3)]' : 'text-zinc-500 hover:text-white hover:bg-white/5'
+                    }`}
                 >
                   {item.icon} {item.label}
                 </button>
@@ -428,7 +427,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ onExit }) => {
           </div>
 
           <div className="mt-auto">
-            <button 
+            <button
               onClick={onExit}
               className="w-full flex items-center gap-6 px-6 py-5 text-[9px] font-bold text-zinc-600 hover:text-red-500 uppercase tracking-[0.4em] transition-all"
             >
@@ -440,10 +439,10 @@ export const Dashboard: React.FC<DashboardProps> = ({ onExit }) => {
 
       {/* Main Content Area */}
       <main className={`flex-1 transition-all duration-700 ${!showPrintPreview ? 'ml-80 p-16' : ''}`}>
-        
+
         {showPrintPreview ? (
           <div className="max-w-4xl mx-auto bg-white min-h-[1122px] shadow-2xl p-24 text-black animate-fade-in relative">
-            
+
             {/* Header Document (Always White for PDF quality) */}
             <div className="no-print absolute top-0 left-0 w-full -translate-y-full pb-10 flex justify-between items-center">
               <button onClick={() => setShowPrintPreview(false)} className="flex items-center gap-3 text-[10px] font-bold uppercase tracking-[0.4em] text-white hover:text-gold transition-all">
@@ -513,8 +512,8 @@ export const Dashboard: React.FC<DashboardProps> = ({ onExit }) => {
               <div className="text-[9px] text-zinc-300 font-bold tracking-[0.5em] uppercase">
                 <p>{profile.officeName} & Casa Linda Decorações</p>
               </div>
-              <div className="text-xl font-serif tracking-[0.4em] uppercase text-black/20">
-                Casa <span className="italic">Linda</span>
+              <div className="text-xl font-serif tracking-[0.4em] uppercase">
+                <img src="/logo.png" alt="Casa Linda" className="h-6 object-contain grayscale" />
               </div>
             </div>
           </div>
@@ -523,8 +522,8 @@ export const Dashboard: React.FC<DashboardProps> = ({ onExit }) => {
             <header className="flex justify-between items-end mb-24">
               <div className="space-y-6">
                 <div className="flex items-center gap-4">
-                   <div className="w-2 h-2 rounded-full bg-gold shadow-[0_0_15px_rgba(197,160,89,0.8)]" />
-                   <p className="text-gold text-[10px] font-bold uppercase tracking-[0.5em]">Sistema Private Ativo</p>
+                  <div className="w-2 h-2 rounded-full bg-gold shadow-[0_0_15px_rgba(197,160,89,0.8)]" />
+                  <p className="text-gold text-[10px] font-bold uppercase tracking-[0.5em]">Sistema Private Ativo</p>
                 </div>
                 <h2 className="text-7xl font-serif text-white">
                   {activeTab === 'overview' && `Bem-vinda, ${profile.name.split(' ')[0]}`}
@@ -534,7 +533,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ onExit }) => {
                 </h2>
               </div>
               {activeTab !== 'proposals' && (
-                <button 
+                <button
                   onClick={() => setActiveTab('proposals')}
                   className="bg-white text-black px-12 py-5 text-[10px] font-bold flex items-center gap-5 hover:bg-gold transition-all shadow-2xl uppercase tracking-[0.4em] animate-pulse"
                 >

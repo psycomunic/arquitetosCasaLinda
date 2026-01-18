@@ -19,10 +19,10 @@ export const Register: React.FC = () => {
             <div className="w-full max-w-2xl animate-fade-in">
                 <div className="text-center mb-16 space-y-6">
                     <div
-                        className="text-3xl font-serif tracking-[0.4em] uppercase text-white cursor-pointer"
+                        className="cursor-pointer flex justify-center"
                         onClick={() => navigate('/')}
                     >
-                        CASA <span className="italic font-light text-gold">LINDA</span>
+                        <img src="/logo.png" alt="Casa Linda" className="h-8 md:h-10 object-contain" />
                     </div>
                     <p className="text-[10px] text-zinc-500 uppercase tracking-[0.5em] font-bold">Solicitação de Parceria Private</p>
                 </div>

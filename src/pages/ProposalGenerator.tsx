@@ -190,8 +190,8 @@ export const ProposalGenerator: React.FC = () => {
                     <div className="text-[9px] text-zinc-300 font-bold tracking-[0.5em] uppercase">
                         <p>Arcuri Studio Design & Casa Linda Decorações</p>
                     </div>
-                    <div className="text-xl font-serif tracking-[0.4em] uppercase text-black/20">
-                        Casa <span className="italic">Linda</span>
+                    <div className="text-xl font-serif tracking-[0.4em] uppercase">
+                        <img src="/logo.png" alt="Casa Linda" className="h-6 object-contain grayscale" />
                     </div>
                 </div>
             </div>

@@ -35,10 +35,10 @@ export const PortalLayout: React.FC<PortalLayoutProps> = ({ children, profile })
             <aside className="no-print w-80 glass border-r-0 flex flex-col fixed h-full z-20 shadow-2xl">
                 <div className="p-12 h-full flex flex-col">
                     <div
-                        className="text-2xl font-serif tracking-[0.4em] uppercase mb-20 cursor-pointer text-white"
+                        className="mb-20 cursor-pointer"
                         onClick={() => navigate('/')}
                     >
-                        CASA <span className="italic font-light text-gold">LINDA</span>
+                        <img src="/logo.png" alt="Casa Linda" className="h-6 object-contain" />
                     </div>
 
                     <div className="space-y-16 flex-1">
