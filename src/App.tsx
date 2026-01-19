@@ -19,6 +19,7 @@ import { LGPD } from './pages/LGPD';
 import { ThankYou } from './pages/ThankYou';
 import { Analytics } from './components/Analytics';
 import { ProtectedRoute } from './components/ProtectedRoute';
+import { AdminDashboard } from './pages/AdminDashboard';
 
 const ScrollToTop: React.FC = () => {
   const { pathname } = useLocation();
@@ -34,7 +35,8 @@ const App: React.FC = () => {
   const [profile, setProfile] = React.useState({
     name: '',
     officeName: '',
-    logoUrl: ''
+    logoUrl: '',
+    isAdmin: false
   });
 
   useEffect(() => {
@@ -52,7 +54,8 @@ const App: React.FC = () => {
           setProfile({
             name: data.name,
             officeName: data.office_name,
-            logoUrl: data.logo_url || ''
+            logoUrl: data.logo_url || '',
+            isAdmin: data.is_admin || false
           });
         }
       }
@@ -96,6 +99,18 @@ const App: React.FC = () => {
             </PortalLayout>
           </ProtectedRoute>
         } />
+
+        {/* Admin Route */}
+        {profile.isAdmin && (
+          <Route path="/admin" element={
+            <ProtectedRoute>
+              <PortalLayout profile={profile}>
+                <AdminDashboard />
+              </PortalLayout>
+            </ProtectedRoute>
+          } />
+        )}
+
         <Route path="/proposals" element={
           <ProtectedRoute>
             <PortalLayout profile={profile}>

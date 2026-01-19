@@ -6,7 +6,8 @@ import {
     History,
     Settings,
     LogOut,
-    Image as ImageIcon
+    Image as ImageIcon,
+    ShieldAlert
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
@@ -16,6 +17,7 @@ interface PortalLayoutProps {
         name: string;
         officeName: string;
         logoUrl: string;
+        isAdmin?: boolean;
     };
 }
 
@@ -25,6 +27,7 @@ export const PortalLayout: React.FC<PortalLayoutProps> = ({ children, profile })
 
     const menuItems = [
         { id: 'dashboard', icon: <LayoutDashboard size={16} />, label: 'Overview', path: '/dashboard' },
+        ...(profile.isAdmin ? [{ id: 'admin', icon: <ShieldAlert size={16} />, label: 'Admin', path: '/admin' }] : []),
         { id: 'proposals', icon: <FilePlus size={16} />, label: 'Nova Proposta', path: '/proposals' },
         { id: 'sales', icon: <History size={16} />, label: 'Repasses', path: '/earnings' },
         { id: 'settings', icon: <Settings size={16} />, label: 'Branding', path: '/settings' }
