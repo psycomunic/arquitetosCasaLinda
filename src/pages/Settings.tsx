@@ -59,22 +59,24 @@ export const Settings: React.FC = () => {
             const { data: { user } } = await supabase.auth.getUser();
             if (!user) throw new Error('Usuario não autenticado');
 
+            // Using upsert to handle both create (if missing) and update
             const { error } = await supabase
                 .from('architects')
-                .update({
+                .upsert({
+                    id: user.id,
+                    email: user.email || '', // Email is required for new rows
                     name: profile.name,
                     office_name: profile.officeName,
                     logo_url: profile.logoUrl,
                     updated_at: new Date().toISOString()
-                })
-                .eq('id', user.id);
+                });
 
             if (error) throw error;
 
             setMessage({ type: 'success', text: 'Preferências salvas com sucesso!' });
-        } catch (error) {
+        } catch (error: any) {
             console.error('Error updating profile:', error);
-            setMessage({ type: 'error', text: 'Erro ao salvar preferências. Tente novamente.' });
+            setMessage({ type: 'error', text: error.message || 'Erro ao salvar preferências. Tente novamente.' });
         } finally {
             setSaving(false);
         }

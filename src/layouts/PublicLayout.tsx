@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Instagram, Lock } from 'lucide-react';
+import { FloatingWhatsApp } from '../components/FloatingWhatsApp';
 
 interface PublicLayoutProps {
     children: React.ReactNode;
@@ -18,6 +19,8 @@ export const PublicLayout: React.FC<PublicLayoutProps> = ({ children }) => {
 
     return (
         <div className="min-h-screen bg-canvas text-zinc-200 selection:bg-gold selection:text-black">
+            <FloatingWhatsApp />
+
             {/* Glass Navigation */}
             <nav className={`fixed top-0 w-full z-50 px-6 md:px-12 py-5 flex justify-between items-center transition-all duration-700 ${scrolled ? 'glass-dark py-4' : 'bg-transparent'
                 }`}>
@@ -56,8 +59,8 @@ export const PublicLayout: React.FC<PublicLayoutProps> = ({ children }) => {
                             <img src="/logo.png" alt="Casa Linda" className="h-10 md:h-20 object-contain" />
                         </div>
                         <div className="space-y-2">
-                            <p className="text-[10px] text-zinc-500 uppercase tracking-widest leading-relaxed">Desde 2020 elevando o design nacional.</p>
-                            <p className="text-[10px] text-zinc-500 uppercase tracking-widest leading-relaxed">São Paulo | Brasil</p>
+                            <p className="text-[10px] text-zinc-500 uppercase tracking-widest leading-relaxed">Rodovia Paul Fritz Kuehnrich, 990 - Fortaleza</p>
+                            <p className="text-[10px] text-zinc-500 uppercase tracking-widest leading-relaxed">Blumenau/SC | CEP: 89052-381</p>
                         </div>
                     </div>
 
@@ -91,8 +94,8 @@ export const PublicLayout: React.FC<PublicLayoutProps> = ({ children }) => {
                 <div className="mt-24 pt-10 border-t border-white/5 flex flex-col md:flex-row justify-between items-center text-[8px] uppercase tracking-[0.6em] text-zinc-600 font-bold gap-8">
                     <p>© 2024 Casa Linda Decorações. Exclusividade e Arte.</p>
                     <div className="flex gap-12">
-                        <span className="hover:text-zinc-400 cursor-pointer transition-colors">Privacidade</span>
-                        <span className="hover:text-zinc-400 cursor-pointer transition-colors">LGPD Compliance</span>
+                        <span className="hover:text-zinc-400 cursor-pointer transition-colors" onClick={() => navigate('/privacidade')}>Privacidade</span>
+                        <span className="hover:text-zinc-400 cursor-pointer transition-colors" onClick={() => navigate('/lgpd')}>LGPD Compliance</span>
                     </div>
                 </div>
             </footer>

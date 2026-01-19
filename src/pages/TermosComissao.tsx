@@ -27,7 +27,7 @@ export const TermosComissao: React.FC = () => {
                             <div className="space-y-4">
                                 <h4 className="text-gold text-[10px] uppercase tracking-[0.3em] font-bold">Plano Platinum</h4>
                                 <p className="text-sm text-zinc-400 leading-relaxed uppercase tracking-widest">
-                                    Ao se tornar um parceiro Private da Casa Linda, você passa a integrar nosso programa Platinum, garantindo automaticamente 20% de comissão sobre o valor total de cada indicação técnica concluída.
+                                    Ao se tornar um parceiro Private da Casa Linda, você garante uma vantagem competitiva exclusiva. Enquanto o mercado trabalha com margens menores, nós valorizamos sua especificação com <span className="text-white font-bold">20% de comissão garantida</span> sobre o valor total de cada projeto. Sem faixas, sem metas inatingíveis.
                                 </p>
                             </div>
 
@@ -35,29 +35,32 @@ export const TermosComissao: React.FC = () => {
                                 <div className="space-y-4">
                                     <div className="flex gap-4 text-white">
                                         <ShieldCheck className="text-gold" size={20} />
-                                        <span className="text-[10px] uppercase tracking-[0.4em] font-bold">Segurança Jurídica</span>
+                                        <span className="text-[10px] uppercase tracking-[0.4em] font-bold">Segurança Total</span>
                                     </div>
                                     <p className="text-[10px] text-zinc-500 uppercase tracking-widest leading-loose">
-                                        Todos os repasses são documentados e realizados com total transparência fiscal para o seu escritório.
+                                        Seu escritório merece transparência. Todos os repasses são formalizados, documentados e realizados com rigorosa precisão fiscal. Você acompanha tudo pelo seu painel exclusivo.
                                     </p>
                                 </div>
                                 <div className="space-y-4">
                                     <div className="flex gap-4 text-white">
                                         <Zap className="text-gold" size={20} />
-                                        <span className="text-[10px] uppercase tracking-[0.4em] font-bold">Pagamento Ágil</span>
+                                        <span className="text-[10px] uppercase tracking-[0.4em] font-bold">Liquidez Imediata</span>
                                     </div>
                                     <p className="text-[10px] text-zinc-500 uppercase tracking-widest leading-loose">
-                                        Os valores são creditados em sua conta digital do portal assim que a venda é faturada, com resgate simplificado.
+                                        Esqueça os prazos longos. Os valores são liberados em sua conta digital assim que o faturamento é confirmado. Fluxo de caixa ágil para o seu negócio crescer.
                                     </p>
                                 </div>
                             </div>
                         </div>
 
-                        <div className="pt-20 text-center">
+                        <div className="pt-20 text-center space-y-6">
                             <Handshake size={48} className="mx-auto text-gold mb-8 opacity-20" />
-                            <p className="text-zinc-600 text-[9px] uppercase tracking-[0.6em] font-bold max-w-sm mx-auto">
-                                Uma relação baseada em confiança, arte e rentabilidade mútua.
+                            <p className="text-white text-xl font-serif italic max-w-2xl mx-auto">
+                                "Não é apenas sobre quadros. É sobre alavancar o faturamento do seu escritório com o parceiro certo."
                             </p>
+                            <button onClick={() => window.open('https://wa.me/554797220810', '_blank')} className="bg-gold text-black px-8 py-4 text-[10px] font-bold uppercase tracking-[0.4em] hover:bg-white transition-all shadow-xl hover:shadow-gold/20">
+                                Quero Ser Parceiro Agora
+                            </button>
                         </div>
                     </div>
                 </div>

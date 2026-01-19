@@ -13,6 +13,8 @@ import { Sustentabilidade } from './pages/Sustentabilidade';
 import { Artesanato } from './pages/Artesanato';
 import { TermosComissao } from './pages/TermosComissao';
 import { SuportePrivate } from './pages/SuportePrivate';
+import { PrivacyPolicy } from './pages/PrivacyPolicy';
+import { LGPD } from './pages/LGPD';
 
 const ScrollToTop: React.FC = () => {
   const { pathname } = useLocation();
@@ -45,6 +47,10 @@ const App: React.FC = () => {
         <Route path="/artesanato" element={<Artesanato />} />
         <Route path="/termos-comissao" element={<TermosComissao />} />
         <Route path="/suporte-private" element={<SuportePrivate />} />
+
+        {/* Legal Pages */}
+        <Route path="/privacidade" element={<PrivacyPolicy />} />
+        <Route path="/lgpd" element={<LGPD />} />
 
         {/* Portal Routes */}
         <Route path="/dashboard" element={

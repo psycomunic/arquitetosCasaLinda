@@ -24,21 +24,28 @@ export const CanvasPremium: React.FC = () => {
                                         <Zap className="text-gold shrink-0" size={20} />
                                         <p className="text-sm text-zinc-400 leading-relaxed">
                                             <strong className="text-white block uppercase tracking-widest text-[10px] mb-1">Material</strong>
-                                            Tecido Canvas 100% algodão próprio para quadros (o mesmo usado em obras de arte e museus).
+                                            Canvas museu 100% algodão, 380 g/m².
                                         </p>
                                     </li>
                                     <li className="flex gap-4">
                                         <Zap className="text-gold shrink-0" size={20} />
                                         <p className="text-sm text-zinc-400 leading-relaxed">
                                             <strong className="text-white block uppercase tracking-widest text-[10px] mb-1">Tinta</strong>
-                                            Epson Ultrachrome com 200 anos de durabilidade, sem cheiro, mais vida e mais cor.
+                                            HP Latex® 4ª geração, à base d'água sem odor. Sustentável e segura para ambientes internos.
                                         </p>
                                     </li>
                                     <li className="flex gap-4">
                                         <Zap className="text-gold shrink-0" size={20} />
                                         <p className="text-sm text-zinc-400 leading-relaxed">
                                             <strong className="text-white block uppercase tracking-widest text-[10px] mb-1">Impressão</strong>
-                                            Epson Monna Lisa Evo Tre 16 de grandes formatos em FULL HD 4K.
+                                            HP Latex Série 800 - 4K real. Definição fotográfica extraordinária.
+                                        </p>
+                                    </li>
+                                    <li className="flex gap-4">
+                                        <Zap className="text-gold shrink-0" size={20} />
+                                        <p className="text-sm text-zinc-400 leading-relaxed">
+                                            <strong className="text-white block uppercase tracking-widest text-[10px] mb-1">Estrutura</strong>
+                                            Madeira nobre tratada de reflorestamento.
                                         </p>
                                     </li>
                                 </ul>
@@ -74,18 +81,18 @@ export const CanvasPremium: React.FC = () => {
                     <div className="grid md:grid-cols-3 gap-10 pt-20">
                         {[
                             {
-                                title: "Borda Infinita",
-                                desc: "O excesso de tecido é dobrado sobre a borda do chassi, criando uma continuidade da imagem que envolve toda a peça. Com proteção UV.",
+                                title: "Borda Infinita 360°",
+                                desc: "Transforme seu ambiente em uma galeria. O excesso de tecido é dobrado sobre a borda do chassi, criando uma continuidade da imagem que envolve toda a peça. Com proteção UV.",
                                 image: "/images/frames/borda-infinita.jpg"
                             },
                             {
-                                title: "Moldura Canaleta",
-                                desc: "Moldura estilo caixa com perfil de 5 cm de profundidade, fabricadas em madeira nobre de reflorestamento revestida.",
+                                title: "Moldura Premium Caixa",
+                                desc: "Eleve sua decoração. O canvas ganha uma moldura caixa de 5cm em madeira nobre revestida e selada. O contorno elegante valoriza a obra e assegura durabilidade superior a 30 anos.",
                                 image: "/images/frames/moldura-canaleta.png"
                             },
                             {
                                 title: "Premium com Vidro",
-                                desc: "Acabamento com vidro float 3mm incolor de alta transparência. Obras que podem durar mais de 200 anos.",
+                                desc: "Elegância de museu. O acabamento em vidro float 3mm incolor de alta transparência oferece proteção extraordinária e um requinte inigualável. Obras que podem durar mais de 200 anos.",
                                 image: "/images/frames/premium-vidro.png"
                             }
                         ].map((type, i) => (

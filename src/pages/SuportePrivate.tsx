@@ -17,9 +17,9 @@ export const SuportePrivate: React.FC = () => {
 
                     <div className="grid md:grid-cols-2 gap-8">
                         {[
-                            { icon: <MessageCircle className="text-gold" />, title: "WhatsApp Business", value: "+55 11 99999-9999", desc: "Acesso imediato para consultoria técnica." },
-                            { icon: <Mail className="text-gold" />, title: "E-mail Private", value: "private@casalinda.com.br", desc: "Para documentações e formalizações." },
-                            { icon: <Phone className="text-gold" />, title: "Concierge", value: "0800 000 0000", desc: "Suporte especializado para grandes projetos." },
+                            { icon: <MessageCircle className="text-gold" />, title: "WhatsApp Business", value: "(47) 9722-0810", desc: "Acesso imediato para consultoria técnica." },
+                            { icon: <MessageCircle className="text-gold" />, title: "WhatsApp Dedicado", value: "(47) 99686-0431", desc: "Suporte comercial exclusivo." },
+                            { icon: <Mail className="text-gold" />, title: "E-mail Private", value: "suporte@casalindadecoracoes.com", desc: "Para documentações e formalizações." },
                             { icon: <Clock className="text-gold" />, title: "Horário", value: "Seg - Sex, 9h as 18h", desc: "Equipe técnica pronta para atender." }
                         ].map((item, i) => (
                             <div key={i} className="glass p-10 space-y-6">
