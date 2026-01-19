@@ -1,14 +1,37 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Lock, ArrowRight, ShieldCheck } from 'lucide-react';
+import { Lock, ArrowRight, ShieldCheck, Loader2 } from 'lucide-react';
+import { supabase } from '../lib/supabase';
 
 export const Login: React.FC = () => {
     const navigate = useNavigate();
+    const [isLoading, setIsLoading] = useState(false);
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState<string | null>(null);
 
-    const handleLogin = (e: React.FormEvent) => {
+    const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
-        // Simulate login
-        navigate('/dashboard');
+        setIsLoading(true);
+        setError(null);
+
+        try {
+            const { error: authError } = await supabase.auth.signInWithPassword({
+                email,
+                password
+            });
+
+            if (authError) throw authError;
+
+            navigate('/dashboard');
+        } catch (err: any) {
+            console.error('Login error:', err);
+            setError(err.message === 'Invalid login credentials'
+                ? 'E-mail ou senha incorretos.'
+                : 'Erro ao conectar. Verifique seus dados.');
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (
@@ -35,11 +58,19 @@ export const Login: React.FC = () => {
                     </div>
 
                     <form onSubmit={handleLogin} className="space-y-8">
+                        {error && (
+                            <div className="p-4 bg-red-500/10 border border-red-500/20 text-red-300 text-xs rounded-lg">
+                                {error}
+                            </div>
+                        )}
+
                         <div className="space-y-4">
                             <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-[0.4em]">E-mail Profissional</label>
                             <input
                                 type="email"
                                 required
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
                                 placeholder="nome@escritorio.com"
                                 className="w-full px-6 py-5 text-xs border border-white/5 focus:outline-none focus:border-gold transition-all glass-dark text-white rounded-lg"
                             />
@@ -53,6 +84,8 @@ export const Login: React.FC = () => {
                             <input
                                 type="password"
                                 required
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
                                 placeholder="••••••••"
                                 className="w-full px-6 py-5 text-xs border border-white/5 focus:outline-none focus:border-gold transition-all glass-dark text-white rounded-lg"
                             />
@@ -60,9 +93,12 @@ export const Login: React.FC = () => {
 
                         <button
                             type="submit"
-                            className="w-full group relative overflow-hidden bg-white text-black py-7 text-[10px] uppercase tracking-[0.5em] font-bold transition-all hover:scale-[1.02] shadow-2xl"
+                            disabled={isLoading}
+                            className="w-full group relative overflow-hidden bg-white text-black py-7 text-[10px] uppercase tracking-[0.5em] font-bold transition-all hover:scale-[1.02] shadow-2xl disabled:opacity-70 disabled:cursor-not-allowed"
                         >
-                            <span className="relative z-10 flex items-center justify-center gap-4">Autenticar Acesso <ArrowRight size={16} /></span>
+                            <span className="relative z-10 flex items-center justify-center gap-4">
+                                {isLoading ? <Loader2 className="animate-spin" size={16} /> : <>Autenticar Acesso <ArrowRight size={16} /></>}
+                            </span>
                             <div className="absolute inset-0 bg-gold translate-y-full group-hover:translate-y-0 transition-transform duration-500"></div>
                         </button>
                     </form>

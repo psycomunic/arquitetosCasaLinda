@@ -63,7 +63,7 @@ export interface Database {
         Tables: {
             architects: {
                 Row: Architect;
-                Insert: Omit<Architect, 'id' | 'created_at' | 'updated_at' | 'total_earnings'>;
+                Insert: Omit<Architect, 'created_at' | 'updated_at' | 'total_earnings'>;
                 Update: Partial<Omit<Architect, 'id' | 'created_at'>>;
             };
             proposals: {

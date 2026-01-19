@@ -1,14 +1,67 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Award, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { Award, ArrowRight, CheckCircle2, Loader2 } from 'lucide-react';
+import { supabase } from '../lib/supabase';
 
 export const Register: React.FC = () => {
     const navigate = useNavigate();
+    const [isLoading, setIsLoading] = useState(false);
+    const [formData, setFormData] = useState({
+        name: '',
+        cau: '',
+        email: '',
+        password: ''
+    });
+    const [error, setError] = useState<string | null>(null);
 
-    const handleRegister = (e: React.FormEvent) => {
+    const handleRegister = async (e: React.FormEvent) => {
         e.preventDefault();
-        // Simulate register
-        navigate('/obrigado');
+        setIsLoading(true);
+        setError(null);
+
+        try {
+            // 1. Sign up with Supabase Auth
+            const { data: authData, error: authError } = await supabase.auth.signUp({
+                email: formData.email,
+                password: formData.password,
+                options: {
+                    data: {
+                        full_name: formData.name,
+                        cau: formData.cau // Store CAU in metadata since we don't have a column yet
+                    }
+                }
+            });
+
+            if (authError) throw authError;
+
+            if (authData.user) {
+                // 2. Create profile in architects table
+                const { error: profileError } = await supabase
+                    .from('architects')
+                    .insert({
+                        id: authData.user.id,
+                        email: formData.email,
+                        name: formData.name,
+                        office_name: '', // Will be filled in settings
+                        approval_status: 'pending',
+                        commission_rate: 20,
+                        total_earnings: 0
+                    } as any);
+
+                // If profile creation fails, we might want to alert but standard signup worked
+                // For now log it. RLS might block if not configured for insert.
+                if (profileError) {
+                    console.error('Error creating profile:', profileError);
+                }
+
+                navigate('/obrigado');
+            }
+        } catch (err: any) {
+            console.error('Registration error:', err);
+            setError(err.message || 'Erro ao realizar cadastro. Tente novamente.');
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (
@@ -64,12 +117,20 @@ export const Register: React.FC = () => {
                         </div>
 
                         <form onSubmit={handleRegister} className="space-y-8">
+                            {error && (
+                                <div className="p-4 bg-red-500/10 border border-red-500/20 text-red-300 text-xs rounded-lg">
+                                    {error}
+                                </div>
+                            )}
+
                             <div className="space-y-6">
                                 <div className="space-y-3">
                                     <label className="block text-[9px] font-bold text-zinc-500 uppercase tracking-[0.4em]">Nome Completo</label>
                                     <input
                                         type="text"
                                         required
+                                        value={formData.name}
+                                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                                         className="w-full px-5 py-4 text-xs border border-white/5 focus:outline-none focus:border-gold transition-all glass-dark text-white rounded-lg"
                                     />
                                 </div>
@@ -80,6 +141,8 @@ export const Register: React.FC = () => {
                                         type="text"
                                         required
                                         placeholder="Reg. Profissional"
+                                        value={formData.cau}
+                                        onChange={(e) => setFormData({ ...formData, cau: e.target.value })}
                                         className="w-full px-5 py-4 text-xs border border-white/5 focus:outline-none focus:border-gold transition-all glass-dark text-white rounded-lg"
                                     />
                                 </div>
@@ -89,6 +152,8 @@ export const Register: React.FC = () => {
                                     <input
                                         type="email"
                                         required
+                                        value={formData.email}
+                                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                                         className="w-full px-5 py-4 text-xs border border-white/5 focus:outline-none focus:border-gold transition-all glass-dark text-white rounded-lg"
                                     />
                                 </div>
@@ -98,6 +163,8 @@ export const Register: React.FC = () => {
                                     <input
                                         type="password"
                                         required
+                                        value={formData.password}
+                                        onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                                         className="w-full px-5 py-4 text-xs border border-white/5 focus:outline-none focus:border-gold transition-all glass-dark text-white rounded-lg"
                                     />
                                 </div>
@@ -105,9 +172,12 @@ export const Register: React.FC = () => {
 
                             <button
                                 type="submit"
-                                className="w-full group relative overflow-hidden bg-white text-black py-6 text-[9px] uppercase tracking-[0.5em] font-bold transition-all hover:scale-[1.02] shadow-2xl"
+                                disabled={isLoading}
+                                className="w-full group relative overflow-hidden bg-white text-black py-6 text-[9px] uppercase tracking-[0.5em] font-bold transition-all hover:scale-[1.02] shadow-2xl disabled:opacity-70 disabled:cursor-not-allowed"
                             >
-                                <span className="relative z-10 flex items-center justify-center gap-4">Enviar Solicitação <ArrowRight size={14} /></span>
+                                <span className="relative z-10 flex items-center justify-center gap-4">
+                                    {isLoading ? <Loader2 className="animate-spin" size={14} /> : <>Enviar Solicitação <ArrowRight size={14} /></>}
+                                </span>
                                 <div className="absolute inset-0 bg-gold translate-y-full group-hover:translate-y-0 transition-transform duration-500"></div>
                             </button>
                         </form>

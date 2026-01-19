@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { supabase } from './lib/supabase';
 import { Home } from './pages/Home';
 import { Login } from './pages/Login';
 import { Register } from './pages/Register';
@@ -29,12 +30,42 @@ const ScrollToTop: React.FC = () => {
 };
 
 const App: React.FC = () => {
-  // Mock profile data - in a real app this would come from a context or auth hook
-  const profile = {
-    name: 'Isabella Arcuri',
-    officeName: 'Arcuri Studio Design',
-    logoUrl: 'https://images.unsplash.com/photo-1599305090748-364e26244675?q=80&w=200&auto=format&fit=crop'
-  };
+  const [profile, setProfile] = React.useState({
+    name: '',
+    officeName: '',
+    logoUrl: ''
+  });
+
+  useEffect(() => {
+    // Check active session and fetch profile
+    const fetchProfile = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const { data } = await supabase
+          .from('architects')
+          .select('*')
+          .eq('id', user.id)
+          .single() as any;
+
+        if (data) {
+          setProfile({
+            name: data.name,
+            officeName: data.office_name,
+            logoUrl: data.logo_url || ''
+          });
+        }
+      }
+    };
+
+    fetchProfile();
+
+    // Listen to changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session) fetchProfile();
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   return (
     <Router>
