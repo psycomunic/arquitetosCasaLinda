@@ -8,7 +8,7 @@ export const Register: React.FC = () => {
     const handleRegister = (e: React.FormEvent) => {
         e.preventDefault();
         // Simulate register
-        navigate('/dashboard');
+        navigate('/obrigado');
     };
 
     return (

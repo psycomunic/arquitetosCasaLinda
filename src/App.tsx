@@ -15,6 +15,8 @@ import { TermosComissao } from './pages/TermosComissao';
 import { SuportePrivate } from './pages/SuportePrivate';
 import { PrivacyPolicy } from './pages/PrivacyPolicy';
 import { LGPD } from './pages/LGPD';
+import { ThankYou } from './pages/ThankYou';
+import { Analytics } from './components/Analytics';
 
 const ScrollToTop: React.FC = () => {
   const { pathname } = useLocation();
@@ -37,6 +39,7 @@ const App: React.FC = () => {
   return (
     <Router>
       <ScrollToTop />
+      <Analytics />
       <Routes>
         {/* Public Routes */}
         <Route path="/" element={<Home />} />
@@ -47,6 +50,7 @@ const App: React.FC = () => {
         <Route path="/artesanato" element={<Artesanato />} />
         <Route path="/termos-comissao" element={<TermosComissao />} />
         <Route path="/suporte-private" element={<SuportePrivate />} />
+        <Route path="/obrigado" element={<ThankYou />} />
 
         {/* Legal Pages */}
         <Route path="/privacidade" element={<PrivacyPolicy />} />
