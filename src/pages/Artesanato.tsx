@@ -36,7 +36,7 @@ export const Artesanato: React.FC = () => {
                         <div className="order-1 lg:order-2">
                             <div className="aspect-[4/5] bg-zinc-900 overflow-hidden rounded-lg grayscale hover:grayscale-0 transition-all duration-1000">
                                 <img
-                                    src="https://images.unsplash.com/photo-1554188248-986adbb73be4?q=80&w=1000&auto=format&fit=crop"
+                                    src="/images/rod-artist.jpg"
                                     className="w-full h-full object-cover"
                                     alt="Artista Rod"
                                 />
