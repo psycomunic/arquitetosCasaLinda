@@ -102,7 +102,7 @@ const App: React.FC = () => {
 
         {/* Admin Route */}
         {profile.isAdmin && (
-          <Route path="/admin" element={
+          <Route path="/adm" element={
             <ProtectedRoute>
               <PortalLayout profile={profile}>
                 <AdminDashboard />
