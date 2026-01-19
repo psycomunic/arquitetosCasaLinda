@@ -18,6 +18,7 @@ import { PrivacyPolicy } from './pages/PrivacyPolicy';
 import { LGPD } from './pages/LGPD';
 import { ThankYou } from './pages/ThankYou';
 import { Analytics } from './components/Analytics';
+import { ProtectedRoute } from './components/ProtectedRoute';
 
 const ScrollToTop: React.FC = () => {
   const { pathname } = useLocation();
@@ -89,24 +90,32 @@ const App: React.FC = () => {
 
         {/* Portal Routes */}
         <Route path="/dashboard" element={
-          <PortalLayout profile={profile}>
-            <DashboardOverview />
-          </PortalLayout>
+          <ProtectedRoute>
+            <PortalLayout profile={profile}>
+              <DashboardOverview />
+            </PortalLayout>
+          </ProtectedRoute>
         } />
         <Route path="/proposals" element={
-          <PortalLayout profile={profile}>
-            <ProposalGenerator />
-          </PortalLayout>
+          <ProtectedRoute>
+            <PortalLayout profile={profile}>
+              <ProposalGenerator />
+            </PortalLayout>
+          </ProtectedRoute>
         } />
         <Route path="/earnings" element={
-          <PortalLayout profile={profile}>
-            <Earnings />
-          </PortalLayout>
+          <ProtectedRoute>
+            <PortalLayout profile={profile}>
+              <Earnings />
+            </PortalLayout>
+          </ProtectedRoute>
         } />
         <Route path="/settings" element={
-          <PortalLayout profile={profile}>
-            <Settings />
-          </PortalLayout>
+          <ProtectedRoute>
+            <PortalLayout profile={profile}>
+              <Settings />
+            </PortalLayout>
+          </ProtectedRoute>
         } />
 
         {/* Catch all */}

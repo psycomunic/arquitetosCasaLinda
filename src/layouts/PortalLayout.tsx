@@ -8,6 +8,7 @@ import {
     LogOut,
     Image as ImageIcon
 } from 'lucide-react';
+import { supabase } from '../lib/supabase';
 
 interface PortalLayoutProps {
     children: React.ReactNode;
@@ -28,6 +29,11 @@ export const PortalLayout: React.FC<PortalLayoutProps> = ({ children, profile })
         { id: 'sales', icon: <History size={16} />, label: 'Repasses', path: '/earnings' },
         { id: 'settings', icon: <Settings size={16} />, label: 'Branding', path: '/settings' }
     ];
+
+    const handleLogout = async () => {
+        await supabase.auth.signOut();
+        navigate('/');
+    };
 
     return (
         <div className="flex min-h-screen bg-canvas text-zinc-200">
@@ -68,7 +74,7 @@ export const PortalLayout: React.FC<PortalLayoutProps> = ({ children, profile })
 
                     <div className="mt-auto">
                         <button
-                            onClick={() => navigate('/')}
+                            onClick={handleLogout}
                             className="w-full flex items-center gap-6 px-6 py-5 text-[9px] font-bold text-zinc-600 hover:text-red-500 uppercase tracking-[0.4em] transition-all"
                         >
                             <LogOut size={16} /> Finalizar Sessão
