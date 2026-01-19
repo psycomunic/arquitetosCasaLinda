@@ -52,9 +52,9 @@ export const Landing: React.FC<LandingProps> = ({ onEnter }) => {
         </div>
 
         <div className="hidden lg:flex gap-10 text-[9px] uppercase tracking-[0.3em] font-medium text-zinc-500">
-          <a href="#proposta" className="hover:text-gold transition-colors">Exclusividade</a>
-          <a href="#tecnologia" className="hover:text-gold transition-colors">Portal Private</a>
-          <a href="#comissao" className="hover:text-gold transition-colors">Rentabilidade</a>
+          <button onClick={() => navigate('/artesanato')} className="hover:text-gold transition-colors uppercase">Exclusividade</button>
+          <button onClick={() => navigate('/login')} className="hover:text-gold transition-colors uppercase">Portal Private</button>
+          <button onClick={() => navigate('/termos-comissao')} className="hover:text-gold transition-colors uppercase">Rentabilidade</button>
         </div>
 
         <button
