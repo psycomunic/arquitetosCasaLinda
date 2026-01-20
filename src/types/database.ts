@@ -12,7 +12,16 @@ export interface Architect {
     approval_status: 'pending' | 'approved' | 'rejected';
     city: string | null;
     state: string | null;
-    cau?: string; // Optative until mapped in DB setup if needed
+    cau?: string | null;
+    cnpj?: string | null;
+    phone?: string | null;
+    website?: string | null;
+    street?: string | null;
+    number?: string | null;
+    complement?: string | null;
+    neighborhood?: string | null;
+    zip_code?: string | null;
+    profile_photo_url?: string | null;
     approved_at: string | null;
     approved_by: string | null;
     created_at: string;

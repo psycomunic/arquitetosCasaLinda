@@ -47,7 +47,19 @@ export interface Proposal {
 export interface ArchitectProfile {
   name: string;
   officeName: string;
-  logoUrl?: string;
+  logoUrl?: string | null;
+  profilePhotoUrl?: string | null;
+  cau?: string;
+  cnpj?: string;
+  phone?: string;
+  website?: string;
+  street?: string;
+  number?: string;
+  complement?: string;
+  neighborhood?: string;
+  zipCode?: string;
+  city?: string;
+  state?: string;
   commissionRate: number;
   totalEarnings: number;
 }
