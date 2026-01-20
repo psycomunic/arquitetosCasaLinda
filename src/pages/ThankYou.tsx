@@ -1,15 +1,71 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CheckCircle2, ArrowRight, Mail } from 'lucide-react';
+import { CheckCircle2, ArrowRight, Mail, Loader2, PartyPopper } from 'lucide-react';
 import { trackEvent } from '../components/Analytics';
+import { supabase } from '../lib/supabase';
 
 export const ThankYou: React.FC = () => {
     const navigate = useNavigate();
+    const [status, setStatus] = useState<'pending' | 'approved'>('pending');
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // Fire conversion event on mount
         trackEvent('CompleteRegistration');
+        checkStatus();
     }, []);
+
+    const checkStatus = async () => {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) {
+            setLoading(false);
+            return;
+        }
+
+        // Initial check
+        const { data } = await supabase
+            .from('architects')
+            .select('approval_status')
+            .eq('id', user.id)
+            .single();
+
+        if (data && data.approval_status === 'approved') {
+            setStatus('approved');
+        }
+
+        // Realtime subscription
+        const channel = supabase
+            .channel('approval-check')
+            .on(
+                'postgres_changes',
+                {
+                    event: 'UPDATE',
+                    schema: 'public',
+                    table: 'architects',
+                    filter: `id=eq.${user.id}`
+                },
+                (payload) => {
+                    const newStatus = (payload.new as any).approval_status;
+                    if (newStatus === 'approved') {
+                        setStatus('approved');
+                    }
+                }
+            )
+            .subscribe();
+
+        setLoading(false);
+
+        return () => {
+            supabase.removeChannel(channel);
+        };
+    };
+
+    if (loading) {
+        return (
+            <div className="min-h-screen bg-canvas flex items-center justify-center">
+                <Loader2 className="animate-spin text-gold" size={32} />
+            </div>
+        );
+    }
 
     return (
         <div className="min-h-screen bg-canvas flex items-center justify-center px-6 py-20 relative overflow-hidden">
@@ -24,35 +80,50 @@ export const ThankYou: React.FC = () => {
 
                 <div className="glass p-12 md:p-16 space-y-10 border-t-4 border-gold">
                     <div className="flex justify-center">
-                        <div className="w-24 h-24 bg-gold/10 rounded-full flex items-center justify-center text-gold animate-bounce">
-                            <CheckCircle2 size={48} />
+                        <div className={`w-24 h-24 rounded-full flex items-center justify-center animate-bounce ${status === 'approved' ? 'bg-green-500/10 text-green-500' : 'bg-gold/10 text-gold'}`}>
+                            {status === 'approved' ? <PartyPopper size={48} /> : <CheckCircle2 size={48} />}
                         </div>
                     </div>
 
                     <div className="space-y-6">
-                        <h1 className="text-4xl md:text-5xl font-serif text-white">Solicitação Recebida</h1>
+                        <h1 className="text-4xl md:text-5xl font-serif text-white">
+                            {status === 'approved' ? 'Acesso Liberado!' : 'Solicitação Recebida'}
+                        </h1>
                         <p className="text-zinc-400 text-lg font-light leading-relaxed max-w-lg mx-auto">
-                            Agradecemos seu interesse em se tornar um parceiro Private. Seus dados foram enviados para nossa equipe de curadoria.
+                            {status === 'approved'
+                                ? 'Sua conta foi aprovada pela nossa curadoria. Você já pode acessar todas as ferramentas exclusivas do portal.'
+                                : 'Agradecemos seu interesse em se tornar um parceiro Private. Seus dados foram enviados para nossa equipe de curadoria.'}
                         </p>
                     </div>
 
                     <div className="space-y-4 bg-zinc-900/50 p-8 rounded-lg border border-white/5">
                         <div className="flex items-center justify-center gap-3 text-gold">
-                            <Mail size={20} />
-                            <span className="text-xs font-bold uppercase tracking-widest">Próximos Passos</span>
+                            {status === 'approved' ? <CheckCircle2 size={20} /> : <Mail size={20} />}
+                            <span className="text-xs font-bold uppercase tracking-widest">{status === 'approved' ? 'Tudo Pronto' : 'Próximos Passos'}</span>
                         </div>
                         <p className="text-sm text-zinc-500">
-                            Em breve você receberá um e-mail com o status da sua aprovação e as credenciais de acesso ao portal.
+                            {status === 'approved'
+                                ? 'Clique no botão abaixo para entrar no seu Dashboard.'
+                                : 'Aguarde nesta tela ou fique atento ao seu e-mail. Assim que aprovado, esta página atualizará automaticamente.'}
                         </p>
                     </div>
 
                     <div className="pt-8">
-                        <button
-                            onClick={() => navigate('/')}
-                            className="bg-white text-black px-12 py-4 text-[10px] uppercase tracking-[0.4em] font-bold hover:bg-gold transition-all shadow-xl hover:shadow-gold/20 flex items-center gap-4 mx-auto"
-                        >
-                            Voltar ao Início <ArrowRight size={14} />
-                        </button>
+                        {status === 'approved' ? (
+                            <button
+                                onClick={() => navigate('/dashboard')}
+                                className="bg-green-500 text-black px-12 py-4 text-[10px] uppercase tracking-[0.4em] font-bold hover:bg-green-400 transition-all shadow-xl hover:shadow-green-500/20 flex items-center gap-4 mx-auto"
+                            >
+                                Acessar Dashboard <ArrowRight size={14} />
+                            </button>
+                        ) : (
+                            <button
+                                onClick={() => navigate('/')}
+                                className="bg-white text-black px-12 py-4 text-[10px] uppercase tracking-[0.4em] font-bold hover:bg-gold transition-all shadow-xl hover:shadow-gold/20 flex items-center gap-4 mx-auto"
+                            >
+                                Voltar ao Início <ArrowRight size={14} />
+                            </button>
+                        )}
                     </div>
                 </div>
             </div>
