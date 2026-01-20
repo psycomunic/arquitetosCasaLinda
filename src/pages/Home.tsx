@@ -87,7 +87,9 @@ export const Home: React.FC = () => {
           </div>
 
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-serif leading-tight tracking-tight text-white max-w-5xl mx-auto">
-            Hoje somos a maior marca brasileira de quadros decorativos e referência internacional — <span className="text-gradient-gold italic">e queremos arquitetos como você ao nosso lado.</span>
+            Hoje somos a maior marca brasileira de quadros decorativos e referência internacional
+            <br className="hidden md:block" />
+            <span className="text-gradient-gold italic block mt-2">e queremos arquitetos como você ao nosso lado.</span>
           </h1>
 
           <p className="text-sm md:text-xl text-zinc-400 font-light max-w-3xl mx-auto leading-relaxed">
