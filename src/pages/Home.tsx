@@ -44,9 +44,9 @@ export const Home: React.FC = () => {
         </div>
 
         <div className="hidden lg:flex gap-10 text-[9px] uppercase tracking-[0.3em] font-medium text-zinc-500">
-          <button onClick={() => navigate('/artesanato')} className="hover:text-gold transition-colors uppercase">Exclusividade</button>
-          <button onClick={() => navigate('/login')} className="hover:text-gold transition-colors uppercase">Portal Private</button>
-          <button onClick={() => navigate('/termos-comissao')} className="hover:text-gold transition-colors uppercase">Rentabilidade</button>
+          <button onClick={() => navigate('/canvas-premium')} className="hover:text-gold transition-colors uppercase">Canvas Premium</button>
+          <button onClick={() => navigate('/sustentabilidade')} className="hover:text-gold transition-colors uppercase">Sustentabilidade</button>
+          <button onClick={() => navigate('/artesanato')} className="hover:text-gold transition-colors uppercase">Artesanato</button>
         </div>
 
         <button
