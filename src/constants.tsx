@@ -29,10 +29,10 @@ export const FRAMES: Frame[] = [
   { id: 'p12', name: 'Flutuante Madeira', price: 420, category: 'Premium', subCategory: 'Flutuante/Canaleta', allowsGlass: false, thumbnailUrl: '/images/frames/flutuante-madeira.jpg' },
 
   // Premium - Côncava
-  { id: 'p13', name: 'Côncava Preta', price: 350, category: 'Premium', subCategory: 'Côncava', allowsGlass: true, thumbnailUrl: '/images/frames/premium-vidro.png' },
-  { id: 'p14', name: 'Côncava Branca', price: 350, category: 'Premium', subCategory: 'Côncava', allowsGlass: true, thumbnailUrl: '/images/frames/premium-vidro.png' },
-  { id: 'p15', name: 'Côncava Dourada', price: 380, category: 'Premium', subCategory: 'Côncava', allowsGlass: true, thumbnailUrl: '/images/frames/premium-vidro.png' },
-  { id: 'p16', name: 'Côncava Madeira', price: 360, category: 'Premium', subCategory: 'Côncava', allowsGlass: true, thumbnailUrl: '/images/frames/premium-vidro.png' },
+  { id: 'p13', name: 'Côncava Preta', price: 350, category: 'Premium', subCategory: 'Côncava', allowsGlass: true, thumbnailUrl: '/images/frames/concava-preta.png' },
+  { id: 'p14', name: 'Côncava Branca', price: 350, category: 'Premium', subCategory: 'Côncava', allowsGlass: true, thumbnailUrl: '/images/frames/concava-branca.jpg' },
+  { id: 'p15', name: 'Côncava Dourada', price: 380, category: 'Premium', subCategory: 'Côncava', allowsGlass: true, thumbnailUrl: '/images/frames/concava-dourada.png' },
+  { id: 'p16', name: 'Côncava Madeira', price: 360, category: 'Premium', subCategory: 'Côncava', allowsGlass: true, thumbnailUrl: '/images/frames/concava-madeira.jpg' },
 
   // Premium - Inox
   { id: 'p17', name: 'Inox', price: 800, category: 'Premium', allowsGlass: true }
