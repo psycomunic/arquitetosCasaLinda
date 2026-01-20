@@ -114,35 +114,35 @@ export const ProposalPrintView: React.FC<ProposalPrintViewProps> = ({
                 </div>
 
                 {/* ITEMS PAGES */}
-                <div className="bg-white min-h-[297mm] p-16">
-                    <div className="mb-12 pb-4 border-b border-zinc-100 flex justify-between items-end">
+                <div className="bg-white min-h-[297mm] p-12">
+                    <div className="mb-8 pb-4 border-b border-zinc-100 flex justify-between items-end">
                         <h3 className="text-2xl italic">Obras Selecionadas</h3>
                         <span className="text-[9px] font-sans uppercase tracking-[0.2em] text-zinc-400">Ref: {Math.floor(Math.random() * 9999).toString().padStart(4, '0')}</span>
                     </div>
 
-                    <div className="space-y-20">
+                    <div className="space-y-12">
                         {items.map((item, idx) => (
-                            <div key={idx} className="break-inside-avoid page-break-item mb-20 last:mb-0">
-                                <div className="flex flex-col md:flex-row gap-12 items-center">
+                            <div key={idx} className="break-inside-avoid page-break-item mb-12 last:mb-0">
+                                <div className="flex flex-col md:flex-row gap-8 items-center">
                                     <div className="w-full md:w-3/5">
-                                        <div className="bg-zinc-50 p-6 shadow-sm">
+                                        <div className="bg-zinc-50 p-6 shadow-sm flex justify-center">
                                             <img
                                                 src={item.artPiece?.imageUrl || item.customImageUrl}
-                                                className="w-full h-auto object-contain max-h-[500px]"
+                                                className="w-full h-auto object-contain max-h-[350px]"
                                                 alt={item.title}
                                             />
                                         </div>
                                     </div>
-                                    <div className="w-full md:w-2/5 space-y-8">
+                                    <div className="w-full md:w-2/5 space-y-6">
                                         <div className="space-y-2">
                                             <span className="text-[9px] text-gold font-sans uppercase tracking-[0.4em] font-bold block">
                                                 Obra 0{idx + 1}
                                             </span>
-                                            <h4 className="text-3xl leading-tight">{item.title}</h4>
+                                            <h4 className="text-2xl leading-tight">{item.title}</h4>
                                             <p className="text-xs text-zinc-400 font-sans uppercase tracking-widest">{item.artPiece?.category || 'Acervo Pessoal'}</p>
                                         </div>
 
-                                        <div className="space-y-4 pt-6 border-t border-zinc-100 font-sans">
+                                        <div className="space-y-3 pt-4 border-t border-zinc-100 font-sans">
                                             <div>
                                                 <p className="text-[8px] uppercase tracking-widest text-zinc-400 mb-1">Moldura Selecionada</p>
                                                 <p className="text-sm border-l-2 border-gold pl-3">{item.frame?.name}</p>
@@ -153,9 +153,9 @@ export const ProposalPrintView: React.FC<ProposalPrintViewProps> = ({
                                             </div>
                                         </div>
 
-                                        <div className="bg-zinc-50 p-6 mt-6">
+                                        <div className="bg-zinc-50 p-4 mt-4">
                                             <p className="text-[9px] uppercase tracking-widest text-zinc-400 mb-2 font-sans">Investimento</p>
-                                            <p className="text-2xl">R$ {item.price.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
+                                            <p className="text-xl">R$ {item.price.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
                                         </div>
                                     </div>
                                 </div>
