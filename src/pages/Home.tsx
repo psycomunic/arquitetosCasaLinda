@@ -189,35 +189,7 @@ export const Home: React.FC = () => {
         </div>
       </section>
 
-      {/* Social Proof Section */}
-      <section className="py-24 bg-canvas border-y border-white/5">
-        <div className="container mx-auto px-6 text-center">
-          <p className="text-[9px] uppercase tracking-[0.4em] font-bold text-zinc-500 mb-12">Arquitetos e Escritórios que confiam</p>
-          <div className="flex flex-wrap justify-center items-center gap-16 grayscale opacity-40 hover:opacity-100 transition-opacity duration-500">
-            {/* Placeholders for Partner Logos - In production use actual images */}
-            {['STUDIO A', 'ARQ DESIGN', 'CASAMOGNO', 'ELEVATO', 'MOOD'].map((logo, i) => (
-              <h3 key={i} className="text-2xl font-serif text-white italic">{logo}</h3>
-            ))}
-          </div>
 
-          <div className="mt-20 grid md:grid-cols-2 gap-8 max-w-4xl mx-auto text-left">
-            <div className="glass p-8">
-              <div className="flex gap-1 mb-4 text-gold">
-                <Star size={14} fill="#c5a059" /><Star size={14} fill="#c5a059" /><Star size={14} fill="#c5a059" /><Star size={14} fill="#c5a059" /><Star size={14} fill="#c5a059" />
-              </div>
-              <p className="text-zinc-400 text-sm italic mb-6">"A facilidade de gerar propostas com minha marca e a qualidade das obras impressionam meus clientes. O cashback de 20% é imbatível."</p>
-              <p className="text-xs font-bold text-white uppercase tracking-widest">Mariana Costa, Arquiteta</p>
-            </div>
-            <div className="glass p-8">
-              <div className="flex gap-1 mb-4 text-gold">
-                <Star size={14} fill="#c5a059" /><Star size={14} fill="#c5a059" /><Star size={14} fill="#c5a059" /><Star size={14} fill="#c5a059" /><Star size={14} fill="#c5a059" />
-              </div>
-              <p className="text-zinc-400 text-sm italic mb-6">"Finalmente uma parceira que entende o mercado de luxo. O suporte para projetos personalizados faz toda a diferença."</p>
-              <p className="text-xs font-bold text-white uppercase tracking-widest">Roberto Almeida, Designer</p>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* Calculadora de Ganhos: Gatilho Massivo de Conversão */}
       <section id="comissao" className="py-40 bg-ebonite px-6 relative overflow-hidden">
@@ -291,10 +263,13 @@ export const Home: React.FC = () => {
 
           <div className="grid md:grid-cols-2 gap-8">
             {[
-              { q: "Preciso pagar para me cadastrar?", a: "Não. O acesso ao programa Private é totalmente gratuito para arquitetos e designers com CAU/ABD ativo." },
-              { q: "Como a comissão é paga?", a: "O pagamento é realizado via transferência bancária ou PIX até o dia 10 do mês subsequente à aprovação do pedido." },
-              { q: "Existe exclusividade?", a: "Não exigimos exclusividade. Acreditamos que você escolhe a Casa Linda pela qualidade e serviço, não por contrato." },
-              { q: "Vocês enviam para todo o Brasil?", a: "Sim, com embalagem reforçada e seguro total. Temos parceiros logísticos especializados em obras de arte." }
+              { q: "Preciso fechar a venda com o cliente?", a: "Não. Você pode apenas indicar ou optar pela venda assistida. O modelo é flexível." },
+              { q: "Posso indicar quadros e espelhos sob medida?", a: "Sim. Trabalhamos com tamanhos personalizados e projetos especiais." },
+              { q: "Como funciona a arte personalizada?", a: "Você envia o briefing e nosso artista residente desenvolve a arte exclusiva para o projeto." },
+              { q: "Como sei quanto vou receber?", a: "Tudo fica disponível no seu dashboard, com total transparência." },
+              { q: "Quando recebo a comissão?", a: "Mensalmente, após confirmação da venda." },
+              { q: "Posso perder meu nível?", a: "Sim, caso não atinja o volume mínimo mensal. O sistema é justo e automático." },
+              { q: "Posso usar a marca Casa Linda nos meus projetos?", a: "Sim, conforme diretrizes do Programa de Parcerias." }
             ].map((faq, i) => (
               <div key={i} className="glass p-8 space-y-4 hover:bg-white/5 transition-colors">
                 <h4 className="text-sm font-bold text-white uppercase tracking-widest">{faq.q}</h4>
