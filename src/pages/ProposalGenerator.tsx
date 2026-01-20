@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useRef } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import {
     Plus,
     Printer,
@@ -12,13 +12,39 @@ import {
     Box
 } from 'lucide-react';
 import { MOCK_ARTS, FRAMES, FINISHES } from '../constants';
-import { ArtPiece, ProposalItem, Frame, Finish } from '../types';
+import { ArtPiece, ProposalItem, Frame, Finish, ArchitectProfile } from '../types';
+import { supabase } from '../lib/supabase';
 
 export const ProposalGenerator: React.FC = () => {
     const [proposalItems, setProposalItems] = useState<ProposalItem[]>([]);
     const [clientName, setClientName] = useState('');
     const [showPrintPreview, setShowPrintPreview] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
+    const [architectProfile, setArchitectProfile] = useState<ArchitectProfile | null>(null);
+
+    useEffect(() => {
+        const fetchProfile = async () => {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (user) {
+                const { data } = await supabase
+                    .from('architects')
+                    .select('*')
+                    .eq('id', user.id)
+                    .single();
+
+                if (data) {
+                    setArchitectProfile({
+                        name: data.name,
+                        officeName: data.office_name,
+                        commissionRate: Number(data.commission_rate),
+                        totalEarnings: Number(data.total_earnings),
+                        logoUrl: data.logo_url
+                    });
+                }
+            }
+        };
+        fetchProfile();
+    }, []);
 
     // Current item being configured
     const [selectedFrame, setSelectedFrame] = useState<Frame>(FRAMES[0]);
@@ -122,13 +148,22 @@ export const ProposalGenerator: React.FC = () => {
                     </button>
                 </div>
 
+                {/* Header with Architect Branding */}
                 <div className="flex justify-between items-start mb-32">
                     <div className="space-y-12">
-                        <div className="w-56 h-56 bg-zinc-50 p-10 border border-zinc-100 shadow-sm flex items-center justify-center grayscale">
-                            <span className="text-[10px] text-zinc-300 font-bold tracking-[0.4em] uppercase">Branding</span>
+                        <div className="w-56 h-56 bg-zinc-50 p-6 border border-zinc-100 shadow-sm flex items-center justify-center">
+                            {architectProfile?.logoUrl ? (
+                                <img src={architectProfile.logoUrl} className="w-full h-full object-contain" alt="Branding" />
+                            ) : (
+                                <span className="text-[10px] text-zinc-300 font-bold tracking-[0.4em] uppercase text-center">
+                                    Seu Logo Aqui
+                                </span>
+                            )}
                         </div>
                         <div>
-                            <h3 className="text-3xl font-serif text-black">Arcuri Studio Design</h3>
+                            <h3 className="text-3xl font-serif text-black">
+                                {architectProfile?.officeName || architectProfile?.name || 'Seu Escritório'}
+                            </h3>
                             <p className="text-[10px] text-zinc-400 uppercase tracking-[0.6em] font-medium mt-2">Interior Design & Art Curation</p>
                         </div>
                     </div>
@@ -188,7 +223,7 @@ export const ProposalGenerator: React.FC = () => {
 
                 <div className="pt-20 border-t border-zinc-100 flex justify-between items-end">
                     <div className="text-[9px] text-zinc-300 font-bold tracking-[0.5em] uppercase">
-                        <p>Arcuri Studio Design & Casa Linda Decorações</p>
+                        <p>{architectProfile?.officeName || architectProfile?.name || 'Seu Escritório'} & Casa Linda Decorações</p>
                     </div>
                     <div className="text-xl font-serif tracking-[0.4em] uppercase">
                         <img src="/logo.png" alt="Casa Linda" className="h-10 object-contain grayscale" />
