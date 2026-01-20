@@ -24,7 +24,7 @@ export const ProposalPrintView: React.FC<ProposalPrintViewProps> = ({
         const timer = setTimeout(() => {
             setIsReady(true);
             window.print();
-        }, 1000);
+        }, 1500); // Slightly longer delay to ensure images load
         return () => clearTimeout(timer);
     }, []);
 
@@ -34,15 +34,12 @@ export const ProposalPrintView: React.FC<ProposalPrintViewProps> = ({
         year: 'numeric'
     });
 
-    // Get up to 4 images for the cover collage
-    const coverImages = items.slice(0, 4).map(item => item.artPiece?.imageUrl || item.customImageUrl);
-
     return createPortal(
-        <div className="fixed inset-0 bg-white z-[9999] overflow-y-auto animate-fade-in text-black font-serif">
+        <div className="fixed inset-0 bg-white z-[9999] overflow-y-auto animate-fade-in text-zinc-900 font-serif">
             {/* Control Bar - Hidden in Print */}
             <div className="fixed top-0 left-0 w-full bg-zinc-900 text-white p-4 flex justify-between items-center no-print z-50 shadow-xl font-sans">
                 <div className="text-xs font-bold uppercase tracking-widest">
-                    Visualização de Impressão (A4)
+                    Visualização de Impressão (Premium)
                 </div>
                 <div className="flex gap-4">
                     <button
@@ -64,98 +61,139 @@ export const ProposalPrintView: React.FC<ProposalPrintViewProps> = ({
             <div className="w-[210mm] mx-auto bg-white shadow-2xl my-20 print:my-0 print:shadow-none print:w-full">
 
                 {/* PAGE 1: COVER */}
-                <div className="w-full h-[297mm] relative flex flex-col p-16 break-after-page bg-white">
-                    {/* Header */}
-                    <div className="flex justify-between items-center mb-12">
-                        {architectProfile?.logoUrl ? (
-                            <img src={architectProfile.logoUrl} className="h-16 object-contain" alt="Branding" />
-                        ) : (
-                            <h2 className="text-xl font-bold uppercase tracking-widest">{architectProfile?.officeName || 'Seu Escritório'}</h2>
-                        )}
-                        <div className="text-right">
-                            <p className="text-[9px] font-sans uppercase tracking-[0.3em] text-zinc-400">Curadoria de Arte</p>
-                        </div>
-                    </div>
+                <div className="w-full h-[297mm] relative flex flex-col break-after-page bg-white overflow-hidden">
+                    {/* Artistic Background Element */}
+                    <div className="absolute top-0 right-0 w-2/3 h-full bg-zinc-50/50 -skew-x-12 translate-x-1/3 -z-10"></div>
 
-                    {/* Main Content */}
-                    <div className="flex-1 flex flex-col justify-center relative">
-                        {/* Collage */}
-                        <div className="absolute inset-0 flex items-center justify-center opacity-10 pointer-events-none -z-10">
-                            <div className="grid grid-cols-2 gap-2 w-full max-w-lg grayscale">
-                                {coverImages.map((img, i) => (
-                                    <div key={i} className="aspect-square bg-zinc-100 overflow-hidden">
-                                        <img src={img} className="w-full h-full object-cover" alt="" />
-                                    </div>
-                                ))}
+                    <div className="flex-1 flex flex-col p-20 relative z-10">
+                        {/* Header */}
+                        <div className="flex justify-between items-start mb-24">
+                            <div>
+                                <p className="text-[10px] font-sans uppercase tracking-[0.4em] text-gold mb-2">Curadoria Exclusiva</p>
+                                <h1 className="text-6xl italic font-light text-zinc-900 leading-tight">
+                                    Projeto<br />
+                                    <span className="font-serif font-bold">{clientName}</span>
+                                </h1>
+                            </div>
+                            <div className="text-right">
+                                {architectProfile?.logoUrl ? (
+                                    <img src={architectProfile.logoUrl} className="h-20 object-contain ml-auto" alt="Branding" />
+                                ) : (
+                                    <h2 className="text-xl font-bold uppercase tracking-widest border-b-2 border-gold pb-2 inline-block">{architectProfile?.officeName || 'Seu Escritório'}</h2>
+                                )}
                             </div>
                         </div>
 
-                        <div className="text-center space-y-6 z-10">
-                            <h1 className="text-6xl italic text-black">
-                                Seleção Exclusiva
-                            </h1>
-                            <div className="w-16 h-[1px] bg-gold mx-auto my-6"></div>
-                            <h2 className="text-4xl uppercase tracking-widest font-sans font-light">
-                                {clientName}
-                            </h2>
-                        </div>
-                    </div>
+                        {/* Cover Image Feature (First Item) */}
+                        {items[0] && (
+                            <div className="flex-1 flex items-center justify-center relative mb-20">
+                                <div className="relative z-10 shadow-2xl">
+                                    <div className="bg-white p-4 pb-12 shadow-md rotate-1 transform transition-transform">
+                                        <img
+                                            src={items[0].artPiece?.imageUrl || items[0].customImageUrl}
+                                            className="max-h-[350px] object-contain"
+                                            alt="Capa"
+                                        />
+                                    </div>
+                                </div>
+                                <div className="absolute -bottom-10 -right-10 text-[200px] leading-none text-zinc-100 font-serif italic -z-10 select-none">
+                                    01
+                                </div>
+                            </div>
+                        )}
 
-                    {/* Footer */}
-                    <div className="flex justify-between items-end border-t border-zinc-100 pt-8 font-sans">
-                        <div>
-                            <p className="text-[9px] font-bold uppercase tracking-[0.2em]">{architectProfile?.officeName}</p>
-                            <p className="text-[9px] text-zinc-400 uppercase tracking-widest mt-1">Interior Design</p>
-                        </div>
-                        <div className="text-right text-[9px] text-zinc-400 uppercase tracking-[0.2em]">
-                            {currentDate}
+                        {/* Footer */}
+                        <div className="mt-auto border-t border-zinc-200 pt-8 flex justify-between items-end font-sans">
+                            <div>
+                                <p className="text-[9px] uppercase tracking-[0.3em] text-zinc-400">Desenvolvido por</p>
+                                <p className="text-xs font-bold uppercase tracking-widest mt-1">{architectProfile?.officeName}</p>
+                            </div>
+                            <div className="text-right">
+                                <p className="text-[9px] uppercase tracking-[0.3em] text-zinc-400">Data</p>
+                                <p className="text-xs font-bold uppercase tracking-widest mt-1">{currentDate}</p>
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 {/* ITEMS PAGES */}
-                <div className="bg-white min-h-[297mm] p-12">
-                    <div className="mb-8 pb-4 border-b border-zinc-100 flex justify-between items-end">
-                        <h3 className="text-2xl italic">Obras Selecionadas</h3>
-                        <span className="text-[9px] font-sans uppercase tracking-[0.2em] text-zinc-400">Ref: {Math.floor(Math.random() * 9999).toString().padStart(4, '0')}</span>
+                <div className="bg-white min-h-[297mm]">
+                    {/* Page Header */}
+                    <div className="px-20 pt-20 pb-10">
+                        <h3 className="text-3xl italic font-light text-zinc-900">Seleção de Obras</h3>
+                        <div className="w-12 h-[2px] bg-gold mt-4"></div>
                     </div>
 
-                    <div className="space-y-12">
+                    <div className="px-20 pb-20 space-y-24">
                         {items.map((item, idx) => (
-                            <div key={idx} className="break-inside-avoid page-break-item mb-12 last:mb-0">
-                                <div className="flex flex-col md:flex-row gap-8 items-center">
-                                    <div className="w-full md:w-3/5">
-                                        <div className="bg-zinc-50 p-6 shadow-sm flex justify-center">
-                                            <img
-                                                src={item.artPiece?.imageUrl || item.customImageUrl}
-                                                className="w-full h-auto object-contain max-h-[350px]"
-                                                alt={item.title}
-                                            />
+                            <div key={idx} className="break-inside-avoid page-break-item">
+                                <div className="flex flex-col gap-10">
+                                    {/* Number & Title */}
+                                    <div className="flex items-baseline gap-6 border-b border-zinc-100 pb-6">
+                                        <span className="text-4xl text-transparent bg-clip-text bg-gradient-to-br from-gold to-yellow-600 font-serif font-bold italic">
+                                            {(idx + 1).toString().padStart(2, '0')}
+                                        </span>
+                                        <div className="flex-1">
+                                            <h4 className="text-2xl font-serif text-zinc-800">{item.title}</h4>
+                                            <p className="text-[10px] font-sans text-zinc-400 uppercase tracking-widest mt-1">
+                                                {item.artPiece?.category || 'Acervo Personalizado'}
+                                                <span className="mx-2 text-zinc-300">•</span>
+                                                {item.format?.label} {item.size ? `(${item.size})` : ''}
+                                            </p>
+                                        </div>
+                                        <div className="text-right">
+                                            <p className="text-xl font-serif font-bold text-zinc-900">R$ {item.price.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
                                         </div>
                                     </div>
-                                    <div className="w-full md:w-2/5 space-y-6">
-                                        <div className="space-y-2">
-                                            <span className="text-[9px] text-gold font-sans uppercase tracking-[0.4em] font-bold block">
-                                                Obra 0{idx + 1}
-                                            </span>
-                                            <h4 className="text-2xl leading-tight">{item.title}</h4>
-                                            <p className="text-xs text-zinc-400 font-sans uppercase tracking-widest">{item.artPiece?.category || 'Acervo Pessoal'}</p>
-                                        </div>
 
-                                        <div className="space-y-3 pt-4 border-t border-zinc-100 font-sans">
-                                            <div>
-                                                <p className="text-[8px] uppercase tracking-widest text-zinc-400 mb-1">Moldura Selecionada</p>
-                                                <p className="text-sm border-l-2 border-gold pl-3">{item.frame?.name}</p>
-                                            </div>
-                                            <div>
-                                                <p className="text-[8px] uppercase tracking-widest text-zinc-400 mb-1">Acabamento</p>
-                                                <p className="text-sm border-l-2 border-gold pl-3">{item.finish?.name}</p>
+                                    <div className="grid grid-cols-12 gap-12">
+                                        {/* Main Art Image */}
+                                        <div className="col-span-8">
+                                            <div className="bg-zinc-50 p-12 flex items-center justify-center shadow-inner rounded-sm">
+                                                <img
+                                                    src={item.artPiece?.imageUrl || item.customImageUrl}
+                                                    className="w-full h-auto object-contain max-h-[400px] shadow-lg"
+                                                    alt={item.title}
+                                                />
                                             </div>
                                         </div>
 
-                                        <div className="bg-zinc-50 p-4 mt-4">
-                                            <p className="text-[9px] uppercase tracking-widest text-zinc-400 mb-2 font-sans">Investimento</p>
-                                            <p className="text-xl">R$ {item.price.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
+                                        {/* Details Sidebar */}
+                                        <div className="col-span-4 space-y-8">
+                                            {/* Frame Detail */}
+                                            <div className="space-y-3">
+                                                <p className="text-[9px] font-sans uppercase tracking-[0.2em] text-zinc-400 font-bold border-b border-zinc-100 pb-2">Moldura</p>
+                                                <div className="flex flex-col gap-3">
+                                                    {item.frame?.thumbnailUrl ? (
+                                                        <div className="w-full aspect-square bg-zinc-100 overflow-hidden border border-zinc-200">
+                                                            <img
+                                                                src={item.frame.thumbnailUrl}
+                                                                className="w-full h-full object-cover transform hover:scale-110 transition-transform duration-700"
+                                                                alt={item.frame.name}
+                                                            />
+                                                        </div>
+                                                    ) : (
+                                                        <div className="w-full aspect-square bg-zinc-100 flex items-center justify-center text-zinc-300 italic text-xs">
+                                                            Sem imagem
+                                                        </div>
+                                                    )}
+                                                    <div>
+                                                        <p className="font-serif text-lg leading-none">{item.frame?.name}</p>
+                                                        <p className="text-[10px] text-zinc-500 mt-1 uppercase tracking-wide">{item.frame?.category}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            {/* Finish Detail */}
+                                            <div className="space-y-3 pt-4">
+                                                <p className="text-[9px] font-sans uppercase tracking-[0.2em] text-zinc-400 font-bold border-b border-zinc-100 pb-2">Acabamento</p>
+                                                <div>
+                                                    <p className="font-serif text-lg">{item.finish?.name}</p>
+                                                    <p className="text-[10px] text-zinc-500 mt-1 uppercase tracking-wide">
+                                                        {item.finish?.isGlass ? 'Proteção com Vidro' : 'Sem Vidro'}
+                                                    </p>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -165,50 +203,50 @@ export const ProposalPrintView: React.FC<ProposalPrintViewProps> = ({
                 </div>
 
                 {/* SUMMARY PAGE */}
-                <div className="w-full h-[297mm] relative flex flex-col p-16 break-before-page bg-white">
-                    <div className="flex-1 flex flex-col justify-center items-center text-center space-y-16">
-                        <div className="space-y-6">
-                            <div className="w-12 h-12 border border-black flex items-center justify-center mx-auto mb-6 rounded-full">
-                                <span className="font-serif italic text-2xl">i</span>
-                            </div>
-                            <h2 className="text-5xl italic">Resumo do Investimento</h2>
+                <div className="w-full h-[297mm] relative flex flex-col p-20 break-before-page bg-zinc-900 text-white">
+                    <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none"
+                        style={{ backgroundImage: `url("https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?q=80&w=2574&auto=format&fit=crop")`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
+                    </div>
+
+                    <div className="flex-1 flex flex-col justify-center relative z-10">
+                        <div className="text-center space-y-8 mb-20">
+                            <h2 className="text-5xl font-serif italic font-light">Resumo do Investimento</h2>
                             <div className="w-24 h-[1px] bg-gold mx-auto"></div>
                         </div>
 
-                        <div className="py-12 px-20 border-y border-zinc-100 bg-zinc-50/50 w-full max-w-2xl">
-                            <div className="flex justify-between items-end mb-2">
-                                <span className="text-xs font-sans uppercase tracking-[0.3em] text-zinc-500">Total Proposta</span>
-                                <span className="text-5xl">R$ {totalValue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+                        <div className="max-w-2xl mx-auto w-full space-y-8">
+                            {/* Item List Summary */}
+                            <div className="space-y-4 mb-12">
+                                {items.map((item, idx) => (
+                                    <div key={idx} className="flex justify-between items-baseline border-b border-white/10 pb-4 text-sm">
+                                        <span className="font-sans font-light tracking-wide text-zinc-400">{item.title}</span>
+                                        <span className="font-serif text-zinc-300">R$ {item.price.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+                                    </div>
+                                ))}
+                            </div>
+
+                            {/* Total */}
+                            <div className="flex justify-between items-end py-8 border-y border-gold/30">
+                                <span className="text-sm font-sans uppercase tracking-[0.4em] text-gold">Valor Total</span>
+                                <span className="text-6xl font-serif italic">R$ {totalValue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-2 gap-12 text-left bg-white p-10 border border-zinc-100 shadow-sm w-full max-w-3xl">
-                            <div className="space-y-4">
-                                <h4 className="text-xs font-sans font-bold uppercase tracking-widest text-black">Aprovação</h4>
-                                <p className="text-[10px] font-sans text-zinc-500 leading-relaxed">
-                                    Ao aprovar esta proposta, o cliente concorda com os termos de prestação de serviços e prazos estipulados.
-                                    <br /><br />
-                                    _______________________<br />
-                                    Assinatura do Cliente
-                                </p>
+                        <div className="mt-20 grid grid-cols-2 gap-20 max-w-4xl mx-auto">
+                            <div className="space-y-4 text-center">
+                                <div className="border-b border-white/20 pb-4"></div>
+                                <p className="text-[10px] font-sans uppercase tracking-[0.2em] text-zinc-500">Assinatura do Cliente</p>
                             </div>
-                            <div className="space-y-4">
-                                <h4 className="text-xs font-sans font-bold uppercase tracking-widest text-black">Próximos Passos</h4>
-                                <p className="text-[10px] font-sans text-zinc-500 leading-relaxed">
-                                    1. Devolução da via assinada<br />
-                                    2. Pagamento do sinal (50%)<br />
-                                    3. Início da produção
-                                </p>
+                            <div className="space-y-4 text-center">
+                                <div className="border-b border-white/20 pb-4"></div>
+                                <p className="text-[10px] font-sans uppercase tracking-[0.2em] text-zinc-500">Data</p>
                             </div>
                         </div>
                     </div>
 
-                    <div className="text-center border-t border-zinc-100 pt-8">
-                        <div className="flex justify-center items-center gap-4 mb-4 opacity-50">
-                            <img src="/logo.png" alt="" className="h-6 grayscale" />
-                        </div>
-                        <p className="text-[8px] font-sans uppercase tracking-[0.4em] text-zinc-400">
-                            {architectProfile?.officeName} • {architectProfile?.website || 'www.casalinda.com.br'}
+                    <div className="text-center opacity-30 pt-10">
+                        <p className="text-[8px] font-sans uppercase tracking-[0.5em]">
+                            {architectProfile?.officeName}
                         </p>
                     </div>
                 </div>
