@@ -466,7 +466,27 @@ export const ProposalGenerator: React.FC = () => {
                             </div>
 
                             <button
-                                onClick={() => setShowPrintPreview(true)}
+                                onClick={async () => {
+                                    if (!architectProfile) return;
+                                    try {
+                                        const { data, error } = await supabase
+                                            .from('proposals')
+                                            .insert({
+                                                architect_id: (await supabase.auth.getUser()).data.user?.id,
+                                                client_name: clientName,
+                                                total_value: totalProposalValue,
+                                                commission_value: totalProposalValue * (architectProfile.commissionRate / 100),
+                                                status: 'sent'
+                                            })
+                                            .select();
+
+                                        if (error) throw error;
+                                        setShowPrintPreview(true);
+                                    } catch (err) {
+                                        console.error('Error saving proposal:', err);
+                                        alert('Erro ao salvar proposta. Tente novamente.');
+                                    }
+                                }}
                                 disabled={proposalItems.length === 0 || !clientName}
                                 className="w-full bg-white text-black py-6 font-bold flex items-center justify-center gap-4 hover:bg-gold transition-all disabled:opacity-10 disabled:grayscale disabled:cursor-not-allowed uppercase tracking-[0.4em] text-[10px] shadow-[0_0_30px_rgba(255,255,255,0.05)]"
                             >

@@ -3,6 +3,7 @@ import { DollarSign, Award, ArrowRight, Inbox } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { ArchitectProfile } from '../types';
+import { Ranking } from '../components/Ranking';
 
 export const DashboardOverview: React.FC = () => {
     const navigate = useNavigate();
@@ -83,19 +84,25 @@ export const DashboardOverview: React.FC = () => {
                 </div>
             </div>
 
-            <div className="glass overflow-hidden min-h-[300px] flex flex-col">
-                <div className="p-8 border-b border-white/5 flex justify-between items-center bg-white/5">
-                    <h3 className="font-serif text-2xl text-white">Vendas Recentes</h3>
-                    <button
-                        onClick={() => navigate('/earnings')}
-                        className="text-[9px] text-gold hover:text-white font-bold uppercase tracking-[0.3em] transition-all flex items-center gap-2"
-                    >
-                        Relatório Completo <ArrowRight size={14} />
-                    </button>
-                </div>
-                <div className="flex-1 flex flex-col items-center justify-center p-12 text-zinc-600">
-                    <Inbox size={48} strokeWidth={1} className="mb-4 opacity-20" />
-                    <p className="text-[10px] uppercase tracking-[0.3em]">Nenhuma venda registrada ainda</p>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                {/* Ranking Section */}
+                <Ranking />
+
+                {/* Vendas Recentes / Placeholder */}
+                <div className="glass overflow-hidden min-h-[300px] flex flex-col">
+                    <div className="p-8 border-b border-white/5 flex justify-between items-center bg-white/5">
+                        <h3 className="font-serif text-2xl text-white">Vendas Recentes</h3>
+                        <button
+                            onClick={() => navigate('/earnings')}
+                            className="text-[9px] text-gold hover:text-white font-bold uppercase tracking-[0.3em] transition-all flex items-center gap-2"
+                        >
+                            Relatório Completo <ArrowRight size={14} />
+                        </button>
+                    </div>
+                    <div className="flex-1 flex flex-col items-center justify-center p-12 text-zinc-600">
+                        <Inbox size={48} strokeWidth={1} className="mb-4 opacity-20" />
+                        <p className="text-[10px] uppercase tracking-[0.3em]">Nenhuma venda registrada ainda</p>
+                    </div>
                 </div>
             </div>
 
