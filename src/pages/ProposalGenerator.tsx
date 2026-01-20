@@ -14,6 +14,7 @@ import {
 import { MOCK_ARTS, FRAMES, FINISHES } from '../constants';
 import { ArtPiece, ProposalItem, Frame, Finish, ArchitectProfile } from '../types';
 import { supabase } from '../lib/supabase';
+import { ProposalPrintView } from '../components/ProposalPrintView';
 
 export const ProposalGenerator: React.FC = () => {
     const [proposalItems, setProposalItems] = useState<ProposalItem[]>([]);
@@ -138,98 +139,13 @@ export const ProposalGenerator: React.FC = () => {
 
     if (showPrintPreview) {
         return (
-            <div className="max-w-4xl mx-auto bg-white min-h-[1122px] shadow-2xl p-24 text-black animate-fade-in relative">
-                <div className="no-print absolute top-0 left-0 w-full -translate-y-full pb-10 flex justify-between items-center">
-                    <button onClick={() => setShowPrintPreview(false)} className="flex items-center gap-3 text-[10px] font-bold uppercase tracking-[0.4em] text-white hover:text-gold transition-all">
-                        <ChevronLeft size={16} /> Editar Proposta
-                    </button>
-                    <button onClick={() => window.print()} className="bg-gold text-black px-12 py-5 text-[10px] font-bold flex items-center gap-4 hover:bg-white transition-all uppercase tracking-[0.5em] shadow-2xl">
-                        <Printer size={18} /> Imprimir Proposta
-                    </button>
-                </div>
-
-                {/* Header with Architect Branding */}
-                <div className="flex justify-between items-start mb-32">
-                    <div className="space-y-12">
-                        <div className="w-56 h-56 bg-zinc-50 p-6 border border-zinc-100 shadow-sm flex items-center justify-center">
-                            {architectProfile?.logoUrl ? (
-                                <img src={architectProfile.logoUrl} className="w-full h-full object-contain" alt="Branding" />
-                            ) : (
-                                <span className="text-[10px] text-zinc-300 font-bold tracking-[0.4em] uppercase text-center">
-                                    Seu Logo Aqui
-                                </span>
-                            )}
-                        </div>
-                        <div>
-                            <h3 className="text-3xl font-serif text-black">
-                                {architectProfile?.officeName || architectProfile?.name || 'Seu Escritório'}
-                            </h3>
-                            <p className="text-[10px] text-zinc-400 uppercase tracking-[0.6em] font-medium mt-2">Interior Design & Art Curation</p>
-                        </div>
-                    </div>
-                    <div className="text-right space-y-4">
-                        <h1 className="text-7xl font-serif uppercase tracking-[0.1em] text-black/10">Project Selection</h1>
-                        <div className="space-y-2">
-                            <p className="text-[10px] text-zinc-400 font-bold uppercase tracking-[0.4em]">Ref: CP-{Math.floor(Math.random() * 99999).toString().padStart(5, '0')}</p>
-                            <p className="text-[10px] text-zinc-400 font-bold uppercase tracking-[0.4em]">Data: {new Date().toLocaleDateString('pt-BR')}</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="mb-24 py-16 border-y border-zinc-100">
-                    <p className="text-[9px] uppercase tracking-[0.6em] text-zinc-300 font-bold mb-8 italic">Composição Exclusiva para:</p>
-                    <h2 className="text-7xl font-serif text-black tracking-tight">{clientName}</h2>
-                </div>
-
-                <div className="space-y-40 mb-40">
-                    {proposalItems.map((item, idx) => (
-                        <div key={idx} className="flex gap-24 items-start break-inside-avoid">
-                            <div className="w-1/2 shadow-2xl bg-zinc-50 border border-zinc-100">
-                                <img src={item.artPiece?.imageUrl || item.customImageUrl} className="w-full h-auto" alt={item.title} />
-                            </div>
-                            <div className="w-1/2 flex flex-col pt-10">
-                                <p className="text-[10px] text-gold-leaf font-bold uppercase tracking-[0.5em] mb-4">{item.artPiece?.category || 'Custom'}</p>
-                                <h4 className="text-5xl font-serif mb-8 text-black leading-tight">{item.title}</h4>
-
-                                <div className="space-y-4 mb-16">
-                                    <div className="flex justify-between border-b border-zinc-100 pb-2">
-                                        <span className="text-[9px] uppercase tracking-widest text-zinc-400">Moldura</span>
-                                        <span className="text-[10px] uppercase font-bold text-black">{item.frame?.name}</span>
-                                    </div>
-                                    <div className="flex justify-between border-b border-zinc-100 pb-2">
-                                        <span className="text-[9px] uppercase tracking-widest text-zinc-400">Acabamento</span>
-                                        <span className="text-[10px] uppercase font-bold text-black">{item.finish?.name}</span>
-                                    </div>
-                                </div>
-
-                                <div className="mt-auto bg-zinc-50 p-10 border-l-4 border-black">
-                                    <p className="text-[9px] text-zinc-400 font-bold uppercase tracking-[0.4em] mb-2">Valor de Investimento:</p>
-                                    <p className="text-4xl font-serif text-black">R$ {item.price.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
-                                </div>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-
-                <div className="bg-black text-white p-20 flex justify-between items-center mb-32">
-                    <div className="space-y-2">
-                        <p className="text-2xl font-serif tracking-[0.3em] uppercase">Investimento Total</p>
-                        <p className="text-[9px] text-zinc-500 uppercase tracking-[0.4em]">Seleção Premium Casa Linda</p>
-                    </div>
-                    <div className="text-right">
-                        <p className="text-7xl font-serif">R$ {totalProposalValue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
-                    </div>
-                </div>
-
-                <div className="pt-20 border-t border-zinc-100 flex justify-between items-end">
-                    <div className="text-[9px] text-zinc-300 font-bold tracking-[0.5em] uppercase">
-                        <p>{architectProfile?.officeName || architectProfile?.name || 'Seu Escritório'} & Casa Linda Decorações</p>
-                    </div>
-                    <div className="text-xl font-serif tracking-[0.4em] uppercase">
-                        <img src="/logo.png" alt="Casa Linda" className="h-10 object-contain grayscale" />
-                    </div>
-                </div>
-            </div>
+            <ProposalPrintView
+                items={proposalItems}
+                clientName={clientName}
+                architectProfile={architectProfile}
+                totalValue={totalProposalValue}
+                onClose={() => setShowPrintPreview(false)}
+            />
         );
     }
 
