@@ -16,7 +16,7 @@ export const FRAMES: Frame[] = [
   { id: 'p3', name: 'Galeria Imperial', price: 520, category: 'Premium', subCategory: 'Clássicas', allowsGlass: true, thumbnailUrl: '/images/frames/galeria-imperial-v2.jpg' },
 
   // Premium - Luxo
-  { id: 'p4', name: 'Roma Moderna', price: 600, category: 'Premium', subCategory: 'Luxo', allowsGlass: true },
+  { id: 'p4', name: 'Roma Moderna', price: 600, category: 'Premium', subCategory: 'Luxo', allowsGlass: true, thumbnailUrl: '/images/frames/roma-moderna.jpg' },
   { id: 'p5', name: 'Palaciana', price: 620, category: 'Premium', subCategory: 'Luxo', allowsGlass: true },
   { id: 'p6', name: 'Realce Imperial', price: 580, category: 'Premium', subCategory: 'Luxo', allowsGlass: true },
   { id: 'p7', name: 'Imperial Prata e Ouro', price: 650, category: 'Premium', subCategory: 'Luxo', allowsGlass: true },
