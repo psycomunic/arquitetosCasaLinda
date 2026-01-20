@@ -220,7 +220,8 @@ export const ProposalPrintView: React.FC<ProposalPrintViewProps> = ({
                     html, body { 
                         height: auto; 
                         overflow: visible; 
-                        background: white;
+                        background-color: white !important;
+                        background: white !important;
                         -webkit-print-color-adjust: exact; 
                         print-color-adjust: exact;
                     }
