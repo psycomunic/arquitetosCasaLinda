@@ -8,7 +8,10 @@ import {
   Zap,
   Monitor,
   Sparkles,
-  Star
+  Star,
+  Globe,
+  FileCheck,
+  Users
 } from 'lucide-react';
 
 export const Home: React.FC = () => {
@@ -56,7 +59,7 @@ export const Home: React.FC = () => {
       </nav>
 
       {/* Dramatic Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center px-6 overflow-hidden">
+      <section className="relative min-h-screen flex items-center justify-center px-6 overflow-hidden pt-20">
         <div className="absolute inset-0 z-0">
           <img
             src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?q=80&w=2000&auto=format&fit=crop"
@@ -66,31 +69,37 @@ export const Home: React.FC = () => {
           <div className="absolute inset-0 bg-gradient-to-b from-canvas via-transparent to-canvas"></div>
         </div>
 
-        <div className="container mx-auto relative z-10 text-center space-y-12">
-          <div className="inline-flex items-center gap-3 px-6 py-2 glass rounded-full animate-float">
-            <Lock size={12} className="text-gold" />
-            <span className="text-[9px] uppercase tracking-[0.4em] font-bold text-zinc-300">Apenas para Arquitetos e Designers</span>
+        <div className="container mx-auto relative z-10 text-center space-y-10">
+          {/* Social Proof / Authority Badges */}
+          <div className="flex flex-wrap justify-center gap-4 md:gap-8 mb-8">
+            <div className="glass px-4 py-2 rounded-full flex items-center gap-2">
+              <Globe size={12} className="text-gold" />
+              <span className="text-[9px] uppercase tracking-widest text-zinc-300 font-bold">Exportamos para os EUA</span>
+            </div>
+            <div className="glass px-4 py-2 rounded-full flex items-center gap-2">
+              <FileCheck size={12} className="text-gold" />
+              <span className="text-[9px] uppercase tracking-widest text-zinc-300 font-bold">Certificado de Autenticidade</span>
+            </div>
+            <div className="glass px-4 py-2 rounded-full flex items-center gap-2">
+              <Users size={12} className="text-gold" />
+              <span className="text-[9px] uppercase tracking-widest text-zinc-300 font-bold">+5.000 Arquitetos Ativos</span>
+            </div>
           </div>
 
-          <h1 className="text-6xl md:text-[9rem] font-serif leading-none tracking-tighter text-white">
-            Onde a Técnica <br />
-            <span className="text-gradient-gold italic font-light">Encontra a Obra.</span>
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-serif leading-tight tracking-tight text-white max-w-5xl mx-auto">
+            Hoje somos a maior marca brasileira de quadros decorativos e referência internacional — <span className="text-gradient-gold italic">e queremos arquitetos como você ao nosso lado.</span>
           </h1>
 
-          <p className="text-sm md:text-xl text-zinc-400 font-light max-w-2xl mx-auto leading-relaxed uppercase tracking-[0.1em]">
-            Elevamos a curadoria de arte a um padrão de elite. <br />
-            <span className="text-white font-bold">20% de comissão direta</span> e ferramentas de luxo para o seu escritório.
+          <p className="text-sm md:text-xl text-zinc-400 font-light max-w-3xl mx-auto leading-relaxed">
+            Comissão de até <span className="text-white font-bold">20%</span>, suporte dedicado e certificação de qualidade internacional.
           </p>
 
           <div className="flex flex-col md:flex-row gap-6 justify-center pt-8">
             <button
               onClick={() => navigate('/register')}
-              className="group bg-gold-leaf text-black px-12 py-7 text-xs uppercase tracking-[0.4em] font-bold shadow-[0_0_50px_rgba(197,160,89,0.3)] hover:shadow-[0_0_80px_rgba(197,160,89,0.5)] transition-all hover:-translate-y-1"
+              className="group bg-gold-leaf text-black px-12 py-7 text-xs uppercase tracking-[0.4em] font-bold shadow-[0_0_50px_rgba(197,160,89,0.3)] hover:shadow-[0_0_80px_rgba(197,160,89,0.5)] transition-all hover:-translate-y-1 transform active:scale-95"
             >
-              Iniciar Parceria Private
-            </button>
-            <button className="glass text-white px-12 py-7 text-xs uppercase tracking-[0.4em] font-bold hover:bg-white/10 transition-all">
-              Conhecer o Acervo
+              QUERO MEU ACESSO DE PARCEIRO
             </button>
           </div>
         </div>
@@ -101,8 +110,37 @@ export const Home: React.FC = () => {
         </div>
       </section>
 
-      {/* Seção Proposta: Glass Cards */}
-      <section id="proposta" className="py-40 px-6 bg-canvas relative">
+      {/* Seção Como Funciona (Processo Simples) */}
+      <section className="py-24 bg-canvas px-6 border-b border-white/5">
+        <div className="max-w-6xl mx-auto text-center space-y-16">
+          <div className="space-y-4">
+            <h2 className="text-gold text-[10px] uppercase tracking-[0.5em] font-bold">Processo Simplificado</h2>
+            <h3 className="text-4xl md:text-5xl font-serif text-white">Como Funciona a Parceria</h3>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-12 relative">
+            {/* Connector Line */}
+            <div className="hidden md:block absolute top-12 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-gold/30 to-transparent -z-10"></div>
+
+            {[
+              { icon: "01", title: "Cadastro Aprovado", desc: "Solicite seu acesso e aguarde a validação do seu perfil profissional." },
+              { icon: "02", title: "Especifique ou Venda", desc: "Use nossos links trackeáveis ou solicite projetos personalizados." },
+              { icon: "03", title: "Receba 20%", desc: "Comissão garantida e depositada automaticamente em sua conta." }
+            ].map((step, i) => (
+              <div key={i} className="bg-canvas p-6 relative group">
+                <div className="w-24 h-24 mx-auto bg-ebonite border border-gold/20 rounded-full flex items-center justify-center text-3xl font-serif text-gold mb-8 group-hover:scale-110 transition-transform shadow-[0_0_30px_rgba(197,160,89,0.1)]">
+                  {step.icon}
+                </div>
+                <h4 className="text-lg font-bold text-white uppercase tracking-widest mb-4">{step.title}</h4>
+                <p className="text-zinc-500 text-sm leading-relaxed">{step.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Seção Proposta de Valor (O que oferecemos) */}
+      <section id="proposta" className="py-40 px-6 bg-ebonite relative">
         <div className="max-w-7xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-24 items-center">
             <div className="space-y-10">
@@ -144,6 +182,36 @@ export const Home: React.FC = () => {
               </div>
               {/* Decorative elements */}
               <div className="absolute -top-10 -left-10 w-40 h-40 bg-gold/10 rounded-full blur-3xl"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Social Proof Section */}
+      <section className="py-24 bg-canvas border-y border-white/5">
+        <div className="container mx-auto px-6 text-center">
+          <p className="text-[9px] uppercase tracking-[0.4em] font-bold text-zinc-500 mb-12">Arquitetos e Escritórios que confiam</p>
+          <div className="flex flex-wrap justify-center items-center gap-16 grayscale opacity-40 hover:opacity-100 transition-opacity duration-500">
+            {/* Placeholders for Partner Logos - In production use actual images */}
+            {['STUDIO A', 'ARQ DESIGN', 'CASAMOGNO', 'ELEVATO', 'MOOD'].map((logo, i) => (
+              <h3 key={i} className="text-2xl font-serif text-white italic">{logo}</h3>
+            ))}
+          </div>
+
+          <div className="mt-20 grid md:grid-cols-2 gap-8 max-w-4xl mx-auto text-left">
+            <div className="glass p-8">
+              <div className="flex gap-1 mb-4 text-gold">
+                <Star size={14} fill="#c5a059" /><Star size={14} fill="#c5a059" /><Star size={14} fill="#c5a059" /><Star size={14} fill="#c5a059" /><Star size={14} fill="#c5a059" />
+              </div>
+              <p className="text-zinc-400 text-sm italic mb-6">"A facilidade de gerar propostas com minha marca e a qualidade das obras impressionam meus clientes. O cashback de 20% é imbatível."</p>
+              <p className="text-xs font-bold text-white uppercase tracking-widest">Mariana Costa, Arquiteta</p>
+            </div>
+            <div className="glass p-8">
+              <div className="flex gap-1 mb-4 text-gold">
+                <Star size={14} fill="#c5a059" /><Star size={14} fill="#c5a059" /><Star size={14} fill="#c5a059" /><Star size={14} fill="#c5a059" /><Star size={14} fill="#c5a059" />
+              </div>
+              <p className="text-zinc-400 text-sm italic mb-6">"Finalmente uma parceira que entende o mercado de luxo. O suporte para projetos personalizados faz toda a diferença."</p>
+              <p className="text-xs font-bold text-white uppercase tracking-widest">Roberto Almeida, Designer</p>
             </div>
           </div>
         </div>
@@ -204,9 +272,33 @@ export const Home: React.FC = () => {
                 onClick={() => navigate('/register')}
                 className="w-full py-6 bg-white text-black text-[10px] uppercase tracking-[0.5em] font-bold hover:bg-gold transition-all shadow-[0_10px_40px_rgba(255,255,255,0.1)]"
               >
-                Ativar Minha Conta Premium
+                QUERO MEU ACESSO DE PARCEIRO
               </button>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section className="py-24 bg-ebonite px-6">
+        <div className="max-w-4xl mx-auto space-y-16">
+          <div className="text-center space-y-4">
+            <h2 className="text-gold text-[10px] uppercase tracking-[0.5em] font-bold">Dúvidas Frequentes</h2>
+            <h3 className="text-4xl font-serif text-white">Perguntas Comuns</h3>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-8">
+            {[
+              { q: "Preciso pagar para me cadastrar?", a: "Não. O acesso ao programa Private é totalmente gratuito para arquitetos e designers com CAU/ABD ativo." },
+              { q: "Como a comissão é paga?", a: "O pagamento é realizado via transferência bancária ou PIX até o dia 10 do mês subsequente à aprovação do pedido." },
+              { q: "Existe exclusividade?", a: "Não exigimos exclusividade. Acreditamos que você escolhe a Casa Linda pela qualidade e serviço, não por contrato." },
+              { q: "Vocês enviam para todo o Brasil?", a: "Sim, com embalagem reforçada e seguro total. Temos parceiros logísticos especializados em obras de arte." }
+            ].map((faq, i) => (
+              <div key={i} className="glass p-8 space-y-4 hover:bg-white/5 transition-colors">
+                <h4 className="text-sm font-bold text-white uppercase tracking-widest">{faq.q}</h4>
+                <p className="text-xs text-zinc-400 leading-relaxed text-justify">{faq.a}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -230,7 +322,7 @@ export const Home: React.FC = () => {
               onClick={() => navigate('/register')}
               className="group relative overflow-hidden bg-white text-black px-20 py-8 text-[10px] uppercase tracking-[0.5em] font-bold transition-all hover:scale-105"
             >
-              <span className="relative z-10 flex items-center gap-4">Solicitar Acesso à Galeria <ArrowRight size={16} /></span>
+              <span className="relative z-10 flex items-center gap-4">QUERO AUMENTAR MINHAS VENDAS COM CASA LINDA <ArrowRight size={16} /></span>
               <div className="absolute inset-0 bg-gold translate-y-full group-hover:translate-y-0 transition-transform duration-500"></div>
             </button>
           </div>
