@@ -23,10 +23,10 @@ export const FRAMES: Frame[] = [
   { id: 'p8', name: 'Barroco Imperial', price: 700, category: 'Premium', subCategory: 'Luxo', allowsGlass: true, thumbnailUrl: '/images/frames/barroco-imperial.jpg' },
 
   // Premium - Flutuante/Canaleta
-  { id: 'p9', name: 'Flutuante Preta', price: 400, category: 'Premium', subCategory: 'Flutuante/Canaleta', allowsGlass: false, thumbnailUrl: '/images/frames/moldura-canaleta.png' },
-  { id: 'p10', name: 'Flutuante Branca', price: 400, category: 'Premium', subCategory: 'Flutuante/Canaleta', allowsGlass: false, thumbnailUrl: '/images/frames/moldura-canaleta.png' },
-  { id: 'p11', name: 'Flutuante Dourada', price: 450, category: 'Premium', subCategory: 'Flutuante/Canaleta', allowsGlass: false, thumbnailUrl: '/images/frames/moldura-canaleta.png' },
-  { id: 'p12', name: 'Flutuante Madeira', price: 420, category: 'Premium', subCategory: 'Flutuante/Canaleta', allowsGlass: false, thumbnailUrl: '/images/frames/moldura-canaleta.png' },
+  { id: 'p9', name: 'Flutuante Preta', price: 400, category: 'Premium', subCategory: 'Flutuante/Canaleta', allowsGlass: false, thumbnailUrl: '/images/frames/flutuante-preta.png' },
+  { id: 'p10', name: 'Flutuante Branca', price: 400, category: 'Premium', subCategory: 'Flutuante/Canaleta', allowsGlass: false, thumbnailUrl: '/images/frames/flutuante-branca.png' },
+  { id: 'p11', name: 'Flutuante Dourada', price: 450, category: 'Premium', subCategory: 'Flutuante/Canaleta', allowsGlass: false, thumbnailUrl: '/images/frames/flutuante-dourada.jpg' },
+  { id: 'p12', name: 'Flutuante Madeira', price: 420, category: 'Premium', subCategory: 'Flutuante/Canaleta', allowsGlass: false, thumbnailUrl: '/images/frames/flutuante-madeira.jpg' },
 
   // Premium - Côncava
   { id: 'p13', name: 'Côncava Preta', price: 350, category: 'Premium', subCategory: 'Côncava', allowsGlass: true, thumbnailUrl: '/images/frames/premium-vidro.png' },
