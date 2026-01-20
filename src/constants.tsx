@@ -43,6 +43,29 @@ export const FINISHES: Finish[] = [
   { id: 'f2', name: 'Com Vidro', price: 250.00, isGlass: true }
 ];
 
+export const FORMATS = [
+  {
+    id: 'quadrado',
+    label: '1 Tela Quadrado',
+    sizes: ['85x85cm', '115x115cm', '145x145cm']
+  },
+  {
+    id: 'padrao',
+    label: '1 Tela',
+    sizes: ['85x55cm', '115x75cm', '145x95cm', '175x100cm']
+  },
+  {
+    id: 'dupla',
+    label: '2 Telas',
+    sizes: ['55x35cm cada', '85x55cm cada', '115x75cm cada', '145x95cm cada', '175x95cm cada']
+  },
+  {
+    id: 'tripla',
+    label: '3 Telas',
+    sizes: ['40x20cm cada', '55x30cm cada', '70x40cm cada', '90x50cm cada', '120x70cm cada']
+  }
+];
+
 export const MOCK_ARTS: ArtPiece[] = [
   {
     id: '1',

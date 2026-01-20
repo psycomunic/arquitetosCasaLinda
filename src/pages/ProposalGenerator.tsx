@@ -9,10 +9,13 @@ import {
     ChevronLeft,
     Upload,
     Layers,
-    Box
+    Box,
+    Layout,
+    Square,
+    Maximize
 } from 'lucide-react';
-import { MOCK_ARTS, FRAMES, FINISHES } from '../constants';
-import { ArtPiece, ProposalItem, Frame, Finish, ArchitectProfile } from '../types';
+import { MOCK_ARTS, FRAMES, FINISHES, FORMATS } from '../constants';
+import { ArtPiece, ProposalItem, Frame, Finish, ArchitectProfile, Format } from '../types';
 import { supabase } from '../lib/supabase';
 import { ProposalPrintView } from '../components/ProposalPrintView';
 
@@ -34,12 +37,13 @@ export const ProposalGenerator: React.FC = () => {
                     .single();
 
                 if (data) {
+                    const profileData = data as any;
                     setArchitectProfile({
-                        name: data.name,
-                        officeName: data.office_name,
-                        commissionRate: Number(data.commission_rate),
-                        totalEarnings: Number(data.total_earnings),
-                        logoUrl: data.logo_url
+                        name: profileData.name,
+                        officeName: profileData.office_name,
+                        commissionRate: Number(profileData.commission_rate),
+                        totalEarnings: Number(profileData.total_earnings),
+                        logoUrl: profileData.logo_url
                     });
                 }
             }
@@ -48,7 +52,16 @@ export const ProposalGenerator: React.FC = () => {
     }, []);
 
     // Current item being configured
+    const [selectedFormat, setSelectedFormat] = useState<Format>(FORMATS[1]); // Default to 1 Tela
+    const [selectedSize, setSelectedSize] = useState<string>(FORMATS[1].sizes?.[0] || '');
     const [selectedFrame, setSelectedFrame] = useState<Frame>(FRAMES[0]);
+
+    // Update selected size when format changes
+    useEffect(() => {
+        if (selectedFormat.sizes && selectedFormat.sizes.length > 0) {
+            setSelectedSize(selectedFormat.sizes[0]);
+        }
+    }, [selectedFormat]);
     const [selectedFinish, setSelectedFinish] = useState<Finish>(FINISHES[0]);
 
     // Group frames by category and subcategory
@@ -65,8 +78,6 @@ export const ProposalGenerator: React.FC = () => {
 
     const handleFrameSelect = (frame: Frame) => {
         setSelectedFrame(frame);
-        // If the new frame doesn't allow glass and the current finish is glass,
-        // switch to Canvas Standard (f1)
         if (!frame.allowsGlass && selectedFinish.isGlass) {
             const defaultFinish = FINISHES.find(f => !f.isGlass) || FINISHES[0];
             setSelectedFinish(defaultFinish);
@@ -85,7 +96,11 @@ export const ProposalGenerator: React.FC = () => {
     }, [searchTerm]);
 
     const calculateItemPrice = (basePrice: number, frame: Frame, finish: Finish) => {
-        return basePrice + frame.price + finish.price;
+        let multiplier = 1;
+        if (selectedFormat.id === 'dupla') multiplier = 2;
+        if (selectedFormat.id === 'tripla') multiplier = 3;
+
+        return (basePrice + frame.price + finish.price) * multiplier;
     };
 
     const handleAddArtToProposal = (art: ArtPiece) => {
@@ -96,6 +111,8 @@ export const ProposalGenerator: React.FC = () => {
             title: art.title,
             frame: selectedFrame,
             finish: selectedFinish,
+            format: selectedFormat,
+            size: selectedSize,
             quantity: 1,
             price: price
         };
@@ -112,6 +129,8 @@ export const ProposalGenerator: React.FC = () => {
             title: customTitle || 'Imagem do Cliente',
             frame: selectedFrame,
             finish: selectedFinish,
+            format: selectedFormat,
+            size: selectedSize,
             quantity: 1,
             price: price
         };
@@ -149,6 +168,48 @@ export const ProposalGenerator: React.FC = () => {
         );
     }
 
+    const renderFormatIcon = (formatId: string) => {
+        switch (formatId) {
+            case 'quadrado':
+                return (
+                    <div className="w-16 h-16 bg-zinc-200 flex items-center justify-center rounded shadow-inner">
+                        <div className="w-10 h-10 border-2 border-black bg-white"></div>
+                    </div>
+                );
+            case 'padrao':
+                return (
+                    <div className="w-16 h-16 bg-zinc-200 flex items-center justify-center rounded shadow-inner">
+                        <div className="w-8 h-10 border-2 border-black bg-white"></div>
+                    </div>
+                );
+            case 'dupla':
+                return (
+                    <div className="w-16 h-16 bg-zinc-200 flex items-center justify-center gap-1 rounded shadow-inner px-2">
+                        <div className="w-6 h-8 border-2 border-black bg-white"></div>
+                        <div className="w-6 h-8 border-2 border-black bg-white"></div>
+                    </div>
+                );
+            case 'tripla':
+                return (
+                    <div className="w-16 h-16 bg-zinc-200 flex items-center justify-center gap-1 rounded shadow-inner px-1">
+                        <div className="w-4 h-6 border-2 border-black bg-white"></div>
+                        <div className="w-4 h-6 border-2 border-black bg-white"></div>
+                        <div className="w-4 h-6 border-2 border-black bg-white"></div>
+                    </div>
+                );
+            default:
+                return null;
+        }
+    };
+
+    const renderSizeIcon = () => {
+        return (
+            <div className="w-12 h-12 bg-zinc-200 flex items-center justify-center rounded shadow-inner">
+                <Maximize size={20} className="text-zinc-600" />
+            </div>
+        );
+    };
+
     return (
         <div className="animate-fade-in no-print space-y-12">
             <header className="mb-12">
@@ -158,7 +219,49 @@ export const ProposalGenerator: React.FC = () => {
             <div className="flex flex-col lg:flex-row gap-12">
                 {/* Configuration Area */}
                 <div className="w-full lg:w-2/3 space-y-10">
-                    {/* Item Configuration (Frame/Finish) */}
+
+                    {/* 1. Format Selection */}
+                    <div className="glass p-10 space-y-8">
+                        <div className="flex items-center gap-3 text-gold">
+                            <Layout size={18} />
+                            <h4 className="text-[10px] uppercase tracking-[0.4em] font-bold">Escolha o Formato</h4>
+                        </div>
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            {FORMATS.map(f => (
+                                <button
+                                    key={f.id}
+                                    onClick={() => setSelectedFormat(f)}
+                                    className={`p-6 flex flex-col items-center gap-4 border transition-all rounded-lg ${selectedFormat.id === f.id ? 'border-gold bg-gold/5' : 'border-white/5 bg-white/5 hover:border-white/10'}`}
+                                >
+                                    {renderFormatIcon(f.id)}
+                                    <span className="text-[9px] uppercase tracking-widest font-bold text-white">{f.label}</span>
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* 2. Size Selection */}
+                    <div className="glass p-10 space-y-8 animate-fade-in">
+                        <div className="flex items-center gap-3 text-gold">
+                            <Maximize size={18} />
+                            <h4 className="text-[10px] uppercase tracking-[0.4em] font-bold">Escolha o Tamanho</h4>
+                        </div>
+                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+                            {selectedFormat.sizes?.map(size => (
+                                <button
+                                    key={size}
+                                    onClick={() => setSelectedSize(size)}
+                                    className={`p-4 flex flex-col items-center gap-3 border transition-all rounded-lg ${selectedSize === size ? 'border-gold bg-gold/5' : 'border-white/5 bg-white/5 hover:border-white/10'}`}
+                                >
+                                    {renderSizeIcon()}
+                                    <span className="text-[9px] uppercase tracking-widest font-bold text-white text-center">{size}</span>
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+
+
+                    {/* 3. Item Configuration (Frame/Finish) */}
                     <div className="glass p-10 space-y-12">
                         <div className="space-y-8">
                             <div className="flex items-center gap-3 text-gold">
@@ -353,9 +456,15 @@ export const ProposalGenerator: React.FC = () => {
                                         <img src={item.artPiece?.imageUrl || item.customImageUrl} className="w-20 h-24 object-cover rounded shadow-lg" alt="" />
                                         <div className="flex-1 overflow-hidden">
                                             <p className="text-xs font-bold text-white truncate uppercase tracking-widest">{item.title}</p>
-                                            <div className="flex flex-wrap gap-2 mt-2">
-                                                <span className="text-[8px] bg-white/5 px-2 py-1 rounded text-zinc-400 uppercase tracking-tighter">{item.frame?.name}</span>
-                                                <span className="text-[8px] bg-white/5 px-2 py-1 rounded text-zinc-400 uppercase tracking-tighter">{item.finish?.name}</span>
+                                            <div className="flex flex-col gap-1 mt-2">
+                                                <div className="flex flex-wrap gap-1">
+                                                    <span className="text-[8px] bg-white/5 px-2 py-1 rounded text-zinc-400 uppercase tracking-tighter">{item.format?.label || '1 Tela'}</span>
+                                                    {item.size && <span className="text-[8px] bg-white/5 px-2 py-1 rounded text-zinc-400 uppercase tracking-tighter">{item.size}</span>}
+                                                </div>
+                                                <div className="flex flex-wrap gap-1">
+                                                    <span className="text-[8px] bg-white/5 px-2 py-1 rounded text-zinc-400 uppercase tracking-tighter">{item.frame?.name}</span>
+                                                    <span className="text-[8px] bg-white/5 px-2 py-1 rounded text-zinc-400 uppercase tracking-tighter">{item.finish?.name}</span>
+                                                </div>
                                             </div>
                                             <p className="text-[10px] text-gold mt-2 font-bold">R$ {item.price.toLocaleString('pt-BR')}</p>
                                         </div>
@@ -393,7 +502,7 @@ export const ProposalGenerator: React.FC = () => {
                                                 total_value: totalProposalValue,
                                                 commission_value: totalProposalValue * (architectProfile.commissionRate / 100),
                                                 status: 'sent'
-                                            })
+                                            } as any)
                                             .select();
 
                                         if (error) throw error;

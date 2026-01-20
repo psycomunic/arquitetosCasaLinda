@@ -24,6 +24,13 @@ export interface ArtPiece {
   imageUrl: string;
 }
 
+export interface Format {
+  id: string;
+  label: string;
+  image?: string;
+  sizes?: string[]; // New field for available sizes
+}
+
 export interface ProposalItem {
   id: string;
   artPiece?: ArtPiece;
@@ -31,6 +38,8 @@ export interface ProposalItem {
   title: string;
   frame?: Frame;
   finish?: Finish;
+  format?: Format;
+  size?: string; // New field for selected size
   quantity: number;
   price: number;
 }
