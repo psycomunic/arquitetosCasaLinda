@@ -52,7 +52,7 @@ export const CustomProjectModal: React.FC<CustomProjectModalProps> = ({ isOpen, 
                             <div className="grid grid-cols-2 gap-6">
                                 <div className="space-y-2">
                                     <label className="text-xs font-bold uppercase tracking-widest text-zinc-700">Tipo de Demanda</label>
-                                    <select className="w-full bg-zinc-50 border border-zinc-200 rounded-xl p-4 text-sm focus:outline-none focus:border-gold transition-colors appearance-none">
+                                    <select className="w-full bg-zinc-50 border border-zinc-200 rounded-xl p-4 text-sm text-zinc-900 focus:outline-none focus:border-gold transition-colors appearance-none">
                                         <option>Obra sob Medida</option>
                                         <option>Artista Residente (Exclusivo)</option>
                                         <option>Espelhos Especiais</option>
@@ -64,7 +64,7 @@ export const CustomProjectModal: React.FC<CustomProjectModalProps> = ({ isOpen, 
                                     <input
                                         type="text"
                                         placeholder="Ex: Lobby Hotel, Living..."
-                                        className="w-full bg-zinc-50 border border-zinc-200 rounded-xl p-4 text-sm focus:outline-none focus:border-gold transition-colors"
+                                        className="w-full bg-zinc-50 border border-zinc-200 rounded-xl p-4 text-sm text-zinc-900 focus:outline-none focus:border-gold transition-colors"
                                     />
                                 </div>
                             </div>
@@ -76,14 +76,14 @@ export const CustomProjectModal: React.FC<CustomProjectModalProps> = ({ isOpen, 
                                 <input
                                     type="text"
                                     placeholder="Ex: Tons terrosos, minimalista, vibrante..."
-                                    className="w-full bg-zinc-50 border border-zinc-200 rounded-xl p-4 text-sm focus:outline-none focus:border-gold transition-colors"
+                                    className="w-full bg-zinc-50 border border-zinc-200 rounded-xl p-4 text-sm text-zinc-900 focus:outline-none focus:border-gold transition-colors"
                                 />
                             </div>
 
                             <div className="space-y-2">
                                 <label className="text-xs font-bold uppercase tracking-widest text-zinc-700">Detalhamento</label>
                                 <textarea
-                                    className="w-full bg-zinc-50 border border-zinc-200 rounded-xl p-4 text-sm focus:outline-none focus:border-gold transition-colors min-h-[100px]"
+                                    className="w-full bg-zinc-50 border border-zinc-200 rounded-xl p-4 text-sm text-zinc-900 focus:outline-none focus:border-gold transition-colors min-h-[100px]"
                                     placeholder="Descreva a visão para este projeto..."
                                 ></textarea>
                             </div>
