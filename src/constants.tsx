@@ -17,10 +17,10 @@ export const FRAMES: Frame[] = [
 
   // Premium - Luxo
   { id: 'p4', name: 'Roma Moderna', price: 600, category: 'Premium', subCategory: 'Luxo', allowsGlass: true, thumbnailUrl: '/images/frames/roma-moderna.jpg' },
-  { id: 'p5', name: 'Palaciana', price: 620, category: 'Premium', subCategory: 'Luxo', allowsGlass: true },
-  { id: 'p6', name: 'Realce Imperial', price: 580, category: 'Premium', subCategory: 'Luxo', allowsGlass: true },
-  { id: 'p7', name: 'Imperial Prata e Ouro', price: 650, category: 'Premium', subCategory: 'Luxo', allowsGlass: true },
-  { id: 'p8', name: 'Barroco Imperial', price: 700, category: 'Premium', subCategory: 'Luxo', allowsGlass: true },
+  { id: 'p5', name: 'Palaciana', price: 620, category: 'Premium', subCategory: 'Luxo', allowsGlass: true, thumbnailUrl: '/images/frames/palaciana.jpg' },
+  { id: 'p6', name: 'Realce Imperial', price: 580, category: 'Premium', subCategory: 'Luxo', allowsGlass: true, thumbnailUrl: '/images/frames/realce-imperial.jpg' },
+  { id: 'p7', name: 'Imperial Prata e Ouro', price: 650, category: 'Premium', subCategory: 'Luxo', allowsGlass: true, thumbnailUrl: '/images/frames/imperial-prata-e-ouro.jpg' },
+  { id: 'p8', name: 'Barroco Imperial', price: 700, category: 'Premium', subCategory: 'Luxo', allowsGlass: true, thumbnailUrl: '/images/frames/barroco-imperial.jpg' },
 
   // Premium - Flutuante/Canaleta
   { id: 'p9', name: 'Flutuante Preta', price: 400, category: 'Premium', subCategory: 'Flutuante/Canaleta', allowsGlass: false, thumbnailUrl: '/images/frames/moldura-canaleta.png' },
