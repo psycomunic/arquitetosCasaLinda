@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { ProposalItem, ArchitectProfile } from '../types';
 
 interface ProposalPrintViewProps {
@@ -36,7 +37,7 @@ export const ProposalPrintView: React.FC<ProposalPrintViewProps> = ({
     // Get up to 4 images for the cover collage
     const coverImages = items.slice(0, 4).map(item => item.artPiece?.imageUrl || item.customImageUrl);
 
-    return (
+    return createPortal(
         <div className="fixed inset-0 bg-white z-[9999] overflow-y-auto animate-fade-in text-black font-serif">
             {/* Control Bar - Hidden in Print */}
             <div className="fixed top-0 left-0 w-full bg-zinc-900 text-white p-4 flex justify-between items-center no-print z-50 shadow-xl font-sans">
@@ -225,6 +226,9 @@ export const ProposalPrintView: React.FC<ProposalPrintViewProps> = ({
                         -webkit-print-color-adjust: exact; 
                         print-color-adjust: exact;
                     }
+                    /* HIDE MAIN APP ROOT */
+                    #root { display: none !important; }
+
                     /* Reset the fixed modal container */
                     .fixed.inset-0 {
                         position: static !important;
@@ -248,6 +252,7 @@ export const ProposalPrintView: React.FC<ProposalPrintViewProps> = ({
                     ::-webkit-scrollbar { display: none; }
                 }
             `}</style>
-        </div>
+        </div>,
+        document.body
     );
 };
