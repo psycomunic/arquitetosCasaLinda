@@ -130,6 +130,31 @@ export const Settings: React.FC = () => {
         }
     };
 
+    const handleCepChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const cep = e.target.value.replace(/\D/g, '');
+        setProfile({ ...profile, zipCode: cep });
+
+        if (cep.length === 8) {
+            try {
+                const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+                const data = await response.json();
+
+                if (!data.erro) {
+                    setProfile(prev => ({
+                        ...prev,
+                        zipCode: cep, // maintain filtered cep
+                        street: data.logradouro,
+                        neighborhood: data.bairro,
+                        city: data.localidade,
+                        state: data.uf
+                    }));
+                }
+            } catch (error) {
+                console.error('Error fetching CEP:', error);
+            }
+        }
+    };
+
     if (loading) {
         return (
             <div className="flex items-center justify-center min-h-[50vh]">
@@ -137,6 +162,7 @@ export const Settings: React.FC = () => {
             </div>
         );
     }
+
 
     return (
         <div className="max-w-5xl animate-fade-in no-print pb-24">
@@ -319,9 +345,10 @@ export const Settings: React.FC = () => {
                                     <input
                                         type="text"
                                         value={profile.zipCode || ''}
-                                        onChange={(e) => setProfile({ ...profile, zipCode: e.target.value })}
+                                        onChange={handleCepChange}
                                         className="w-full px-6 py-4 border border-white/5 focus:outline-none focus:border-gold transition-all text-sm glass-dark text-white rounded-lg placeholder-zinc-700"
                                         placeholder="00000-000"
+                                        maxLength={9}
                                     />
                                 </div>
                             </div>
