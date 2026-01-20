@@ -192,14 +192,33 @@ export const ProposalPrintView: React.FC<ProposalPrintViewProps> = ({
             <style>{`
                 @media print {
                     @page { size: A4; margin: 0; }
-                    body { -webkit-print-color-adjust: exact; print-color-adjust: exact; background: white; }
+                    html, body { 
+                        height: auto; 
+                        overflow: visible; 
+                        background: white;
+                        -webkit-print-color-adjust: exact; 
+                        print-color-adjust: exact;
+                    }
+                    /* Reset the fixed modal container */
+                    .fixed.inset-0 {
+                        position: static !important;
+                        overflow: visible !important;
+                        height: auto !important;
+                        background: white !important;
+                    }
                     .no-print { display: none !important; }
                     .break-after-page { page-break-after: always; }
                     .break-before-page { page-break-before: always; }
                     .break-inside-avoid { page-break-inside: avoid; }
-                    /* Make sure the container takes full width/height without margins/padding interfering */
-                    .w-[210mm] { width: 100% !important; margin: 0 !important; shadow: none !important; }
-                    /* Hide scrollbars */
+                    
+                    /* Container resets */
+                    .w-[210mm] { 
+                        width: 100% !important; 
+                        margin: 0 !important; 
+                        box-shadow: none !important; 
+                    }
+                    
+                    /* Clean up scrollbars */
                     ::-webkit-scrollbar { display: none; }
                 }
             `}</style>
