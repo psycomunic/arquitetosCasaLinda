@@ -35,7 +35,7 @@ export const FRAMES: Frame[] = [
   { id: 'p16', name: 'Côncava Madeira', price: 360, category: 'Premium', subCategory: 'Côncava', allowsGlass: true, thumbnailUrl: '/images/frames/concava-madeira.jpg' },
 
   // Premium - Inox
-  { id: 'p17', name: 'Inox', price: 800, category: 'Premium', allowsGlass: true }
+  { id: 'p17', name: 'Inox', price: 800, category: 'Premium', allowsGlass: true, thumbnailUrl: '/images/frames/inox.jpg' }
 ];
 
 export const FINISHES: Finish[] = [
