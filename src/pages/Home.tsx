@@ -113,28 +113,31 @@ export const Home: React.FC = () => {
       </section>
 
       {/* Seção Como Funciona (Processo Simples) */}
-      <section className="py-24 bg-canvas px-6 border-b border-white/5">
-        <div className="max-w-6xl mx-auto text-center space-y-16">
-          <div className="space-y-4">
-            <h2 className="text-gold text-[10px] uppercase tracking-[0.5em] font-bold">Processo Simplificado</h2>
-            <h3 className="text-4xl md:text-5xl font-serif text-white">Como Funciona a Parceria</h3>
+      <section className="py-32 bg-black px-6 border-b border-white/5 relative overflow-hidden">
+        {/* Ambient Background Glow */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-gold/5 blur-[120px] rounded-full pointer-events-none"></div>
+
+        <div className="max-w-6xl mx-auto text-center space-y-20 relative z-10">
+          <div className="space-y-6">
+            <h2 className="text-gold text-[10px] uppercase tracking-[0.6em] font-bold opacity-80">Processo Simplificado</h2>
+            <h3 className="text-4xl md:text-6xl font-serif text-white">Como Funciona a Parceria</h3>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-12 relative">
-            {/* Connector Line */}
-            <div className="hidden md:block absolute top-12 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-gold/30 to-transparent -z-10"></div>
-
+          <div className="grid md:grid-cols-3 gap-16">
             {[
               { icon: "01", title: "Cadastro Aprovado", desc: "Solicite seu acesso e aguarde a validação do seu perfil profissional." },
               { icon: "02", title: "Especifique ou Venda", desc: "Use nossos links trackeáveis ou solicite projetos personalizados." },
               { icon: "03", title: "Receba 20%", desc: "Comissão garantida e depositada automaticamente em sua conta." }
             ].map((step, i) => (
-              <div key={i} className="bg-canvas p-6 relative group">
-                <div className="w-24 h-24 mx-auto bg-ebonite border border-gold/20 rounded-full flex items-center justify-center text-3xl font-serif text-gold mb-8 group-hover:scale-110 transition-transform shadow-[0_0_30px_rgba(197,160,89,0.1)]">
-                  {step.icon}
+              <div key={i} className="group relative">
+                <div className="w-28 h-28 mx-auto mb-10 relative flex items-center justify-center">
+                  <div className="absolute inset-0 rounded-full border border-gold/20 group-hover:border-gold/50 transition-colors duration-500"></div>
+                  <div className="absolute inset-0 rounded-full bg-gold/5 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  <span className="text-3xl font-serif text-gold relative z-10">{step.icon}</span>
                 </div>
-                <h4 className="text-lg font-bold text-white uppercase tracking-widest mb-4">{step.title}</h4>
-                <p className="text-zinc-500 text-sm leading-relaxed">{step.desc}</p>
+
+                <h4 className="text-sm font-bold text-white uppercase tracking-[0.2em] mb-4">{step.title}</h4>
+                <p className="text-zinc-500 text-sm leading-relaxed max-w-xs mx-auto font-light">{step.desc}</p>
               </div>
             ))}
           </div>
