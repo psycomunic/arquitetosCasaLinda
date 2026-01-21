@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { Architect } from '../types/database';
 import { 
@@ -29,6 +30,16 @@ export const AdminDashboard: React.FC = () => {
     const [storeDiscount, setStoreDiscount] = useState('0');
     const [savingDiscount, setSavingDiscount] = useState(false);
     const [activeTab, setActiveTab] = useState<'overview' | 'production'>('overview');
+    const [searchParams] = useSearchParams();
+
+    useEffect(() => {
+        const tab = searchParams.get('tab');
+        if (tab === 'production') {
+            setActiveTab('production');
+        } else {
+            setActiveTab('overview');
+        }
+    }, [searchParams]);
 
     useEffect(() => {
         fetchData();

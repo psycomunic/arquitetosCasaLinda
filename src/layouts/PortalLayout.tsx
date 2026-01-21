@@ -6,8 +6,9 @@ import {
     History,
     Settings,
     LogOut,
-    Image as ImageIcon,
-    ShieldAlert
+    ImageIcon,
+    Shield,
+    Package
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
@@ -27,7 +28,10 @@ export const PortalLayout: React.FC<PortalLayoutProps> = ({ children, profile })
 
     const menuItems = [
         { id: 'dashboard', icon: <LayoutDashboard size={16} />, label: 'Overview', path: '/dashboard' },
-        ...(profile.isAdmin ? [{ id: 'admin', icon: <ShieldAlert size={16} />, label: 'Admin', path: '/adm' }] : []),
+        ...(profile.isAdmin ? [
+            { id: 'admin', icon: <Shield size={16} />, label: 'Painel Admin', path: '/adm' },
+            { id: 'production', icon: <Package size={16} />, label: 'Produção & Envios', path: '/adm?tab=production' }
+        ] : []),
         { id: 'proposals', icon: <FilePlus size={16} />, label: 'Nova Proposta', path: '/proposals' },
         { id: 'sales', icon: <History size={16} />, label: 'Repasses', path: '/earnings' },
         { id: 'settings', icon: <Settings size={16} />, label: 'Branding', path: '/settings' }

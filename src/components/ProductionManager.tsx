@@ -320,15 +320,25 @@ export const ProductionManager: React.FC = () => {
                                 />
                             </div>
                             <div className="space-y-2">
-                                <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold">Projeto</label>
+                                <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold">Arquiteto</label>
                                 <input
                                     required
-                                    value={manualOrder.project_name}
-                                    onChange={e => setManualOrder({...manualOrder, project_name: e.target.value})}
+                                    value={manualOrder.architect_name}
+                                    onChange={e => setManualOrder({...manualOrder, architect_name: e.target.value})}
                                     className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white outline-none focus:border-gold"
-                                    placeholder="Ex: Sala de Estar"
+                                    placeholder="Nome do Arquiteto"
                                 />
                             </div>
+                        </div>
+                        <div className="space-y-2">
+                            <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold">Projeto</label>
+                            <input
+                                required
+                                value={manualOrder.project_name}
+                                onChange={e => setManualOrder({...manualOrder, project_name: e.target.value})}
+                                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white outline-none focus:border-gold"
+                                placeholder="Ex: Sala de Estar"
+                            />
                         </div>
                         <div className="space-y-2">
                             <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold">Título da Obra / Arte</label>
