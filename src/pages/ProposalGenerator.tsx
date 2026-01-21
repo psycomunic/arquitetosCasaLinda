@@ -436,7 +436,14 @@ export const ProposalGenerator: React.FC = () => {
                             <h3 className="font-serif text-3xl text-white">Suas Escolhas</h3>
                             <div className="w-12 h-1 bg-gold"></div>
                         </div>
-
+                        <div className="space-y-6 max-h-[400px] overflow-y-auto custom-scrollbar pr-2">
+                            {proposalItems.length === 0 ? (
+                                <div className="py-20 text-center border border-dashed border-white/5 rounded-xl">
+                                    <p className="text-zinc-600 text-[10px] uppercase tracking-widest leading-loose">
+                                        Nenhuma obra selecionada <br /> para a proposta.
+                                    </p>
+                                </div>
+                            ) : (
                                 proposalItems.map((item, idx) => (
                                     <div key={item.id} className="flex gap-5 items-center glass p-5 group border-white/5 hover:border-gold/20 transition-all rounded-lg relative">
                                         <img src={item.artPiece?.imageUrl || item.customImageUrl} className="w-20 h-24 object-cover rounded shadow-lg" alt="" />
