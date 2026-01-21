@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { DollarSign, Award, ArrowRight, Inbox, Share2, UploadCloud, Crown, Copy, Check, MessageSquare } from 'lucide-react';
+import { DollarSign, Award, ArrowRight, Inbox, Share2, UploadCloud, Crown, Copy, Check, MessageSquare, Star } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { ArchitectProfile } from '../types';
