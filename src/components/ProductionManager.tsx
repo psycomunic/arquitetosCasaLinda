@@ -163,7 +163,7 @@ export const ProductionManager: React.FC = () => {
                 .from('proposals')
                 .insert({
                     client_name: manualOrder.client_name,
-                    project_name: manualOrder.project_name,
+                    project_name: (manualOrder.project_name && manualOrder.project_name.trim() !== '') ? manualOrder.project_name : manualOrder.client_name,
                     total_value: Number(manualOrder.total_value),
                     status: 'paid', // Direct to paid/production
                     architect_id: userId // Set current user as "owner" for RLS
@@ -475,8 +475,9 @@ const ProductionVoucher: React.FC<{ order: ProductionOrder, onClose: () => void 
                                 <div className="bg-zinc-100 border-[3px] border-black p-12 space-y-8 text-center">
                                     <AlertCircle size={48} className="mx-auto text-black" />
                                     <div className="space-y-2">
-                                        <p className="text-3xl font-black italic uppercase">Itens Detalhados Não Localizados</p>
-                                        <p className="text-lg font-bold text-zinc-600">Este é um pedido manual ou legado. Por favor, utilize os dados acima para identificação na Proposta Digital.</p>
+                                        <p className="text-3xl font-black italic uppercase">Dados Técnicos Não Sincronizados</p>
+                                        <p className="text-lg font-bold text-zinc-600">Este pedido (ID: {order.id.split('-')[0]}) foi processado sem o detalhamento de itens no banco de dados.</p>
+                                        <p className="text-sm text-zinc-500 mt-4">Causa provável: Pedido manual antigo ou falha na conexão durante a criação. <br/> Por favor, crie um **novo pedido de teste** para verificar a correção.</p>
                                     </div>
                                 </div>
                             </div>

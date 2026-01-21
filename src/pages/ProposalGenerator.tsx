@@ -496,7 +496,7 @@ export const ProposalGenerator: React.FC = () => {
                                             .insert({
                                                 architect_id: userId,
                                                 client_name: clientName,
-                                                project_name: projectName || clientName,
+                                                project_name: (projectName && projectName.trim() !== '') ? projectName : clientName,
                                                 total_value: totalProposalValue,
                                                 commission_value: totalProposalValue * (architectProfile.commissionRate / 100),
                                                 status: 'sent'
