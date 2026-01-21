@@ -76,9 +76,9 @@ export const DashboardOverview: React.FC = () => {
         return <div className="text-white">Carregando...</div>;
     }
 
-    const firstName = profile?.name.split(' ')[0] || 'Parceiro';
+    const firstName = profile?.name?.split(' ')[0] || 'Parceiro';
     const totalDiscountValue = storeDiscount + 3;
-    const calculatedCoupon = `${firstName.toUpperCase()}${totalDiscountValue}`;
+    const calculatedCoupon = `${firstName?.toUpperCase()}${totalDiscountValue}`;
 
     return (
         <div className="space-y-10 animate-fade-in no-print pb-20">
