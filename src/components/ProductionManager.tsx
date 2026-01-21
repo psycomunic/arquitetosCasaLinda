@@ -58,7 +58,7 @@ export const ProductionManager: React.FC = () => {
             // Fetch Proposals awaiting payment
             const { data: proposals } = await supabase
                 .from('proposals')
-                .select('*, architects(name)')
+                .select('*, architects(name, commission_rate)')
                 .eq('status', 'sent')
                 .order('created_at', { ascending: false });
 
@@ -81,7 +81,7 @@ export const ProductionManager: React.FC = () => {
             // Fetch Paid orders (Production)
             const { data: paidProposals } = await supabase
                 .from('proposals')
-                .select('*, architects(name)')
+                .select('*, architects(name, commission_rate)')
                 .eq('status', 'paid')
                 .order('updated_at', { ascending: false });
 
@@ -124,14 +124,18 @@ export const ProductionManager: React.FC = () => {
             if (error) throw error;
 
             // Also create a sale record
+            const commissionRate = proposal.architects?.commission_rate || 15;
+            const commissionValue = proposal.commission_value || (proposal.total_value * (commissionRate / 100));
+
             await supabase.from('sales').insert({
                 proposal_id: proposal.id,
                 architect_id: proposal.architect_id,
                 sale_value: proposal.total_value,
-                commission_value: proposal.commission_value,
+                commission_value: commissionValue,
+                commission_rate: commissionRate,
                 status: 'paid',
                 paid_at: new Date().toISOString()
-            });
+            } as any);
 
             fetchData();
             alert('Pagamento confirmado! Pedido enviado para produção.');
