@@ -436,7 +436,32 @@ export const ProposalGenerator: React.FC = () => {
                             <h3 className="font-serif text-3xl text-white">Suas Escolhas</h3>
                             <div className="w-12 h-1 bg-gold"></div>
                         </div>
-                        <div className="space-y-6 max-h-[400px] overflow-y-auto custom-scrollbar pr-2">
+
+                        {/* Client and Project Details */}
+                        <div className="grid grid-cols-1 gap-6">
+                            <div className="space-y-2">
+                                <label className="text-[9px] uppercase tracking-[0.4em] text-zinc-500 font-bold">Nome do Cliente</label>
+                                <input
+                                    type="text"
+                                    value={clientName}
+                                    onChange={(e) => setClientName(e.target.value)}
+                                    placeholder="Ex: João Silva"
+                                    className="w-full bg-white/5 border border-white/10 rounded-lg px-6 py-4 text-xs text-white outline-none focus:border-gold transition-all"
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <label className="text-[9px] uppercase tracking-[0.4em] text-zinc-500 font-bold">Nome do Projeto / Ambiente</label>
+                                <input
+                                    type="text"
+                                    value={projectName}
+                                    onChange={(e) => setProjectName(e.target.value)}
+                                    placeholder="Ex: Sala de Estar"
+                                    className="w-full bg-white/5 border border-white/10 rounded-lg px-6 py-4 text-xs text-white outline-none focus:border-gold transition-all"
+                                />
+                            </div>
+                        </div>
+
+                        <div className="space-y-6 max-h-[300px] overflow-y-auto custom-scrollbar pr-2">
                             {proposalItems.length === 0 ? (
                                 <div className="py-20 text-center border border-dashed border-white/5 rounded-xl">
                                     <p className="text-zinc-600 text-[10px] uppercase tracking-widest leading-loose">
