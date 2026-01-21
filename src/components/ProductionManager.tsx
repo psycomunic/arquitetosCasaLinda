@@ -182,7 +182,7 @@ export const ProductionManager: React.FC = () => {
                     quantity: 1,
                     unit_price: Number(manualOrder.total_value),
                     total_price: Number(manualOrder.total_value),
-                    image_url: manualOrder.image_url
+                    image_url: manualOrder.image_url || 'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?q=80&w=800&auto=format&fit=crop' // Fallback image for manual entries
                 });
 
             if (iErr) throw iErr;
@@ -432,45 +432,71 @@ const ProductionVoucher: React.FC<{ order: ProductionOrder, onClose: () => void 
             <div className="max-w-[1000px] mx-auto space-y-12">
                 {/* Fallback if no items (Legacy/Failed items) */}
                 {order.items.length === 0 && (
-                    <div className="border-[3px] border-black p-10 relative overflow-hidden break-after-page bg-white min-h-[500px] flex flex-col justify-between">
-                        <div>
-                            <div className="absolute top-8 right-8 border-[3px] border-black px-6 py-2 flex flex-col items-center">
-                                <span className="text-[10px] font-black uppercase tracking-tighter">ORDEM DE PRODUÇÃO</span>
-                                <span className="text-3xl font-black">#{order.id.split('-')[0].toUpperCase()}</span>
-                            </div>
+                    <div className="border-[4px] border-black p-12 relative overflow-hidden break-after-page bg-white min-h-[900px] flex flex-col">
+                        <div className="absolute top-10 right-10 border-[3px] border-black px-8 py-3 flex flex-col items-center bg-white z-10">
+                            <span className="text-[10px] font-black uppercase tracking-tighter">ORDEM DE PRODUÇÃO</span>
+                            <span className="text-4xl font-black">#{order.id.split('-')[0].toUpperCase()}</span>
+                        </div>
 
-                            <header className="border-b-[3px] border-black pb-8 mb-10">
-                                <h1 className="text-5xl font-black italic mb-4 uppercase tracking-tighter">FICHA DE PRODUÇÃO</h1>
-                                <p className="text-sm font-bold text-zinc-500 uppercase tracking-widest">Resumo de Pedido (Legado/Manual)</p>
-                            </header>
+                        <div className="absolute -bottom-20 -right-20 opacity-5 pointer-events-none select-none">
+                            <h1 className="text-[200px] font-black italic uppercase leading-none">CASA<br/>LINDA</h1>
+                        </div>
 
-                            <div className="grid grid-cols-2 gap-12">
-                                <div className="space-y-6">
-                                    <div className="space-y-1">
-                                        <p className="text-[10px] uppercase font-black text-zinc-400">PROJETO / AMBIENTE</p>
-                                        <p className="text-3xl font-bold">{order.project_name}</p>
+                        <header className="border-b-[4px] border-black pb-10 mb-12">
+                            <h1 className="text-6xl font-black italic mb-2 uppercase tracking-tighter leading-none">FICHA TÉCNICA</h1>
+                            <p className="text-lg font-bold text-zinc-500 uppercase tracking-[0.2em]">{order.project_name} (RESUMO)</p>
+                        </header>
+
+                        <div className="grid grid-cols-12 gap-12 flex-1 relative">
+                            <div className="col-span-12 space-y-12">
+                                <div className="grid grid-cols-2 gap-12">
+                                    <div className="space-y-6">
+                                        <div className="space-y-1">
+                                            <p className="text-[10px] uppercase font-black text-zinc-400">PROJETO / AMBIENTE</p>
+                                            <p className="text-4xl font-black italic">{order.project_name}</p>
+                                        </div>
+                                        <div className="space-y-1">
+                                            <p className="text-[10px] uppercase font-black text-zinc-400">CLIENTE</p>
+                                            <p className="text-2xl font-bold">{order.client_name}</p>
+                                        </div>
                                     </div>
-                                    <div className="space-y-1">
-                                        <p className="text-[10px] uppercase font-black text-zinc-400">CLIENTE</p>
-                                        <p className="text-xl font-bold">{order.client_name}</p>
+                                    <div className="space-y-6 text-right">
+                                        <div className="space-y-1">
+                                            <p className="text-[10px] uppercase font-black text-zinc-400">ARQUITETO(A)</p>
+                                            <p className="text-2xl font-bold">{order.architect_name}</p>
+                                        </div>
+                                        <div className="space-y-1">
+                                            <p className="text-[10px] uppercase font-black text-zinc-400">VALOR TOTAL DO PEDIDO</p>
+                                            <p className="text-2xl font-bold">R$ {order.total_value.toLocaleString('pt-BR')}</p>
+                                        </div>
                                     </div>
                                 </div>
-                                <div className="space-y-6 text-right">
-                                    <div className="space-y-1">
-                                        <p className="text-[10px] uppercase font-black text-zinc-400">ARQUITETO(A)</p>
-                                        <p className="text-xl font-bold">{order.architect_name}</p>
-                                    </div>
-                                    <div className="space-y-1">
-                                        <p className="text-[10px] uppercase font-black text-zinc-400">DATA DE APROVAÇÃO</p>
-                                        <p className="text-xl font-bold">{new Date().toLocaleDateString('pt-BR')}</p>
+
+                                <div className="bg-zinc-100 border-[3px] border-black p-12 space-y-8 text-center">
+                                    <AlertCircle size={48} className="mx-auto text-black" />
+                                    <div className="space-y-2">
+                                        <p className="text-3xl font-black italic uppercase">Itens Detalhados Não Localizados</p>
+                                        <p className="text-lg font-bold text-zinc-600">Este é um pedido manual ou legado. Por favor, utilize os dados acima para identificação na Proposta Digital.</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div className="bg-zinc-50 border-2 border-black p-10 mt-10 text-center italic">
-                            <p className="text-xl font-serif">Esta é uma ordem sem itens detalhados no sistema. <br/> Por favor, consulte a proposta digital original para especificações técnicas de produção.</p>
-                        </div>
+                        {/* Footer / Quality Check */}
+                        <footer className="mt-auto pt-10 border-t-[3px] border-black grid grid-cols-3 gap-8">
+                            <div className="space-y-4">
+                                <p className="text-[10px] font-black uppercase">Responsável Produção</p>
+                                <div className="border-b-[1px] border-black h-8"></div>
+                            </div>
+                            <div className="space-y-4">
+                                <p className="text-[10px] font-black uppercase">Conferência Qualidade</p>
+                                <div className="border-b-[1px] border-black h-8"></div>
+                            </div>
+                            <div className="space-y-4 text-right">
+                                <p className="text-[10px] font-black uppercase">Data de Saída</p>
+                                <p className="text-xl font-black">___/___/_____</p>
+                            </div>
+                        </footer>
                     </div>
                 )}
 
