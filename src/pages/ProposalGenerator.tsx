@@ -12,7 +12,8 @@ import {
     Box,
     Layout,
     Square,
-    Maximize
+    Maximize,
+    Loader2
 } from 'lucide-react';
 import { MOCK_ARTS, FRAMES, FINISHES, FORMATS } from '../constants';
 import { ArtPiece, ProposalItem, Frame, Finish, ArchitectProfile, Format } from '../types';
@@ -22,6 +23,8 @@ import { ProposalPrintView } from '../components/ProposalPrintView';
 export const ProposalGenerator: React.FC = () => {
     const [proposalItems, setProposalItems] = useState<ProposalItem[]>([]);
     const [clientName, setClientName] = useState('');
+    const [projectName, setProjectName] = useState('');
+    const [isSaving, setIsSaving] = useState(false);
     const [showPrintPreview, setShowPrintPreview] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
     const [architectProfile, setArchitectProfile] = useState<ArchitectProfile | null>(null);
@@ -434,26 +437,6 @@ export const ProposalGenerator: React.FC = () => {
                             <div className="w-12 h-1 bg-gold"></div>
                         </div>
 
-                        <div className="space-y-6">
-                            <div>
-                                <label className="block text-[9px] font-bold text-zinc-500 uppercase tracking-[0.4em] mb-4">Projeto / Ambiente</label>
-                                <input
-                                    type="text"
-                                    value={clientName}
-                                    onChange={(e) => setClientName(e.target.value)}
-                                    placeholder="Ex: Apartamento Ibirapuera"
-                                    className="w-full px-6 py-5 text-xs border border-white/5 focus:outline-none focus:border-gold transition-all glass-dark text-white rounded-lg"
-                                />
-                            </div>
-                        </div>
-
-                        <div className="space-y-4 max-h-[350px] overflow-y-auto pr-2 custom-scrollbar">
-                            {proposalItems.length === 0 ? (
-                                <div className="text-center py-20 text-zinc-600 border border-dashed border-white/5 rounded-xl bg-white/5">
-                                    <ImageIcon className="mx-auto mb-4 opacity-10" size={50} strokeWidth={1} />
-                                    <p className="text-[10px] uppercase tracking-[0.3em] px-10">Componha seu projeto selecionando molduras e obras</p>
-                                </div>
-                            ) : (
                                 proposalItems.map((item, idx) => (
                                     <div key={item.id} className="flex gap-5 items-center glass p-5 group border-white/5 hover:border-gold/20 transition-all rounded-lg relative">
                                         <img src={item.artPiece?.imageUrl || item.customImageUrl} className="w-20 h-24 object-cover rounded shadow-lg" alt="" />
@@ -495,30 +478,57 @@ export const ProposalGenerator: React.FC = () => {
 
                             <button
                                 onClick={async () => {
-                                    if (!architectProfile) return;
+                                    if (!architectProfile || isSaving) return;
+                                    setIsSaving(true);
                                     try {
-                                        const { data, error } = await supabase
+                                        const userId = (await supabase.auth.getUser()).data.user?.id;
+                                        
+                                        // 1. Insert Proposal header
+                                        const { data: proposalData, error: proposalError } = await supabase
                                             .from('proposals')
                                             .insert({
-                                                architect_id: (await supabase.auth.getUser()).data.user?.id,
+                                                architect_id: userId,
                                                 client_name: clientName,
+                                                project_name: projectName || clientName,
                                                 total_value: totalProposalValue,
                                                 commission_value: totalProposalValue * (architectProfile.commissionRate / 100),
                                                 status: 'sent'
                                             } as any)
-                                            .select();
+                                            .select()
+                                            .single();
 
-                                        if (error) throw error;
+                                        if (proposalError) throw proposalError;
+
+                                        // 2. Insert items
+                                        const itemsToInsert = proposalItems.map(item => ({
+                                            proposal_id: proposalData.id,
+                                            product_name: `${item.title} - ${item.frame?.name} (${item.finish?.name})`,
+                                            product_code: item.artPiece?.id || 'CUSTOM',
+                                            quantity: 1,
+                                            unit_price: item.price,
+                                            total_price: item.price,
+                                            image_url: item.artPiece?.imageUrl || item.customImageUrl
+                                        }));
+
+                                        const { error: itemsError } = await supabase
+                                            .from('proposal_items')
+                                            .insert(itemsToInsert);
+
+                                        if (itemsError) throw itemsError;
+
                                         setShowPrintPreview(true);
                                     } catch (err) {
                                         console.error('Error saving proposal:', err);
                                         alert('Erro ao salvar proposta. Tente novamente.');
+                                    } finally {
+                                        setIsSaving(false);
                                     }
                                 }}
-                                disabled={proposalItems.length === 0 || !clientName}
+                                disabled={proposalItems.length === 0 || !clientName || isSaving}
                                 className="w-full bg-white text-black py-6 font-bold flex items-center justify-center gap-4 hover:bg-gold transition-all disabled:opacity-10 disabled:grayscale disabled:cursor-not-allowed uppercase tracking-[0.4em] text-[10px] shadow-[0_0_30px_rgba(255,255,255,0.05)]"
                             >
-                                <Printer size={18} /> Exportar Curadoria
+                                {isSaving ? <Loader2 className="animate-spin" size={18} /> : <Printer size={18} />}
+                                {isSaving ? 'Salvando...' : 'Exportar Curadoria'}
                             </button>
                         </div>
                     </div>

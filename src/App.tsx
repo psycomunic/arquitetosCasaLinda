@@ -38,26 +38,33 @@ const App: React.FC = () => {
     logoUrl: '',
     isAdmin: false
   });
+  const [authLoading, setAuthLoading] = React.useState(true);
 
   useEffect(() => {
     // Check active session and fetch profile
     const fetchProfile = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user) {
-        const { data } = await supabase
-          .from('architects')
-          .select('*')
-          .eq('id', user.id)
-          .single() as any;
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          const { data } = await supabase
+            .from('architects')
+            .select('*')
+            .eq('id', user.id)
+            .single() as any;
 
-        if (data) {
-          setProfile({
-            name: data.name,
-            officeName: data.office_name,
-            logoUrl: data.logo_url || '',
-            isAdmin: data.is_admin || false
-          });
+          if (data) {
+            setProfile({
+              name: data.name,
+              officeName: data.office_name,
+              logoUrl: data.logo_url || '',
+              isAdmin: data.is_admin || false
+            });
+          }
         }
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setAuthLoading(false);
       }
     };
 
@@ -70,6 +77,14 @@ const App: React.FC = () => {
 
     return () => subscription.unsubscribe();
   }, []);
+
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-canvas flex items-center justify-center">
+        <div className="w-12 h-12 border-2 border-gold/20 border-t-gold rounded-full animate-spin"></div>
+      </div>
+    );
+  }
 
   return (
     <Router>
