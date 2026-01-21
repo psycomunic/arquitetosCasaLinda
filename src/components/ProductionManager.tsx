@@ -153,6 +153,8 @@ export const ProductionManager: React.FC = () => {
             // Since the user asked for "ambiente onde posso adicionar manualmente",
             // let's insert into proposals with a special status.
             
+            const userId = (await supabase.auth.getUser()).data.user?.id;
+            
             const { data: prop, error: pErr } = await supabase
                 .from('proposals')
                 .insert({
@@ -160,7 +162,7 @@ export const ProductionManager: React.FC = () => {
                     project_name: manualOrder.project_name,
                     total_value: Number(manualOrder.total_value),
                     status: 'paid', // Direct to paid/production
-                    architect_id: null // Manual entry
+                    architect_id: userId // Set current user as "owner" for RLS
                 } as any)
                 .select()
                 .single();
@@ -424,9 +426,49 @@ const ProductionVoucher: React.FC<{ order: ProductionOrder, onClose: () => void 
 
             {/* VOUCHER CONTENT - A4 Optimized */}
             <div className="max-w-[800px] mx-auto space-y-12">
+                {/* Fallback if no items (Legacy/Failed items) */}
                 {order.items.length === 0 && (
-                    <div className="p-20 text-center border-2 border-dashed border-zinc-200">
-                        <p className="text-zinc-400">Nenhum item encontrado para este pedido.</p>
+                    <div className="border-2 border-black p-10 relative overflow-hidden break-after-page bg-white">
+                        <div className="absolute top-5 right-5 border-2 border-black px-4 py-1 flex flex-col items-center">
+                            <span className="text-[10px] font-bold uppercase">Pedido</span>
+                            <span className="text-xl font-bold">#{order.id.split('-')[0].toUpperCase()}</span>
+                        </div>
+                        <div className="flex gap-10">
+                            <div className="flex-1 space-y-8">
+                                <header className="border-b-2 border-black pb-6">
+                                    <h2 className="text-xs uppercase tracking-widest font-bold mb-2">Canhoto de Produção (Resumo)</h2>
+                                    <h3 className="text-4xl font-serif font-bold italic">{order.project_name}</h3>
+                                </header>
+                                <div className="grid grid-cols-2 gap-8">
+                                    <div className="space-y-4">
+                                        <div className="space-y-1">
+                                            <p className="text-[10px] uppercase font-bold text-zinc-500">Arquiteto</p>
+                                            <p className="text-lg font-bold">{order.architect_name}</p>
+                                        </div>
+                                        <div className="space-y-1">
+                                            <p className="text-[10px] uppercase font-bold text-zinc-500">Cliente / Local</p>
+                                            <p className="text-lg font-bold">{order.client_name}</p>
+                                        </div>
+                                    </div>
+                                    <div className="space-y-4 text-right">
+                                        <div className="space-y-1">
+                                            <p className="text-[10px] uppercase font-bold text-zinc-500">Data Aprovação</p>
+                                            <p className="text-lg font-bold">{new Date().toLocaleDateString('pt-BR')}</p>
+                                        </div>
+                                        <div className="space-y-1">
+                                            <p className="text-[10px] uppercase font-bold text-zinc-500">Valor Total</p>
+                                            <p className="text-lg font-bold">R$ {order.total_value.toLocaleString('pt-BR')}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="bg-zinc-100 p-8 space-y-6 rounded-lg border border-black/10">
+                                    <div className="space-y-1">
+                                        <p className="text-[10px] uppercase font-bold text-zinc-500 tracking-widest">Informação do Pedido</p>
+                                        <p className="text-2xl font-serif font-bold">Verificar detalhes na Proposta Digital</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 )}
                 {order.items.map((item, idx) => (
