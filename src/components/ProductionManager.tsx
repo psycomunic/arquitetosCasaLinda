@@ -443,188 +443,140 @@ const ProductionVoucher: React.FC<{ order: ProductionOrder, onClose: () => void 
             <div className="max-w-[1000px] mx-auto space-y-12">
                 {/* Fallback if no items (Legacy/Failed items) */}
                 {order.items.length === 0 && (
-                    <div className="border-[4px] border-black p-12 relative overflow-hidden break-after-page bg-white min-h-[900px] flex flex-col">
-                        <div className="absolute top-10 right-10 border-[3px] border-black px-8 py-3 flex flex-col items-center bg-white z-10">
-                            <span className="text-[10px] font-black uppercase tracking-tighter">ORDEM DE PRODUÇÃO</span>
-                            <span className="text-4xl font-black">#{order.id.split('-')[0].toUpperCase()}</span>
+                    <div className="border-[2px] border-black p-6 relative overflow-hidden break-inside-avoid bg-white mb-8 flex flex-col">
+                        <div className="absolute top-4 right-4 border-[2px] border-black px-4 py-1 flex flex-col items-center bg-white z-10">
+                            <span className="text-[8px] font-black uppercase tracking-tighter">ORDEM DE PRODUÇÃO</span>
+                            <span className="text-xl font-black">#{order.id.split('-')[0].toUpperCase()}</span>
                         </div>
 
-                        <div className="absolute -bottom-20 -right-20 opacity-5 pointer-events-none select-none">
-                            <h1 className="text-[200px] font-black italic uppercase leading-none">CASA<br/>LINDA</h1>
-                        </div>
-
-                        <header className="border-b-[4px] border-black pb-10 mb-12">
-                            <h1 className="text-6xl font-black italic mb-2 uppercase tracking-tighter leading-none">FICHA TÉCNICA</h1>
-                            <p className="text-lg font-bold text-zinc-500 uppercase tracking-[0.2em]">{order.project_name} (RESUMO)</p>
+                        <header className="border-b-[2px] border-black pb-4 mb-6">
+                            <h1 className="text-3xl font-black italic mb-1 uppercase tracking-tighter leading-none">FICHA TÉCNICA (RESUMO)</h1>
+                            <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em]">{order.project_name}</p>
                         </header>
 
-                        <div className="grid grid-cols-12 gap-12 flex-1 relative">
-                            <div className="col-span-12 space-y-12">
-                                <div className="grid grid-cols-2 gap-12">
-                                    <div className="space-y-6">
-                                        <div className="space-y-1">
-                                            <p className="text-[10px] uppercase font-black text-zinc-400">PROJETO / AMBIENTE</p>
-                                            <p className="text-4xl font-black italic">{order.project_name}</p>
+                        <div className="grid grid-cols-12 gap-6 flex-1 relative">
+                            <div className="col-span-12 space-y-6">
+                                <div className="grid grid-cols-2 gap-6">
+                                    <div className="space-y-2">
+                                        <div className="space-y-0.5">
+                                            <p className="text-[8px] uppercase font-black text-zinc-400">PROJETO / AMBIENTE</p>
+                                            <p className="text-xl font-black italic">{order.project_name}</p>
                                         </div>
-                                        <div className="space-y-1">
-                                            <p className="text-[10px] uppercase font-black text-zinc-400">CLIENTE</p>
-                                            <p className="text-2xl font-bold">{order.client_name}</p>
+                                        <div className="space-y-0.5">
+                                            <p className="text-[8px] uppercase font-black text-zinc-400">CLIENTE</p>
+                                            <p className="text-base font-bold">{order.client_name}</p>
                                         </div>
                                     </div>
-                                    <div className="space-y-6 text-right">
-                                        <div className="space-y-1">
-                                            <p className="text-[10px] uppercase font-black text-zinc-400">ARQUITETO(A)</p>
-                                            <p className="text-2xl font-bold">{order.architect_name}</p>
+                                    <div className="space-y-2 text-right">
+                                        <div className="space-y-0.5">
+                                            <p className="text-[8px] uppercase font-black text-zinc-400">ARQUITETO(A)</p>
+                                            <p className="text-base font-bold">{order.architect_name}</p>
                                         </div>
-                                        <div className="space-y-1">
-                                            <p className="text-[10px] uppercase font-black text-zinc-400">VALOR TOTAL DO PEDIDO</p>
-                                            <p className="text-2xl font-bold">R$ {order.total_value.toLocaleString('pt-BR')}</p>
+                                        <div className="space-y-0.5">
+                                            <p className="text-[8px] uppercase font-black text-zinc-400">VALOR TOTAL</p>
+                                            <p className="text-base font-bold">R$ {order.total_value.toLocaleString('pt-BR')}</p>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div className="bg-zinc-100 border-[3px] border-black p-12 space-y-8 text-center">
-                                    <AlertCircle size={48} className="mx-auto text-black" />
-                                    <div className="space-y-2">
-                                        <p className="text-3xl font-black italic uppercase">Dados Técnicos Não Sincronizados</p>
-                                        <p className="text-lg font-bold text-zinc-600">Este pedido (ID: {order.id.split('-')[0]}) foi processado sem o detalhamento de itens no banco de dados.</p>
-                                        <p className="text-sm text-zinc-500 mt-4">Causa provável: Pedido manual antigo ou falha na conexão durante a criação. <br/> Por favor, crie um **novo pedido de teste** para verificar a correção.</p>
-                                    </div>
+                                <div className="bg-zinc-100 border-[2px] border-black p-4 space-y-2 text-center">
+                                    <p className="text-xl font-black italic uppercase">Dados Técnicos Não Sincronizados</p>
+                                    <p className="text-xs font-bold text-zinc-600">Este pedido (ID: {order.id.split('-')[0]}) é anterior à correção do sistema.</p>
                                 </div>
                             </div>
                         </div>
 
-                        {/* Footer / Quality Check */}
-                        <footer className="mt-auto pt-10 border-t-[3px] border-black grid grid-cols-3 gap-8">
-                            <div className="space-y-4">
-                                <p className="text-[10px] font-black uppercase">Responsável Produção</p>
-                                <div className="border-b-[1px] border-black h-8"></div>
+                        <footer className="mt-4 pt-4 border-t-[2px] border-black grid grid-cols-3 gap-4">
+                            <div className="space-y-1">
+                                <p className="text-[8px] font-black uppercase">Produção</p>
+                                <div className="border-b-[1px] border-black h-4"></div>
                             </div>
-                            <div className="space-y-4">
-                                <p className="text-[10px] font-black uppercase">Conferência Qualidade</p>
-                                <div className="border-b-[1px] border-black h-8"></div>
+                            <div className="space-y-1">
+                                <p className="text-[8px] font-black uppercase">Qualidade</p>
+                                <div className="border-b-[1px] border-black h-4"></div>
                             </div>
-                            <div className="space-y-4 text-right">
-                                <p className="text-[10px] font-black uppercase">Data de Saída</p>
-                                <p className="text-xl font-black">___/___/_____</p>
+                            <div className="space-y-1 text-right">
+                                <p className="text-[8px] font-black uppercase">Saída</p>
+                                <p className="text-[10px] font-black">___/___/___</p>
                             </div>
                         </footer>
                     </div>
                 )}
 
                 {order.items.map((item, idx) => {
-                    // Try to find frame thumbnail from constants
                     const frameInfo = FRAMES.find(f => item.product_name.includes(f.name));
                     
                     return (
-                    <div key={idx} className="border-[4px] border-black p-12 relative overflow-hidden break-after-page bg-white min-h-[900px] flex flex-col">
-                        {/* Status Label on voucher */}
-                        <div className="absolute top-10 right-10 border-[3px] border-black px-8 py-3 flex flex-col items-center bg-white z-10">
-                            <span className="text-[10px] font-black uppercase tracking-tighter">ITEM {idx + 1} DE {order.items.length}</span>
-                            <span className="text-4xl font-black">#{order.id.split('-')[0].toUpperCase()}</span>
+                    <div key={idx} className="border-[2px] border-black p-4 relative overflow-hidden break-inside-avoid bg-white mb-4 flex flex-col">
+                        {/* Compact Header for item */}
+                        <div className="absolute top-4 right-4 border-[2px] border-black px-4 py-1 flex flex-col items-center bg-white z-10">
+                            <span className="text-[7px] font-black uppercase tracking-tighter">ITEM {idx + 1}/{order.items.length}</span>
+                            <span className="text-xl font-black">#{order.id.split('-')[0].toUpperCase()}</span>
                         </div>
 
-                        {/* WATERMARK */}
-                        <div className="absolute -bottom-20 -right-20 opacity-5 pointer-events-none select-none">
-                            <h1 className="text-[200px] font-black italic uppercase leading-none">CASA<br/>LINDA</h1>
-                        </div>
-
-                        <header className="border-b-[4px] border-black pb-10 mb-12">
-                            <h1 className="text-6xl font-black italic mb-2 uppercase tracking-tighter leading-none">FICHA TÉCNICA</h1>
-                            <p className="text-lg font-bold text-zinc-500 uppercase tracking-[0.2em]">{order.project_name}</p>
+                        <header className="border-b-[2px] border-black pb-2 mb-4">
+                            <h1 className="text-2xl font-black italic uppercase tracking-tighter leading-none">FICHA TÉCNICA</h1>
+                            <p className="text-[8px] font-bold text-zinc-500 uppercase tracking-[0.1em]">{order.project_name} | {order.client_name}</p>
                         </header>
 
-                        <div className="grid grid-cols-12 gap-12 flex-1 relative">
-                            {/* Left Column: Visual Proof */}
-                            <div className="col-span-7 space-y-10">
-                                <div className="space-y-4">
-                                    <p className="text-[12px] font-black uppercase tracking-widest bg-black text-white px-4 py-1 inline-block">Visualização da Obra</p>
-                                    <div className="border-[3px] border-black p-2 bg-zinc-100 shadow-[20px_20px_0px_rgba(0,0,0,0.05)]">
-                                        <img 
-                                            src={item.image_url} 
-                                            className="w-full aspect-[3/4] object-cover border-[1px] border-black/10" 
-                                            alt="Preview" 
-                                        />
-                                    </div>
-                                </div>
-                                
-                                <div className="grid grid-cols-2 gap-8">
-                                    <div className="space-y-2">
-                                        <p className="text-[10px] font-black uppercase text-zinc-400">Cliente</p>
-                                        <p className="text-xl font-bold uppercase">{order.client_name}</p>
-                                    </div>
-                                    <div className="space-y-2">
-                                        <p className="text-[10px] font-black uppercase text-zinc-400">Arquiteto(a)</p>
-                                        <p className="text-xl font-bold uppercase">{order.architect_name}</p>
-                                    </div>
+                        <div className="grid grid-cols-12 gap-4 flex-1">
+                            {/* Left Column: Image */}
+                            <div className="col-span-4">
+                                <div className="border-[2px] border-black p-1 bg-zinc-50">
+                                    <img 
+                                        src={item.image_url} 
+                                        className="w-full aspect-square object-cover" 
+                                        alt="Preview" 
+                                    />
                                 </div>
                             </div>
 
-                            {/* Right Column: Tech Specs */}
-                            <div className="col-span-5 space-y-12">
-                                <div className="space-y-8">
-                                    <div className="space-y-2">
-                                        <p className="text-[12px] font-black uppercase tracking-widest text-zinc-400">Identificação</p>
-                                        <h2 className="text-3xl font-black italic uppercase leading-tight">{item.product_name.split(' - ')[0]}</h2>
-                                    </div>
-
-                                    {/* Tech Grid */}
-                                    <div className="grid grid-cols-1 gap-6">
-                                        <div className="bg-zinc-50 border-[2px] border-black p-6 space-y-1">
-                                            <p className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Dimensões / Tamanho</p>
-                                            <p className="text-3xl font-black">{item.product_name.match(/\d+x\d+cm/) || 'Especificado na Proposta'}</p>
-                                        </div>
-
-                                        <div className="bg-black text-white p-6 space-y-3">
-                                            <p className="text-[10px] font-black uppercase tracking-widest text-zinc-400">Moldura Especificada</p>
-                                            <div className="flex items-center gap-4">
-                                                {frameInfo?.thumbnailUrl && (
-                                                    <img src={frameInfo.thumbnailUrl} className="w-16 h-16 object-cover border border-white/20" alt="" />
-                                                )}
-                                                <div>
-                                                    <p className="text-xl font-bold">{frameInfo?.name || 'A Definir'}</p>
-                                                    <p className="text-[10px] uppercase tracking-tighter text-zinc-400">{frameInfo?.category}</p>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div className="border-[2px] border-black p-6 space-y-1">
-                                            <p className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Acabamento</p>
-                                            <p className="text-2xl font-bold italic">{item.product_name.includes('Vidro') ? 'PREMIUM COM VIDRO' : 'CANVAS (SEM VIDRO)'}</p>
-                                        </div>
-                                    </div>
+                            {/* Right Column: Specs */}
+                            <div className="col-span-8 grid grid-cols-2 gap-3 pb-2">
+                                <div className="col-span-2">
+                                    <p className="text-[7px] font-black uppercase text-zinc-400">Obra</p>
+                                    <p className="text-xs font-black uppercase truncate">{item.product_name.split(' - ')[0]}</p>
+                                </div>
+                                
+                                <div className="bg-zinc-100 border border-black p-2 flex flex-col justify-center">
+                                    <p className="text-[6px] font-black uppercase text-zinc-500">Tamanho</p>
+                                    <p className="text-[11px] font-black">{item.product_name.match(/\d+x\d+cm/) || 'Especificado'}</p>
                                 </div>
 
-                                {/* QR Code Placeholder Area */}
-                                <div className="pt-10 flex flex-col items-end">
-                                    <div className="w-32 h-32 border-2 border-black flex items-center justify-center p-2">
-                                        <div className="w-full h-full bg-zinc-100 flex items-center justify-center text-center p-2">
-                                            <p className="text-[8px] font-black uppercase">Controle<br/>Interno<br/>QR CODE</p>
-                                        </div>
-                                    </div>
-                                    <p className="text-[8px] font-black mt-2 uppercase text-zinc-400">Válido para Auditoria de Produção</p>
+                                <div className="bg-black text-white p-2 flex flex-col justify-center overflow-hidden">
+                                    <p className="text-[6px] font-black uppercase text-zinc-400">Moldura</p>
+                                    <p className="text-[9px] font-bold truncate">{frameInfo?.name || 'A Definir'}</p>
+                                </div>
+
+                                <div className="border border-black p-2 flex flex-col justify-center">
+                                    <p className="text-[6px] font-black uppercase text-zinc-500">Acabamento</p>
+                                    <p className="text-[9px] font-bold truncate leading-none">{item.product_name.includes('Vidro') ? 'COM VIDRO' : 'CANVAS'}</p>
+                                </div>
+
+                                <div className="bg-zinc-50 border border-black p-2 flex items-center justify-center">
+                                    <p className="text-[10px] font-black uppercase">QTD: {item.quantity}</p>
                                 </div>
                             </div>
                         </div>
 
-                        {/* Footer / Quality Check */}
-                        <footer className="mt-auto pt-10 border-t-[3px] border-black grid grid-cols-3 gap-8">
-                            <div className="space-y-4">
-                                <p className="text-[10px] font-black uppercase">Responsável Produção</p>
-                                <div className="border-b-[1px] border-black h-8"></div>
+                        {/* Footer for item */}
+                        <footer className="mt-2 pt-2 border-t border-black grid grid-cols-3 gap-2">
+                            <div className="flex items-center gap-2">
+                                <span className="text-[6px] font-black uppercase whitespace-nowrap">CONFERÊNCIA:</span>
+                                <div className="border-b border-black flex-1 h-3"></div>
                             </div>
-                            <div className="space-y-4">
-                                <p className="text-[10px] font-black uppercase">Conferência Qualidade</p>
-                                <div className="border-b-[1px] border-black h-8"></div>
+                            <div className="flex items-center gap-2">
+                                <span className="text-[6px] font-black uppercase whitespace-nowrap">STATUS:</span>
+                                <div className="border border-black w-3 h-3"></div>
+                                <span className="text-[6px]">OK</span>
                             </div>
-                            <div className="space-y-4 text-right">
-                                <p className="text-[10px] font-black uppercase">Data de Saída</p>
-                                <p className="text-xl font-black">___/___/_____</p>
+                            <div className="text-right">
+                                <p className="text-[8px] font-black uppercase">{order.architect_name.split(' ')[0]}</p>
                             </div>
                         </footer>
                     </div>
-                );
-            })}
+                    );
+                })}
             </div>
 
             <style>{`
@@ -643,6 +595,7 @@ const ProductionVoucher: React.FC<{ order: ProductionOrder, onClose: () => void 
                         background: white !important;
                     }
                     .break-after-page { page-break-after: always; }
+                    .break-inside-avoid { page-break-inside: avoid; }
                 }
             `}</style>
         </div>,
