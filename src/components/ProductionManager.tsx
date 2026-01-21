@@ -185,8 +185,13 @@ export const ProductionManager: React.FC = () => {
                     image_url: manualOrder.image_url || 'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?q=80&w=800&auto=format&fit=crop' // Fallback image for manual entries
                 });
 
-            if (iErr) throw iErr;
+            if (iErr) {
+                console.error('Item insertion error:', iErr);
+                throw new Error(`Erro ao salvar itens do pedido: ${iErr.message}`);
+            }
 
+            console.log('Manual order created successfully with items.');
+            
             setManualOrder({
                 client_name: '',
                 project_name: '',
@@ -198,10 +203,10 @@ export const ProductionManager: React.FC = () => {
             });
             setActiveTab('production');
             fetchData();
-            alert('Pedido manual criado com sucesso!');
-        } catch (err) {
-            console.error(err);
-            alert('Erro ao criar pedido manual.');
+            alert('Pedido manual criado com sucesso! Agora você pode imprimir o canhoto completo na aba Produção.');
+        } catch (err: any) {
+            console.error('Manual order full error:', err);
+            alert(`Erro ao criar pedido manual: ${err.message || 'Verifique sua conexão'}`);
         }
     };
 
