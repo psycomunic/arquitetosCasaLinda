@@ -112,34 +112,89 @@ export const Home: React.FC = () => {
         </div>
       </section>
 
-      {/* Seção Como Funciona (Processo Simples) */}
+      {/* Seção Como Funciona (Três Caminhos de Venda) */}
       <section className="py-32 bg-black px-6 border-b border-white/5 relative overflow-hidden">
         {/* Ambient Background Glow */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-gold/5 blur-[120px] rounded-full pointer-events-none"></div>
 
-        <div className="max-w-6xl mx-auto text-center space-y-20 relative z-10">
+        <div className="max-w-7xl mx-auto text-center space-y-20 relative z-10">
           <div className="space-y-6">
-            <h2 className="text-gold text-[10px] uppercase tracking-[0.6em] font-bold opacity-80">Processo Simplificado</h2>
-            <h3 className="text-4xl md:text-6xl font-serif text-white">Como Funciona a Parceria</h3>
+            <h2 className="text-gold text-[10px] uppercase tracking-[0.6em] font-bold opacity-80">Parceria Inteligente</h2>
+            <h3 className="text-4xl md:text-6xl font-serif text-white">3 Caminhos para sua Comissão</h3>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-16">
-            {[
-              { icon: "01", title: "Cadastro Aprovado", desc: "Solicite seu acesso e aguarde a validação do seu perfil profissional." },
-              { icon: "02", title: "Especifique ou Venda", desc: "Use nossos links trackeáveis ou solicite projetos personalizados." },
-              { icon: "03", title: "Receba 20%", desc: "Comissão garantida e depositada automaticamente em sua conta." }
-            ].map((step, i) => (
-              <div key={i} className="group relative">
-                <div className="w-28 h-28 mx-auto mb-10 relative flex items-center justify-center">
-                  <div className="absolute inset-0 rounded-full border border-gold/20 group-hover:border-gold/50 transition-colors duration-500"></div>
-                  <div className="absolute inset-0 rounded-full bg-gold/5 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                  <span className="text-3xl font-serif text-gold relative z-10">{step.icon}</span>
+          <div className="grid md:grid-cols-3 gap-8">
+            {/* MECÂNICA 1 */}
+            <div className="group relative bg-[#0a0a0a] border border-white/5 p-10 hover:border-gold/30 transition-all duration-500">
+              <div className="text-gold mb-8 flex justify-center">
+                <div className="w-16 h-16 rounded-full border border-gold/20 flex items-center justify-center group-hover:bg-gold group-hover:text-black transition-all">
+                  <Zap size={24} />
                 </div>
-
-                <h4 className="text-sm font-bold text-white uppercase tracking-[0.2em] mb-4">{step.title}</h4>
-                <p className="text-zinc-500 text-sm leading-relaxed max-w-xs mx-auto font-light">{step.desc}</p>
               </div>
-            ))}
+              <p className="text-[9px] uppercase tracking-widest text-gold font-bold mb-4">Mecânica 01</p>
+              <h4 className="text-xl font-serif text-white mb-6 uppercase tracking-wider">Indicação Direta</h4>
+              <p className="text-zinc-500 text-[11px] leading-relaxed mb-8 uppercase tracking-widest text-justify">
+                Ideal para projetos simples e alto volume. O cliente compra sozinho via seu <b>Link Exclusivo</b> ou <b>Cupom</b>. Zero fricção operacional e escala absoluta.
+              </p>
+              <div className="space-y-3 pt-6 border-t border-white/5">
+                <div className="flex justify-between text-[8px] uppercase tracking-widest font-bold">
+                  <span className="text-zinc-600">Comissão</span>
+                  <span className="text-white">Até 20%</span>
+                </div>
+                <div className="flex justify-between text-[8px] uppercase tracking-widest font-bold">
+                  <span className="text-zinc-600">Esforço</span>
+                  <span className="text-gold">Mínimo</span>
+                </div>
+              </div>
+            </div>
+
+            {/* MECÂNICA 2 */}
+            <div className="group relative bg-[#0a0a0a] border border-white/5 p-10 hover:border-gold/30 transition-all duration-500">
+              <div className="text-gold mb-8 flex justify-center">
+                <div className="w-16 h-16 rounded-full border border-gold/20 flex items-center justify-center group-hover:bg-gold group-hover:text-black transition-all">
+                  <Monitor size={24} />
+                </div>
+              </div>
+              <p className="text-[9px] uppercase tracking-widest text-gold font-bold mb-4">Mecânica 02</p>
+              <h4 className="text-xl font-serif text-white mb-6 uppercase tracking-wider">Venda Assistida</h4>
+              <p className="text-zinc-500 text-[11px] leading-relaxed mb-8 uppercase tracking-widest text-justify">
+                Para projetos de alto valor. Nosso time técnico cuida de toda a especificação, orçamento e suporte para o seu cliente final.
+              </p>
+              <div className="space-y-3 pt-6 border-t border-white/5">
+                <div className="flex justify-between text-[8px] uppercase tracking-widest font-bold">
+                  <span className="text-zinc-600">Comissão</span>
+                  <span className="text-white">+1% Bônus</span>
+                </div>
+                <div className="flex justify-between text-[8px] uppercase tracking-widest font-bold">
+                  <span className="text-zinc-600">Suporte</span>
+                  <span className="text-gold">Dedicado</span>
+                </div>
+              </div>
+            </div>
+
+            {/* MECÂNICA 3 */}
+            <div className="group relative bg-[#0a0a0a] border border-gold/20 p-10 hover:border-gold transition-all duration-500 shadow-[0_0_50px_rgba(197,160,89,0.05)]">
+              <div className="text-gold mb-8 flex justify-center">
+                <div className="w-16 h-16 rounded-full border border-gold/20 flex items-center justify-center group-hover:bg-gold group-hover:text-black transition-all">
+                  <Star size={24} />
+                </div>
+              </div>
+              <p className="text-[9px] uppercase tracking-widest text-gold font-bold mb-4">Mecânica 03</p>
+              <h4 className="text-xl font-serif text-white mb-6 uppercase tracking-wider">Projetos AAA</h4>
+              <p className="text-zinc-500 text-[11px] leading-relaxed mb-8 uppercase tracking-widest text-justify">
+                Obras gigantes, artes exclusivas de nosso artista residente e curadoria sob medida. O ápice do luxo para seus projetos mais exigentes.
+              </p>
+              <div className="space-y-3 pt-6 border-t border-white/5">
+                <div className="flex justify-between text-[8px] uppercase tracking-widest font-bold">
+                  <span className="text-zinc-600">Comissão</span>
+                  <span className="text-white">20% Garantido</span>
+                </div>
+                <div className="flex justify-between text-[8px] uppercase tracking-widest font-bold">
+                  <span className="text-zinc-600">Exclusividade</span>
+                  <span className="text-gold">Total</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>

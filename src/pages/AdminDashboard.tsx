@@ -14,6 +14,8 @@ export const AdminDashboard: React.FC = () => {
         averageTicket: 0,
         totalArchitects: 0
     });
+    const [storeDiscount, setStoreDiscount] = useState('0');
+    const [savingDiscount, setSavingDiscount] = useState(false);
 
     useEffect(() => {
         fetchData();
@@ -23,7 +25,8 @@ export const AdminDashboard: React.FC = () => {
         try {
             await Promise.all([
                 fetchPendingArchitects(),
-                fetchStats()
+                fetchStats(),
+                fetchSettings()
             ]);
         } catch (err) {
             console.error(err);
@@ -47,6 +50,35 @@ export const AdminDashboard: React.FC = () => {
             totalArchitects: architectsCount || 0
         });
     }
+
+    const fetchSettings = async () => {
+        const { data } = await supabase
+            .from('app_settings')
+            .select('value')
+            .eq('key', 'store_discount_percentage')
+            .single();
+
+        if (data) {
+            setStoreDiscount(data.value);
+        }
+    };
+
+    const handleSaveDiscount = async () => {
+        setSavingDiscount(true);
+        try {
+            const { error } = await supabase
+                .from('app_settings')
+                .upsert({ key: 'store_discount_percentage', value: storeDiscount }, { onConflict: 'key' });
+
+            if (error) throw error;
+            alert('Configuração de desconto atualizada!');
+        } catch (err) {
+            console.error(err);
+            alert('Erro ao salvar configuração.');
+        } finally {
+            setSavingDiscount(false);
+        }
+    };
 
     const fetchPendingArchitects = async () => {
         try {
@@ -132,6 +164,45 @@ export const AdminDashboard: React.FC = () => {
                         <span className="text-[9px] uppercase tracking-widest text-zinc-500">Ticket Médio</span>
                     </div>
                     <h3 className="text-2xl font-serif text-white">R$ {stats.averageTicket.toLocaleString('pt-BR', { maximumFractionDigits: 0 })}</h3>
+                </div>
+            </div>
+
+            {/* Store Settings Section */}
+            <div className="space-y-6">
+                <h3 className="text-xl font-bold text-white flex items-center gap-3">
+                    <DollarSign className="text-gold" /> Promoções & Cashback Loja
+                </h3>
+                <div className="glass p-8 md:p-12 relative overflow-hidden">
+                    <div className="absolute top-0 right-0 p-8 opacity-5">
+                        <DollarSign size={150} strokeWidth={1} />
+                    </div>
+                    <div className="max-w-md space-y-8 relative z-10">
+                        <div className="space-y-4">
+                            <label className="block text-[10px] uppercase tracking-[0.4em] font-bold text-zinc-500">
+                                Desconto Base da Loja (%)
+                            </label>
+                            <p className="text-xs text-zinc-500 mb-6">
+                                Este valor será usado como base para gerar os cupons dos arquitetos (Base + 3%).
+                            </p>
+                            <div className="flex gap-4">
+                                <input
+                                    type="number"
+                                    value={storeDiscount}
+                                    onChange={(e) => setStoreDiscount(e.target.value)}
+                                    className="flex-1 bg-white/5 border border-white/10 rounded-lg px-6 py-4 text-white font-serif text-xl focus:border-gold outline-none transition-all"
+                                    placeholder="Ex: 10"
+                                />
+                                <button
+                                    onClick={handleSaveDiscount}
+                                    disabled={savingDiscount}
+                                    className="px-8 py-4 bg-gold text-black text-[10px] font-bold uppercase tracking-widest rounded-lg hover:bg-white transition-all disabled:opacity-50 flex items-center gap-2"
+                                >
+                                    {savingDiscount ? <Loader2 size={14} className="animate-spin" /> : <FileText size={14} />}
+                                    Salvar Promoção
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 

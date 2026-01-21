@@ -14,7 +14,9 @@ export const DashboardOverview: React.FC = () => {
     const [loading, setLoading] = useState(true);
     const [assistanceModalOpen, setAssistanceModalOpen] = useState(false);
     const [customProjectModalOpen, setCustomProjectModalOpen] = useState(false);
-    const [copied, setCopied] = useState(false);
+    const [copiedLink, setCopiedLink] = useState(false);
+    const [copiedCoupon, setCopiedCoupon] = useState(false);
+    const [storeDiscount, setStoreDiscount] = useState(0);
 
     useEffect(() => {
         const fetchProfile = async () => {
@@ -34,8 +36,20 @@ export const DashboardOverview: React.FC = () => {
                         officeName: architect.office_name,
                         commissionRate: Number(architect.commission_rate),
                         totalEarnings: Number(architect.total_earnings),
-                        logoUrl: architect.logo_url
+                        logoUrl: architect.logo_url,
+                        couponCode: architect.coupon_code
                     });
+                }
+
+                // Fetch store discount setting
+                const { data: settings } = await supabase
+                    .from('app_settings')
+                    .select('value')
+                    .eq('key', 'store_discount_percentage')
+                    .single();
+                
+                if (settings) {
+                    setStoreDiscount(Number(settings.value));
                 }
             }
             setLoading(false);
@@ -46,8 +60,16 @@ export const DashboardOverview: React.FC = () => {
     const copyLink = () => {
         const link = `https://casalinda.com.br/invite/${profile?.officeName?.replace(/\s+/g, '-').toLowerCase()}`;
         navigator.clipboard.writeText(link);
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2000);
+        setCopiedLink(true);
+        setTimeout(() => setCopiedLink(false), 2000);
+    };
+
+    const copyCoupon = () => {
+        if (calculatedCoupon) {
+            navigator.clipboard.writeText(calculatedCoupon);
+            setCopiedCoupon(true);
+            setTimeout(() => setCopiedCoupon(false), 2000);
+        }
     };
 
     if (loading) {
@@ -55,6 +77,8 @@ export const DashboardOverview: React.FC = () => {
     }
 
     const firstName = profile?.name.split(' ')[0] || 'Parceiro';
+    const totalDiscountValue = storeDiscount + 3;
+    const calculatedCoupon = `${firstName.toUpperCase()}${totalDiscountValue}`;
 
     return (
         <div className="space-y-10 animate-fade-in no-print pb-20">
@@ -82,11 +106,26 @@ export const DashboardOverview: React.FC = () => {
                         Ideal para projetos simples e alto volume. O cliente compra sozinho pelo seu link.
                     </p>
 
-                    <div className="p-4 bg-black/50 rounded-xl border border-white/5 flex items-center justify-between group-hover:border-gold/30 transition-colors">
-                        <span className="text-xs text-zinc-500 font-mono">casalinda.com/{firstName.toLowerCase()}</span>
-                        <button onClick={copyLink} className="text-gold hover:text-white transition-colors">
-                            {copied ? <Check size={16} /> : <Copy size={16} />}
-                        </button>
+                    <div className="space-y-3">
+                        <div className="p-4 bg-black/50 rounded-xl border border-white/5 flex items-center justify-between group-hover:border-gold/30 transition-colors">
+                            <div className="flex flex-col">
+                                <span className="text-[8px] uppercase tracking-widest text-zinc-600 font-bold mb-1">Seu Link</span>
+                                <span className="text-[10px] text-zinc-400 font-mono">casalinda.com/{firstName.toLowerCase()}</span>
+                            </div>
+                            <button onClick={copyLink} className="text-gold hover:text-white transition-colors">
+                                {copiedLink ? <Check size={16} /> : <Copy size={16} />}
+                            </button>
+                        </div>
+
+                        <div className="p-4 bg-black/50 rounded-xl border border-white/5 flex items-center justify-between group-hover:border-gold/30 transition-colors">
+                            <div className="flex flex-col">
+                                <span className="text-[8px] uppercase tracking-widest text-zinc-600 font-bold mb-1">Seu Cupom ({totalDiscountValue}% OFF)</span>
+                                <span className="text-[10px] text-zinc-400 font-mono">{calculatedCoupon}</span>
+                            </div>
+                            <button onClick={copyCoupon} className="text-gold hover:text-white transition-colors">
+                                {copiedCoupon ? <Check size={16} /> : <Copy size={16} />}
+                            </button>
+                        </div>
                     </div>
                     <div className="mt-4 flex items-center gap-2">
                         <div className="h-1 flex-1 bg-zinc-800 rounded-full overflow-hidden">

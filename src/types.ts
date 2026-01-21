@@ -71,6 +71,7 @@ export interface ArchitectProfile {
   state?: string;
   commissionRate: number;
   totalEarnings: number;
+  couponCode?: string | null;
 }
 
 export interface Sale {

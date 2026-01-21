@@ -93,9 +93,9 @@ export const Register: React.FC = () => {
                             <div className="space-y-6">
                                 {[
                                     "20% de Comissão Direta",
+                                    "3 Mecânicas de Venda",
                                     "Portal White Label",
-                                    "Curadoria Personalizada",
-                                    "Geração de Propostas em PDF"
+                                    "Curadoria Personalizada"
                                 ].map((item, i) => (
                                     <div key={i} className="flex items-center gap-4">
                                         <CheckCircle2 size={16} className="text-gold" />
