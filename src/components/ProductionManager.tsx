@@ -293,15 +293,21 @@ export const ProductionManager: React.FC = () => {
                                     <h4 className="text-white font-serif text-2xl">{order.project_name}</h4>
                                     <p className="text-xs text-zinc-500 uppercase tracking-widest font-bold">Arquiteto: {order.architect_name}</p>
                                     <div className="flex flex-wrap gap-4 mt-4">
-                                        {order.items.map((item, idx) => (
-                                            <div key={idx} className="flex items-center gap-3 bg-white/5 p-2 rounded">
-                                                <img src={item.image_url} className="w-12 h-12 object-cover rounded" alt="" />
-                                                <div className="text-[9px]">
-                                                    <p className="text-white font-bold">{item.product_name}</p>
-                                                    <p className="text-zinc-500">{item.quantity} un.</p>
+                                        {order.items.length > 0 ? (
+                                            order.items.map((item, idx) => (
+                                                <div key={idx} className="flex items-center gap-3 bg-white/5 p-2 rounded">
+                                                    <img src={item.image_url} className="w-12 h-12 object-cover rounded" alt="" />
+                                                    <div className="text-[9px]">
+                                                        <p className="text-white font-bold">{item.product_name}</p>
+                                                        <p className="text-zinc-500">{item.quantity} un.</p>
+                                                    </div>
                                                 </div>
+                                            ))
+                                        ) : (
+                                            <div className="flex items-center gap-2 text-red-500 bg-red-500/10 px-4 py-2 rounded border border-red-500/20 text-[10px] font-bold uppercase tracking-wider">
+                                                <AlertCircle size={14} /> Dados técnicos não salvos (Este pedido é anterior à correção do sistema)
                                             </div>
-                                        ))}
+                                        )}
                                     </div>
                                 </div>
                                 <div className="flex gap-4">
