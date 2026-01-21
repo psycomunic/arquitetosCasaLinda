@@ -412,7 +412,7 @@ const ProductionVoucher: React.FC<{ order: ProductionOrder, onClose: () => void 
     }, []);
 
     return createPortal(
-        <div className="fixed inset-0 bg-white z-[9999] overflow-y-auto p-10 font-sans text-black">
+        <div className="portal-print-container fixed inset-0 bg-white z-[9999] overflow-y-auto p-10 font-sans text-black">
             {/* Control Header */}
             <div className="no-print flex justify-between items-center mb-10 bg-zinc-900 p-4 rounded text-white sticky top-0">
                 <p className="text-xs uppercase font-bold tracking-widest text-gold">Canhoto de Produção</p>
@@ -424,8 +424,13 @@ const ProductionVoucher: React.FC<{ order: ProductionOrder, onClose: () => void 
 
             {/* VOUCHER CONTENT - A4 Optimized */}
             <div className="max-w-[800px] mx-auto space-y-12">
+                {order.items.length === 0 && (
+                    <div className="p-20 text-center border-2 border-dashed border-zinc-200">
+                        <p className="text-zinc-400">Nenhum item encontrado para este pedido.</p>
+                    </div>
+                )}
                 {order.items.map((item, idx) => (
-                    <div key={idx} className="border-2 border-black p-10 relative overflow-hidden break-after-page">
+                    <div key={idx} className="border-2 border-black p-10 relative overflow-hidden break-after-page bg-white">
                         {/* Status Label on voucher */}
                         <div className="absolute top-5 right-5 border-2 border-black px-4 py-1 flex flex-col items-center">
                             <span className="text-[10px] font-bold uppercase">Pedido</span>
@@ -501,11 +506,20 @@ const ProductionVoucher: React.FC<{ order: ProductionOrder, onClose: () => void 
             </div>
 
             <style>{`
-                @page { size: A4; margin: 10mm; }
+                @page { size: A4; margin: 0; }
                 @media print {
                     .no-print { display: none !important; }
-                    body { background: white !important; padding: 0 !important; }
                     #root { display: none !important; }
+                    body { background: white !important; margin: 0 !important; padding: 0 !important; }
+                    .portal-print-container { 
+                        position: static !important; 
+                        inset: auto !important;
+                        width: 100% !important;
+                        height: auto !important;
+                        overflow: visible !important;
+                        padding: 0 !important;
+                        background: white !important;
+                    }
                     .break-after-page { page-break-after: always; }
                 }
             `}</style>
