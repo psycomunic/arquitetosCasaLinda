@@ -611,8 +611,8 @@ const ProductionVoucher: React.FC<{ order: ProductionOrder, onClose: () => void 
                             </div>
                         </footer>
                     </div>
-                })}
-            </div>
+                );
+            })}
             </div>
 
             <style>{`
