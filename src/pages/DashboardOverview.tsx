@@ -172,31 +172,40 @@ export const DashboardOverview: React.FC = () => {
                     </div>
                 </div>
 
-                {/* MECÂNICA 3: PROJETOS ESPECIAIS */}
-                <div className="bg-gradient-to-b from-zinc-900 to-black border border-gold/20 p-8 group hover:border-gold transition-all duration-500 relative overflow-hidden shadow-2xl">
-                    <div className="absolute top-0 right-0 p-4 bg-gold text-black rounded-bl-2xl text-[9px] font-bold uppercase tracking-widest">
-                        Exclusivo
+                {/* MECÂNICA 3: AAA */}
+                <div className="bg-canvas border border-white/5 p-8 group hover:border-gold/50 transition-all duration-500 relative overflow-hidden">
+                    <div className="absolute top-0 right-0 p-4 bg-zinc-900 rounded-bl-2xl text-[9px] font-bold uppercase tracking-widest text-zinc-500 group-hover:text-gold transition-colors">
+                        Mecânica 03
                     </div>
-                    <div className="mb-6 w-12 h-12 bg-gold/10 rounded-full flex items-center justify-center text-gold group-hover:scale-110 transition-all">
-                        <Crown size={20} />
+                    <div className="mb-6 w-12 h-12 bg-zinc-900 rounded-full flex items-center justify-center text-zinc-500 group-hover:text-gold group-hover:scale-110 transition-all">
+                        <Star size={20} />
                     </div>
                     <h3 className="text-2xl font-serif text-white mb-2">Projetos Especiais</h3>
-                    <p className="text-xs text-zinc-500 uppercase tracking-widest mb-6 font-bold">Arte Sob Medida</p>
-                    <p className="text-zinc-400 text-sm mb-8 min-h-[60px]">
-                        Obras exclusivas, tamanhos gigantes e acesso ao nosso <span className="text-gold">Artista Residente</span>.
+                    <p className="text-xs text-zinc-500 uppercase tracking-widest mb-6 font-bold">Projetos AAA</p>
+                    <p className="text-zinc-400 text-xs mb-8 min-h-[60px] leading-relaxed">
+                        Tamanho personalizado, espelhos sob medida e artes exclusivas de nosso artista residente.
                     </p>
+
+                    <a
+                        href={`https://wa.me/5511999999999?text=Olá! Sou o arquiteto ${profile?.name} e gostaria de solicitar um Projeto Especial (AAA).`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-full py-4 bg-zinc-900 text-white text-[10px] uppercase tracking-[0.2em] font-bold hover:bg-[#25D366] hover:text-white transition-all flex items-center justify-center gap-2 mb-3"
+                    >
+                        Solicitar via WhatsApp
+                    </a>
 
                     <button
                         onClick={() => setCustomProjectModalOpen(true)}
-                        className="w-full py-4 bg-gold text-black text-[10px] uppercase tracking-[0.2em] font-bold hover:bg-white transition-all shadow-[0_0_20px_rgba(197,160,89,0.2)]"
+                        className="w-full py-4 border border-white/5 text-zinc-500 text-[10px] uppercase tracking-[0.2em] font-bold hover:bg-white/5 transition-all"
                     >
-                        Iniciar Projeto AAA
+                        Ver Detalhes do Fluxo
                     </button>
                     <div className="mt-4 flex items-center gap-2">
                         <div className="h-1 flex-1 bg-zinc-800 rounded-full overflow-hidden">
                             <div className="h-full w-full bg-gold"></div>
                         </div>
-                        <span className="text-[9px] uppercase tracking-widest text-gold font-bold">20% Garantido</span>
+                        <span className="text-[9px] uppercase tracking-widest text-gold font-bold">20% Fixo</span>
                     </div>
                 </div>
             </div>

@@ -173,25 +173,25 @@ export const Home: React.FC = () => {
             </div>
 
             {/* MECÂNICA 3 */}
-            <div className="group relative bg-[#0a0a0a] border border-gold/20 p-10 hover:border-gold transition-all duration-500 shadow-[0_0_50px_rgba(197,160,89,0.05)]">
+            <div className="group relative bg-[#0a0a0a] border border-white/5 p-10 hover:border-gold/30 transition-all duration-500">
               <div className="text-gold mb-8 flex justify-center">
                 <div className="w-16 h-16 rounded-full border border-gold/20 flex items-center justify-center group-hover:bg-gold group-hover:text-black transition-all">
                   <Star size={24} />
                 </div>
               </div>
               <p className="text-[9px] uppercase tracking-widest text-gold font-bold mb-4">Mecânica 03</p>
-              <h4 className="text-xl font-serif text-white mb-6 uppercase tracking-wider">Projetos AAA</h4>
+              <h4 className="text-xl font-serif text-white mb-6 uppercase tracking-wider">Projetos Especiais</h4>
               <p className="text-zinc-500 text-[11px] leading-relaxed mb-8 uppercase tracking-widest text-justify">
-                Obras gigantes, artes exclusivas de nosso artista residente e curadoria sob medida. O ápice do luxo para seus projetos mais exigentes.
+                <b>Projetos AAA</b>: Tamanho personalizado, espelhos sob medida e artes exclusivas de nosso artista residente para obras autorais de alto padrão.
               </p>
               <div className="space-y-3 pt-6 border-t border-white/5">
                 <div className="flex justify-between text-[8px] uppercase tracking-widest font-bold">
                   <span className="text-zinc-600">Comissão</span>
-                  <span className="text-white">20% Garantido</span>
+                  <span className="text-white">20% FIXO</span>
                 </div>
                 <div className="flex justify-between text-[8px] uppercase tracking-widest font-bold">
-                  <span className="text-zinc-600">Exclusividade</span>
-                  <span className="text-gold">Total</span>
+                  <span className="text-zinc-600">Nível</span>
+                  <span className="text-gold">EXCLUSIVIDADE</span>
                 </div>
               </div>
             </div>

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
-import { X, Palette, Star, CheckCircle } from 'lucide-react';
+import { X, Palette, Star, CheckCircle, MessageSquare } from 'lucide-react';
 
 interface CustomProjectModalProps {
     isOpen: boolean;
@@ -34,67 +34,48 @@ export const CustomProjectModal: React.FC<CustomProjectModalProps> = ({ isOpen, 
                 {step === 1 ? (
                     <div className="p-8 md:p-12">
                         <div className="mb-8">
-                            <div className="flex items-center gap-2 mb-2">
-                                <span className="text-gold text-[10px] uppercase tracking-[0.3em] font-bold">Mecânica 03</span>
-                                <div className="bg-gold/10 text-gold px-2 py-1 rounded text-[9px] font-bold uppercase tracking-wider flex items-center gap-1">
-                                    <Star size={10} /> Projetos Especiais
+                            <span className="text-gold text-[10px] uppercase tracking-[0.3em] font-bold">Mecânica 03</span>
+                            <h3 className="text-3xl font-serif mt-2 mb-4">Como funcionam os Projetos Especiais</h3>
+                            <div className="grid md:grid-cols-2 gap-8 text-sm leading-relaxed">
+                                <div className="space-y-4">
+                                    <h4 className="text-zinc-900 font-bold uppercase tracking-widest text-[10px]">O que você pode solicitar:</h4>
+                                    <ul className="space-y-2 text-zinc-500">
+                                        <li>• Tamanhos 100% personalizados</li>
+                                        <li>• Espelhos sob medida</li>
+                                        <li>• Artes exclusivas (Artista Residente)</li>
+                                        <li>• Projetos Corporativos / Hotéis</li>
+                                    </ul>
+                                </div>
+                                <div className="space-y-4">
+                                    <h4 className="text-zinc-900 font-bold uppercase tracking-widest text-[10px]">Fluxo de Trabalho:</h4>
+                                    <ul className="space-y-2 text-zinc-500">
+                                        <li>1. <b>Orçamento:</b> Envie a demanda via WhatsApp</li>
+                                        <li>2. <b>Produção:</b> Executamos o projeto técnico</li>
+                                        <li>3. <b>Faturamento:</b> Proposta oficial e nota fiscal</li>
+                                        <li className="text-gold font-bold">• <b>Comissão:</b> 20% FIXO</li>
+                                    </ul>
                                 </div>
                             </div>
-                            <h3 className="text-3xl font-serif mb-4">Projeto Personalizado</h3>
-                            <p className="text-zinc-500 text-sm leading-relaxed">
-                                Solicite obras exclusivas, tamanhos sob medida ou curadoria artistica com nosso Artista Residente.
-                                <br />
-                                <span className="text-black font-bold mt-2 block">Comissão Fixa de 20%.</span>
-                            </p>
                         </div>
 
-                        <form onSubmit={handleSubmit} className="space-y-6">
-                            <div className="grid grid-cols-2 gap-6">
-                                <div className="space-y-2">
-                                    <label className="text-xs font-bold uppercase tracking-widest text-zinc-700">Tipo de Demanda</label>
-                                    <select className="w-full bg-zinc-50 border border-zinc-200 rounded-xl p-4 text-sm text-zinc-900 focus:outline-none focus:border-gold transition-colors appearance-none">
-                                        <option>Obra sob Medida</option>
-                                        <option>Artista Residente (Exclusivo)</option>
-                                        <option>Espelhos Especiais</option>
-                                        <option>Consultoria Completa</option>
-                                    </select>
-                                </div>
-                                <div className="space-y-2">
-                                    <label className="text-xs font-bold uppercase tracking-widest text-zinc-700">Ambiente</label>
-                                    <input
-                                        type="text"
-                                        placeholder="Ex: Lobby Hotel, Living..."
-                                        className="w-full bg-zinc-50 border border-zinc-200 rounded-xl p-4 text-sm text-zinc-900 focus:outline-none focus:border-gold transition-colors"
-                                    />
-                                </div>
-                            </div>
-
-                            <div className="space-y-2">
-                                <label className="text-xs font-bold uppercase tracking-widest text-zinc-700 flex items-center gap-2">
-                                    <Palette size={14} /> Paleta de Cores / Estilo
-                                </label>
-                                <input
-                                    type="text"
-                                    placeholder="Ex: Tons terrosos, minimalista, vibrante..."
-                                    className="w-full bg-zinc-50 border border-zinc-200 rounded-xl p-4 text-sm text-zinc-900 focus:outline-none focus:border-gold transition-colors"
-                                />
-                            </div>
-
-                            <div className="space-y-2">
-                                <label className="text-xs font-bold uppercase tracking-widest text-zinc-700">Detalhamento</label>
-                                <textarea
-                                    className="w-full bg-zinc-50 border border-zinc-200 rounded-xl p-4 text-sm text-zinc-900 focus:outline-none focus:border-gold transition-colors min-h-[100px]"
-                                    placeholder="Descreva a visão para este projeto..."
-                                ></textarea>
-                            </div>
-
-                            <button
-                                type="submit"
-                                className="w-full bg-black text-white py-4 rounded-xl font-bold uppercase tracking-widest hover:bg-gold transition-colors"
+                        <div className="space-y-4">
+                            <a
+                                href="https://wa.me/5511999999999?text=Olá! Gostaria de falar sobre um Projeto Especial (Tamanho personalizado / Arte exclusiva / AAA)."
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="w-full bg-[#25D366] text-white py-5 rounded-xl font-bold uppercase tracking-widest hover:opacity-90 transition-all flex items-center justify-center gap-3 shadow-lg shadow-green-500/20"
                             >
-                                Iniciar Projeto Especial
+                                <MessageSquare size={20} />
+                                Solicitar via WhatsApp
+                            </a>
+                            
+                            <button
+                                onClick={onClose}
+                                className="w-full bg-zinc-100 text-zinc-500 py-4 rounded-xl font-bold text-[10px] uppercase tracking-widest hover:bg-zinc-200 transition-colors"
+                            >
+                                Voltar ao Painel
                             </button>
-                        </form>
+                        </div>
                     </div>
                 ) : (
                     <div className="p-12 text-center py-24">
