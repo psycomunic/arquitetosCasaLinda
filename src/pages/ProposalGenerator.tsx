@@ -149,10 +149,36 @@ export const ProposalGenerator: React.FC = () => {
             const reader = new FileReader();
             reader.onloadend = () => {
                 setCustomImage(reader.result as string);
+                setCustomTitle(file.name.split('.')[0]); // Set title to filename
             };
             reader.readAsDataURL(file);
         }
     };
+
+    // Handle paste interface
+    useEffect(() => {
+        const handlePaste = (e: ClipboardEvent) => {
+            const items = e.clipboardData?.items;
+            if (!items) return;
+
+            for (let i = 0; i < items.length; i++) {
+                if (items[i].type.indexOf('image') !== -1) {
+                    const blob = items[i].getAsFile();
+                    if (blob) {
+                        const reader = new FileReader();
+                        reader.onloadend = () => {
+                            setCustomImage(reader.result as string);
+                            setCustomTitle('Imagem Colada');
+                        };
+                        reader.readAsDataURL(blob);
+                    }
+                }
+            }
+        };
+
+        window.addEventListener('paste', handlePaste);
+        return () => window.removeEventListener('paste', handlePaste);
+    }, []);
 
     const totalProposalValue = proposalItems.reduce((acc, item) => acc + item.price, 0);
 
@@ -338,88 +364,65 @@ export const ProposalGenerator: React.FC = () => {
                         </div>
                     </div>
 
-                    {/* Catalog & Upload */}
+                    {/* Upload / Paste Area */}
                     <div className="glass p-10 space-y-12">
                         <div className="flex flex-col md:flex-row justify-between items-center gap-8">
-                            <h3 className="font-serif text-3xl text-white">Acervo ou Upload</h3>
+                            <div className="space-y-2">
+                                <h3 className="font-serif text-3xl text-white">Adicionar Imagem</h3>
+                                <p className="text-zinc-500 text-[10px] uppercase tracking-widest font-bold">Faça upload ou simplesmente cole (Ctrl+V) a imagem do quadro</p>
+                            </div>
                             <div className="flex gap-4 w-full md:w-auto">
-                                <div className="relative flex-1 md:w-64">
-                                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-600" size={14} />
-                                    <input
-                                        type="text"
-                                        placeholder="Buscar no acervo..."
-                                        value={searchTerm}
-                                        onChange={(e) => setSearchTerm(e.target.value)}
-                                        className="w-full pl-10 pr-4 py-3 text-[10px] glass-dark border border-white/5 rounded-lg focus:border-gold outline-none"
-                                    />
-                                </div>
                                 <button
                                     onClick={() => fileInputRef.current?.click()}
-                                    className="bg-white text-black px-6 py-3 text-[9px] uppercase font-bold tracking-widest hover:bg-gold transition-all"
+                                    className="bg-white text-black px-10 py-4 text-[9px] uppercase font-bold tracking-[0.3em] hover:bg-gold transition-all rounded-lg flex items-center gap-3 shadow-xl"
                                 >
-                                    <Upload size={14} className="inline mr-2" /> Upload
+                                    <Upload size={14} /> Selecionar Arquivo
                                 </button>
                                 <input type="file" ref={fileInputRef} onChange={handleImageUpload} className="hidden" accept="image/*" />
                             </div>
                         </div>
 
-                        {/* Custom Upload Preview */}
-                        {customImage && (
-                            <div className="p-8 border-2 border-dashed border-gold/30 rounded-xl bg-gold/5 flex flex-col md:flex-row gap-10 items-center animate-fade-in">
-                                <img src={customImage} className="w-40 h-40 object-cover rounded shadow-2xl" alt="Custom" />
+                        {/* Custom Upload/Paste Preview */}
+                        {customImage ? (
+                            <div className="p-8 border-2 border-dashed border-gold/30 rounded-xl bg-gold/5 flex flex-col md:flex-row gap-10 items-center animate-fade-in relative">
+                                <button 
+                                    onClick={() => setCustomImage(null)}
+                                    className="absolute top-4 right-4 text-zinc-500 hover:text-white transition-colors"
+                                >
+                                    <Trash2 size={16} />
+                                </button>
+                                <img src={customImage} className="w-56 h-56 object-cover rounded shadow-2xl border border-white/10" alt="Custom" />
                                 <div className="flex-1 space-y-6">
                                     <div className="space-y-3">
-                                        <label className="text-[9px] uppercase font-bold text-zinc-500 tracking-widest">Título da Obra (Opcional)</label>
+                                        <label className="text-[9px] uppercase font-bold text-zinc-500 tracking-widest">Título da Obra no Site</label>
                                         <input
                                             type="text"
                                             value={customTitle}
                                             onChange={(e) => setCustomTitle(e.target.value)}
-                                            placeholder="Ex: Foto Família / Arte Digital"
-                                            className="w-full px-6 py-4 text-xs glass-dark border border-white/5 rounded-lg focus:border-gold outline-none"
+                                            placeholder="Ex: Abstração Minimalista I"
+                                            className="w-full px-6 py-4 text-xs glass-dark border border-white/5 rounded-lg focus:border-gold outline-none text-white font-serif"
                                         />
                                     </div>
                                     <button
                                         onClick={handleAddCustomToProposal}
-                                        className="bg-gold text-black px-10 py-4 text-[9px] uppercase font-bold tracking-widest hover:bg-white transition-all shadow-xl"
+                                        className="w-full md:w-auto bg-gold text-black px-12 py-5 text-[10px] uppercase font-bold tracking-[0.4em] hover:bg-white transition-all shadow-2xl rounded-lg"
                                     >
-                                        Adicionar Imagem à Proposta
+                                        Incluir na Proposta
                                     </button>
                                 </div>
                             </div>
-                        )}
-
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-10">
-                            {filteredArts.map((art) => (
-                                <div key={art.id} className="group relative flex flex-col glass overflow-hidden hover:border-gold/30 transition-all">
-                                    <div className="aspect-[4/5] bg-zinc-900 relative overflow-hidden">
-                                        <img
-                                            src={art.imageUrl}
-                                            alt={art.title}
-                                            className="w-full h-full object-cover group-hover:scale-110 grayscale group-hover:grayscale-0 transition-all duration-1000"
-                                        />
-                                        <div className="absolute inset-0 bg-black/40 group-hover:bg-black/10 transition-all duration-500" />
-                                        <button
-                                            onClick={() => handleAddArtToProposal(art)}
-                                            className="absolute bottom-6 right-6 w-14 h-14 bg-white text-black flex items-center justify-center rounded-full shadow-2xl scale-0 group-hover:scale-100 transition-transform duration-500 hover:bg-gold hover:text-white"
-                                        >
-                                            <Plus size={24} />
-                                        </button>
-                                    </div>
-                                    <div className="p-8">
-                                        <div className="flex justify-between items-start">
-                                            <div>
-                                                <p className="text-[9px] text-gold uppercase tracking-[0.4em] font-bold mb-3">{art.category}</p>
-                                                <h4 className="font-serif text-2xl text-white mb-2">{art.title}</h4>
-                                            </div>
-                                            <div className="text-right">
-                                                <p className="text-xs font-bold text-white">R$ {art.price.toLocaleString('pt-BR')}</p>
-                                                <p className="text-[9px] text-zinc-500 uppercase mt-1">Sugerido</p>
-                                            </div>
-                                        </div>
-                                    </div>
+                        ) : (
+                            <div 
+                                onClick={() => fileInputRef.current?.click()}
+                                className="border-2 border-dashed border-white/5 rounded-2xl p-20 text-center hover:border-gold/30 hover:bg-white/5 transition-all cursor-pointer group"
+                            >
+                                <div className="w-20 h-20 bg-zinc-900 rounded-full flex items-center justify-center mx-auto mb-8 group-hover:scale-110 transition-transform">
+                                    <Upload className="text-zinc-600 group-hover:text-gold" size={30} />
                                 </div>
-                            ))}
-                        </div>
+                                <h4 className="text-white font-serif text-xl mb-2">Arraste ou Cole sua Imagem</h4>
+                                <p className="text-zinc-500 text-xs tracking-widest uppercase">Ou clique para selecionar um arquivo</p>
+                            </div>
+                        )}
                     </div>
                 </div>
 

@@ -158,7 +158,7 @@ export const Home: React.FC = () => {
               <p className="text-[9px] uppercase tracking-widest text-gold font-bold mb-4">Mecânica 02</p>
               <h4 className="text-xl font-serif text-white mb-6 uppercase tracking-wider">Venda Assistida</h4>
               <p className="text-zinc-500 text-[11px] leading-relaxed mb-8 uppercase tracking-widest text-justify">
-                Para projetos de alto valor. Nosso time técnico cuida de toda a especificação, orçamento e suporte para o seu cliente final.
+                Nosso time sugere composições, ajusta medidas e <b>simula os quadros no seu projeto</b>. Você recebe um link personalizado para o cliente apenas realizar o pagamento.
               </p>
               <div className="space-y-3 pt-6 border-t border-white/5">
                 <div className="flex justify-between text-[8px] uppercase tracking-widest font-bold">
@@ -167,7 +167,7 @@ export const Home: React.FC = () => {
                 </div>
                 <div className="flex justify-between text-[8px] uppercase tracking-widest font-bold">
                   <span className="text-zinc-600">Suporte</span>
-                  <span className="text-gold">Dedicado</span>
+                  <span className="text-gold">Humanizado</span>
                 </div>
               </div>
             </div>

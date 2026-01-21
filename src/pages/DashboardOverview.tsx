@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { DollarSign, Award, ArrowRight, Inbox, Share2, UploadCloud, Crown, Copy, Check } from 'lucide-react';
+import { DollarSign, Award, ArrowRight, Inbox, Share2, UploadCloud, Crown, Copy, Check, MessageSquare } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { ArchitectProfile } from '../types';
@@ -141,19 +141,28 @@ export const DashboardOverview: React.FC = () => {
                         Mecânica 02
                     </div>
                     <div className="mb-6 w-12 h-12 bg-zinc-900 rounded-full flex items-center justify-center text-zinc-500 group-hover:text-gold group-hover:scale-110 transition-all">
-                        <UploadCloud size={20} />
+                        <MessageSquare size={20} />
                     </div>
                     <h3 className="text-2xl font-serif text-white mb-2">Venda Assistida</h3>
                     <p className="text-xs text-zinc-500 uppercase tracking-widest mb-6 font-bold">Valor & Suporte</p>
-                    <p className="text-zinc-400 text-sm mb-8 min-h-[60px]">
-                        Envie o projeto e nosso time cuida da especificação e orçamento.
+                    <p className="text-zinc-400 text-xs mb-8 min-h-[60px] leading-relaxed">
+                        Envie seu projeto e nosso time sugere composições, ajusta medidas e simula no ambiente de forma real.
                     </p>
+
+                    <a
+                        href={`https://wa.me/5511999999999?text=Olá! Sou o arquiteto ${profile?.name} e gostaria de solicitar uma Venda Assistida para um projeto meu.`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-full py-4 bg-zinc-900 text-white text-[10px] uppercase tracking-[0.2em] font-bold hover:bg-[#25D366] hover:text-white transition-all flex items-center justify-center gap-2 mb-3"
+                    >
+                        Solicitar via WhatsApp
+                    </a>
 
                     <button
                         onClick={() => setAssistanceModalOpen(true)}
-                        className="w-full py-4 bg-zinc-900 text-white text-[10px] uppercase tracking-[0.2em] font-bold hover:bg-gold hover:text-black transition-all"
+                        className="w-full py-4 border border-white/5 text-zinc-500 text-[10px] uppercase tracking-[0.2em] font-bold hover:bg-white/5 transition-all"
                     >
-                        Solicitar Assistência
+                        Ver Detalhes do Fluxo
                     </button>
                     <div className="mt-4 flex items-center gap-2">
                         <div className="h-1 flex-1 bg-zinc-800 rounded-full overflow-hidden">

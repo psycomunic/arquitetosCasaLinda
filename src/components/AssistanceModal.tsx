@@ -35,38 +35,36 @@ export const AssistanceModal: React.FC<AssistanceModalProps> = ({ isOpen, onClos
                     <div className="p-8 md:p-12">
                         <div className="mb-8">
                             <span className="text-gold text-[10px] uppercase tracking-[0.3em] font-bold">Mecânica 02</span>
-                            <h3 className="text-3xl font-serif mt-2 mb-4">Venda Assistida</h3>
-                            <p className="text-zinc-500 text-sm leading-relaxed">
-                                Envie seu projeto e nossa equipe de especialistas fará a curadoria, simulação e orçamento para seu cliente.
-                                <br />
-                                <span className="text-gold font-bold mt-2 block">+1% de Bônus na comissão.</span>
-                            </p>
+                            <h3 className="text-3xl font-serif mt-2 mb-4">Como funciona a Venda Assistida</h3>
+                            <div className="space-y-4 text-zinc-500 text-sm leading-relaxed">
+                                <p>1. <b>Você envia o projeto:</b> Clique no botão de WhatsApp para falar com nossa curadoria.</p>
+                                <p>2. <b>Nós fazemos a curadoria:</b> Sugerimos composições e ajustamos medidas para o seu ambiente.</p>
+                                <p>3. <b>Simulamos no ambiente:</b> Criamos apresentações realistas dos quadros no seu projeto.</p>
+                                <p>4. <b>Link Personalizado:</b> Enviamos um link pronto para o seu cliente apenas realizar o pagamento.</p>
+                                <p className="text-gold font-bold p-3 bg-gold/5 border border-gold/10 rounded-lg">
+                                    💰 Benefício: +1% de Bônus na comissão por venda assistida.
+                                </p>
+                            </div>
                         </div>
 
-                        <form onSubmit={handleSubmit} className="space-y-6">
-                            <div className="space-y-2">
-                                <label className="text-xs font-bold uppercase tracking-widest text-zinc-700">Upload do Projeto / Planta</label>
-                                <div className="border-2 border-dashed border-zinc-200 rounded-xl p-8 text-center hover:border-gold transition-colors cursor-pointer group">
-                                    <Upload className="mx-auto text-zinc-300 group-hover:text-gold mb-4 transition-colors" />
-                                    <p className="text-xs text-zinc-400">Arraste seu arquivo ou clique para selecionar</p>
-                                </div>
-                            </div>
-
-                            <div className="space-y-2">
-                                <label className="text-xs font-bold uppercase tracking-widest text-zinc-700">Observações / Briefing</label>
-                                <textarea
-                                    className="w-full bg-zinc-50 border border-zinc-200 rounded-xl p-4 text-sm focus:outline-none focus:border-gold transition-colors min-h-[120px]"
-                                    placeholder="Descreva o estilo do cliente, cores preferidas e quaisquer detalhes importantes..."
-                                ></textarea>
-                            </div>
-
-                            <button
-                                type="submit"
-                                className="w-full bg-black text-white py-4 rounded-xl font-bold uppercase tracking-widest hover:bg-gold transition-colors"
+                        <div className="space-y-4">
+                            <a
+                                href="https://wa.me/5511999999999?text=Olá! Gostaria de iniciar uma Venda Assistida para um novo projeto."
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="w-full bg-[#25D366] text-white py-5 rounded-xl font-bold uppercase tracking-widest hover:opacity-90 transition-all flex items-center justify-center gap-3 shadow-lg shadow-green-500/20"
                             >
-                                Enviar Solicitação
+                                <MessageSquare size={20} />
+                                Iniciar via WhatsApp agora
+                            </a>
+                            
+                            <button
+                                onClick={onClose}
+                                className="w-full bg-zinc-100 text-zinc-500 py-4 rounded-xl font-bold text-[10px] uppercase tracking-widest hover:bg-zinc-200 transition-colors"
+                            >
+                                Voltar ao Painel
                             </button>
-                        </form>
+                        </div>
                     </div>
                 ) : (
                     <div className="p-12 text-center py-24">
