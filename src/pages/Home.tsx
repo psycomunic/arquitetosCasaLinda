@@ -125,18 +125,24 @@ export const Home: React.FC = () => {
 
           <div className="grid md:grid-cols-3 gap-8">
             {/* MECÂNICA 1 */}
-            <div className="group relative bg-[#0a0a0a] border border-white/5 p-10 hover:border-gold/30 transition-all duration-500">
-              <div className="text-gold mb-8 flex justify-center">
+            <div className="group relative glass p-10 hover:border-gold/30 transition-all duration-500 flex flex-col items-center text-center">
+              <div className="text-gold mb-8">
                 <div className="w-16 h-16 rounded-full border border-gold/20 flex items-center justify-center group-hover:bg-gold group-hover:text-black transition-all">
                   <Zap size={24} />
                 </div>
               </div>
               <p className="text-[9px] uppercase tracking-widest text-gold font-bold mb-4">Mecânica 01</p>
               <h4 className="text-xl font-serif text-white mb-6 uppercase tracking-wider">Indicação Direta</h4>
-              <p className="text-zinc-500 text-[11px] leading-relaxed mb-8 uppercase tracking-widest text-justify">
+              <p className="text-zinc-500 text-[11px] leading-relaxed mb-8 uppercase tracking-widest text-center">
                 Ideal para projetos simples e alto volume. O cliente compra sozinho via seu <b>Link Exclusivo</b> ou <b>Cupom</b>. Zero fricção operacional e escala absoluta.
               </p>
-              <div className="space-y-3 pt-6 border-t border-white/5">
+              <button 
+                onClick={() => navigate('/register')}
+                className="w-full mb-8 py-3 border border-white/10 text-[8px] uppercase tracking-[0.3em] font-bold text-white hover:bg-white hover:text-black transition-all duration-300"
+              >
+                Gerar meu Link Exclusivo
+              </button>
+              <div className="w-full space-y-3 pt-6 border-t border-white/5">
                 <div className="flex justify-between text-[8px] uppercase tracking-widest font-bold">
                   <span className="text-zinc-600">Comissão</span>
                   <span className="text-white">Até 20%</span>
@@ -149,18 +155,24 @@ export const Home: React.FC = () => {
             </div>
 
             {/* MECÂNICA 2 */}
-            <div className="group relative bg-[#0a0a0a] border border-white/5 p-10 hover:border-gold/30 transition-all duration-500">
-              <div className="text-gold mb-8 flex justify-center">
+            <div className="group relative glass p-10 hover:border-gold/30 transition-all duration-500 flex flex-col items-center text-center">
+              <div className="text-gold mb-8">
                 <div className="w-16 h-16 rounded-full border border-gold/20 flex items-center justify-center group-hover:bg-gold group-hover:text-black transition-all">
                   <Monitor size={24} />
                 </div>
               </div>
               <p className="text-[9px] uppercase tracking-widest text-gold font-bold mb-4">Mecânica 02</p>
               <h4 className="text-xl font-serif text-white mb-6 uppercase tracking-wider">Venda Assistida</h4>
-              <p className="text-zinc-500 text-[11px] leading-relaxed mb-8 uppercase tracking-widest text-justify">
+              <p className="text-zinc-500 text-[11px] leading-relaxed mb-8 uppercase tracking-widest text-center">
                 Nosso time sugere composições, ajusta medidas e <b>simula os quadros no seu projeto</b>. Você recebe um link personalizado para o cliente apenas realizar o pagamento.
               </p>
-              <div className="space-y-3 pt-6 border-t border-white/5">
+              <button 
+                onClick={() => navigate('/register')}
+                className="w-full mb-8 py-3 bg-white/5 border border-gold/30 text-[8px] uppercase tracking-[0.3em] font-bold text-gold hover:bg-gold hover:text-black transition-all duration-300"
+              >
+                Solicitar Simulação Técnica
+              </button>
+              <div className="w-full space-y-3 pt-6 border-t border-white/5">
                 <div className="flex justify-between text-[8px] uppercase tracking-widest font-bold">
                   <span className="text-zinc-600">Comissão</span>
                   <span className="text-white">+1% Bônus</span>
@@ -173,18 +185,24 @@ export const Home: React.FC = () => {
             </div>
 
             {/* MECÂNICA 3 */}
-            <div className="group relative bg-[#0a0a0a] border border-white/5 p-10 hover:border-gold/30 transition-all duration-500">
-              <div className="text-gold mb-8 flex justify-center">
+            <div className="group relative glass p-10 hover:border-gold/30 transition-all duration-500 flex flex-col items-center text-center">
+              <div className="text-gold mb-8">
                 <div className="w-16 h-16 rounded-full border border-gold/20 flex items-center justify-center group-hover:bg-gold group-hover:text-black transition-all">
                   <Star size={24} />
                 </div>
               </div>
               <p className="text-[9px] uppercase tracking-widest text-gold font-bold mb-4">Mecânica 03</p>
               <h4 className="text-xl font-serif text-white mb-6 uppercase tracking-wider">Projetos Especiais</h4>
-              <p className="text-zinc-500 text-[11px] leading-relaxed mb-8 uppercase tracking-widest text-justify">
+              <p className="text-zinc-500 text-[11px] leading-relaxed mb-8 uppercase tracking-widest text-center">
                 <b>Projetos AAA</b>: Tamanho personalizado, espelhos sob medida e artes exclusivas de nosso artista residente para obras autorais de alto padrão.
               </p>
-              <div className="space-y-3 pt-6 border-t border-white/5">
+              <button 
+                onClick={() => navigate('/register')}
+                className="w-full mb-8 py-3 bg-gold text-black text-[8px] uppercase tracking-[0.3em] font-bold shadow-[0_0_20px_rgba(197,160,89,0.3)] hover:shadow-[0_0_40px_rgba(197,160,89,0.5)] hover:-translate-y-0.5 transition-all duration-300"
+              >
+                Consultar Briefing VIP
+              </button>
+              <div className="w-full space-y-3 pt-6 border-t border-white/5">
                 <div className="flex justify-between text-[8px] uppercase tracking-widest font-bold">
                   <span className="text-zinc-600">Comissão</span>
                   <span className="text-white">20% FIXO</span>
