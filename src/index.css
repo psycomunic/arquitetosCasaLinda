@@ -7,17 +7,20 @@
 }
 
 .glass-3d {
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0) 100%);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-    transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.03) 100%);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow:
+        0 8px 32px 0 rgba(0, 0, 0, 0.6),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+    transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 .glass-3d:hover {
-    border: 1px solid rgba(197, 160, 89, 0.3);
-    box-shadow: 0 20px 40px 0 rgba(0, 0, 0, 0.5), 0 0 20px 0 rgba(197, 160, 89, 0.1);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.05) 100%);
+    border: 1px solid rgba(197, 160, 89, 0.5);
+    box-shadow: 0 30px 60px 0 rgba(0, 0, 0, 0.7), 0 0 30px 0 rgba(197, 160, 89, 0.2);
 }
 
 .perspective-1000 {
