@@ -18,6 +18,18 @@ export const PublicLayout: React.FC<PublicLayoutProps> = ({ children }) => {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
+    // Lock body scroll when mobile menu is open
+    useEffect(() => {
+        if (mobileMenuOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'unset';
+        }
+        return () => {
+            document.body.style.overflow = 'unset';
+        };
+    }, [mobileMenuOpen]);
+
     const navLinks = [
         { label: 'Canvas Premium', path: '/canvas-premium' },
         { label: 'Sustentabilidade', path: '/sustentabilidade' },
@@ -65,7 +77,7 @@ export const PublicLayout: React.FC<PublicLayoutProps> = ({ children }) => {
                 </div>
 
                 {/* Mobile Menu Overlay */}
-                <div className={`fixed inset-0 bg-black/95 z-[55] transition-all duration-500 lg:hidden ${mobileMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`}>
+                <div className={`fixed inset-0 bg-black z-[55] transition-all duration-500 lg:hidden overflow-y-auto h-screen ${mobileMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`}>
                     <div className="flex flex-col items-center justify-center h-full space-y-12 text-center p-6">
                         {navLinks.map((link) => (
                             <button
