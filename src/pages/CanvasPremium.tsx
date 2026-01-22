@@ -45,7 +45,7 @@ export const CanvasPremium: React.FC = () => {
                                         <Zap className="text-gold shrink-0" size={20} />
                                         <p className="text-sm text-zinc-400 leading-relaxed">
                                             <strong className="text-white block uppercase tracking-widest text-[10px] mb-1">Estrutura</strong>
-                                            Madeira nobre tratada de reflorestamento.
+                                            Madeira nobre tratada de reflorestamento. Opção de acabamento em gesso para selagem premium.
                                         </p>
                                     </li>
                                 </ul>
@@ -55,6 +55,7 @@ export const CanvasPremium: React.FC = () => {
                                 <div className="glass-3d p-8 text-center space-y-4 hover:-translate-y-1 transition-all">
                                     <ShieldCheck className="mx-auto text-gold" size={32} />
                                     <p className="text-[10px] uppercase tracking-[0.2em] font-bold text-white">5 Anos de Garantia</p>
+                                    <p className="text-[8px] text-zinc-500 uppercase tracking-widest">Embalagem Personalizada</p>
                                 </div>
                                 <div className="glass-3d p-4 group relative overflow-hidden flex flex-col items-center justify-center text-center space-y-4 hover:-translate-y-1 transition-all">
                                     <div className="relative z-10 py-4">
@@ -91,17 +92,17 @@ export const CanvasPremium: React.FC = () => {
                         {[
                             {
                                 title: "Borda Infinita 360°",
-                                desc: "Transforme seu ambiente em uma galeria. O excesso de tecido é dobrado sobre a borda do chassi, criando uma continuidade da imagem que envolve toda a peça. Com proteção UV.",
+                                desc: "Transforme seu ambiente em uma galeria. Imagem contínua nas laterais que envolve toda a peça. Com proteção UV contra desbotamento.",
                                 image: "/images/frames/borda-infinita.jpg"
                             },
                             {
                                 title: "Moldura Premium Caixa",
-                                desc: "Eleve sua decoração. O canvas ganha uma moldura caixa de 5cm em madeira nobre revestida e selada. O contorno elegante valoriza a obra e assegura durabilidade superior a 30 anos.",
+                                desc: "Estilo canaleta (float). O canvas ganha uma moldura de 5cm em madeira nobre revestida. Elegância com durabilidade superior a 30 anos.",
                                 image: "/images/frames/caixa-dourada.png"
                             },
                             {
                                 title: "Premium com Vidro",
-                                desc: "Elegância de museu. O acabamento em vidro float 3mm incolor de alta transparência oferece proteção extraordinária e um requinte inigualável. Obras que podem durar mais de 200 anos.",
+                                desc: "Máximo requinte. Moldura com vidro float 3mm de alta transparência. Proteção extraordinária para obras que atravessam gerações.",
                                 image: "/images/frames/trono-de-ouro.jpg"
                             }
                         ].map((type, i) => (

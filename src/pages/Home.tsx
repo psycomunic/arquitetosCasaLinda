@@ -13,7 +13,13 @@ import {
   FileCheck,
   Users,
   Menu,
-  X
+  X,
+  Shield,
+  Heart,
+  Brush,
+  CheckCircle2,
+  PackageCheck,
+  Award
 } from 'lucide-react';
 import { MovingCarousel } from '../components/MovingCarousel';
 import { PublicLayout } from '../layouts/PublicLayout';
@@ -241,6 +247,165 @@ export const Home: React.FC = () => {
                 </div>
                 {/* Decorative elements */}
                 <div className="absolute -top-10 -left-10 w-40 h-40 bg-gold/10 rounded-full blur-3xl"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* PORQUE COMPRAR CONOSCO Section */}
+        <section className="py-32 bg-canvas relative overflow-hidden px-6">
+          <div className="max-w-7xl mx-auto">
+            <div className="text-center mb-24 space-y-6">
+              <h2 className="text-gold text-[10px] uppercase tracking-[0.6em] font-bold">Respaldo Total</h2>
+              <h3 className="text-4xl md:text-6xl font-serif text-white">Porque comprar conosco?</h3>
+            </div>
+
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+              {[
+                {
+                  icon: <Sparkles className="text-gold" size={24} />,
+                  title: "Quadros Exclusivos",
+                  desc: "Artistas internos e obras registradas/patenteadas, garantindo exclusividade total da marca."
+                },
+                {
+                  icon: <Zap className="text-gold" size={24} />,
+                  title: "Produção Premium",
+                  desc: "Cada quadro é feito à mão e reproduzido em impressão de última geração FULL HD 4K."
+                },
+                {
+                  icon: <Shield className="text-gold" size={24} />,
+                  title: "Canvas Autêntico",
+                  desc: "Tecido 100% algodão padrão museu. Textura artística e proteção para longevidade."
+                },
+                {
+                  icon: <Heart className="text-gold" size={24} />,
+                  title: "Feito com Amor",
+                  desc: "Produção artesanal brasileira. Cada peça é única, feita com cuidado pelos nossos artesãos."
+                }
+              ].map((item, i) => (
+                <div key={i} className="glass-3d p-8 space-y-6 group hover:-translate-y-2 transition-all duration-500">
+                  <div className="w-12 h-12 rounded-full border border-gold/20 flex items-center justify-center group-hover:bg-gold group-hover:text-black transition-all">
+                    {item.icon}
+                  </div>
+                  <h4 className="text-lg font-serif text-white tracking-wide">{item.title}</h4>
+                  <p className="text-[11px] text-zinc-500 leading-relaxed uppercase tracking-widest">
+                    {item.desc}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* NOSSO ARTISTA Section */}
+        <section className="py-40 bg-ebonite relative overflow-hidden px-6 border-y border-white/5">
+          <div className="max-w-7xl mx-auto">
+            <div className="grid lg:grid-cols-2 gap-20 items-center">
+              <div className="relative order-2 lg:order-1">
+                <div className="glass-3d p-4 rounded-2xl rotate-2 hover:rotate-0 transition-all duration-700 overflow-hidden group">
+                  <img
+                    src="https://images.unsplash.com/photo-1513364776144-60967b0f800f?q=80&w=1000&auto=format&fit=crop"
+                    className="w-full h-[600px] object-cover rounded-xl opacity-60 group-hover:opacity-90 transition-opacity duration-700"
+                    alt="Artista Rod"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
+                  <div className="absolute bottom-10 left-10">
+                    <p className="text-gold text-[10px] uppercase tracking-[0.4em] font-bold mb-2">Residente Casa Linda</p>
+                    <h4 className="text-4xl font-serif text-white italic">Rod</h4>
+                  </div>
+                </div>
+                {/* Decorative glow */}
+                <div className="absolute -bottom-20 -left-20 w-80 h-80 bg-gold/10 rounded-full blur-[100px] pointer-events-none"></div>
+              </div>
+
+              <div className="space-y-10 order-1 lg:order-2">
+                <div className="space-y-4">
+                  <h2 className="text-gold text-[10px] uppercase tracking-[0.6em] font-bold">A Mão por Trás da Obra</h2>
+                  <h3 className="text-5xl md:text-7xl font-serif text-white">Nosso Artista</h3>
+                </div>
+
+                <p className="text-xl text-zinc-400 font-light leading-relaxed">
+                  Rod é um renomado artista brasileiro, premiado e reconhecido por suas criações originais, que unem <span className="text-white italic">autenticidade</span>, <span className="text-white italic">emoção</span> e <span className="text-white italic">sofisticação</span>.
+                </p>
+
+                <div className="grid grid-cols-2 gap-8 pt-10 border-t border-white/5">
+                  <div className="space-y-2">
+                    <p className="text-gold text-[10px] uppercase tracking-widest font-bold">Projetos VIP</p>
+                    <p className="text-[11px] text-zinc-500 uppercase tracking-widest leading-relaxed">
+                      Criações artísticas sob medida para seu projeto.
+                    </p>
+                  </div>
+                  <div className="space-y-2">
+                    <p className="text-gold text-[10px] uppercase tracking-widest font-bold">Selo Autoral</p>
+                    <p className="text-[11px] text-zinc-500 uppercase tracking-widest leading-relaxed">
+                      Cada peça carrega a essência e assinatura do artista.
+                    </p>
+                  </div>
+                </div>
+
+                <button
+                  onClick={() => navigate('/register')}
+                  className="px-10 py-6 border border-gold/30 text-gold text-[10px] uppercase tracking-[0.4em] font-bold hover:bg-gold hover:text-black transition-all group"
+                >
+                  <span className="flex items-center gap-4">Conhecer Acervo Autoral <Brush size={14} /></span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* TRUST & INTERNATIONAL Section */}
+        <section className="py-32 bg-canvas px-6 border-b border-white/5 relative">
+          <div className="max-w-7xl mx-auto">
+            <div className="flex flex-col lg:flex-row justify-between items-center gap-20">
+              <div className="space-y-8 text-center lg:text-left lg:max-w-xl">
+                <h3 className="text-white text-3xl md:text-5xl font-serif">Vendemos para o Brasil e para o Mundo</h3>
+                <p className="text-zinc-500 text-sm uppercase tracking-[0.2em] font-light">
+                  Nossa logística premium garante que sua obra chegue impecável a qualquer lugar do globo.
+                </p>
+                <div className="flex justify-center lg:justify-start gap-8">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-6 rounded-sm overflow-hidden border border-white/10">
+                      <img src="https://flagcdn.com/br.svg" alt="Brasil" className="w-full h-full object-cover" />
+                    </div>
+                    <span className="text-[9px] text-zinc-400 font-bold tracking-widest">BR</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-6 rounded-sm overflow-hidden border border-white/10">
+                      <img src="https://flagcdn.com/us.svg" alt="USA" className="w-full h-full object-cover" />
+                    </div>
+                    <span className="text-[9px] text-zinc-400 font-bold tracking-widest">USA</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-6 rounded-sm overflow-hidden border border-white/10">
+                      <img src="https://flagcdn.com/ca.svg" alt="Canadá" className="w-full h-full object-cover" />
+                    </div>
+                    <span className="text-[9px] text-zinc-400 font-bold tracking-widest">CAN</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex flex-wrap justify-center gap-10">
+                <div className="flex flex-col items-center gap-4 group">
+                  <div className="w-24 h-24 glass-white rounded-full flex items-center justify-center p-4 group-hover:bg-white/10 transition-all">
+                    <img
+                      src="https://www.reclameaqui.com.br/assets/images/selo-ra-1000.png"
+                      alt="RA1000"
+                      className="w-full h-auto object-contain grayscale group-hover:grayscale-0 transition-all px-2"
+                    />
+                  </div>
+                  <p className="text-[8px] text-zinc-500 uppercase tracking-widest font-bold">Certificado RA1000</p>
+                </div>
+                <div className="flex flex-col items-center gap-4 group">
+                  <div className="w-24 h-24 glass-white rounded-full flex items-center justify-center group-hover:bg-white/10 transition-all">
+                    <img
+                      src="https://logodownload.org/wp-content/uploads/2019/12/fsc-logo.png"
+                      alt="FSC"
+                      className="w-12 h-auto object-contain grayscale group-hover:grayscale-0 transition-all"
+                    />
+                  </div>
+                  <p className="text-[8px] text-zinc-500 uppercase tracking-widest font-bold">Manejo Sustentável</p>
+                </div>
               </div>
             </div>
           </div>
