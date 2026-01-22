@@ -9,8 +9,8 @@ export const CanvasPremium: React.FC = () => {
                 <div className="max-w-7xl mx-auto space-y-24">
                     <div className="text-center space-y-8">
                         <h2 className="text-gold text-[10px] uppercase tracking-[0.6em] font-bold">Qualidade Museu</h2>
-                        <h1 className="text-6xl md:text-[7rem] font-serif leading-none text-white">Canvas Premium</h1>
-                        <p className="text-zinc-500 font-light text-xl max-w-3xl mx-auto leading-relaxed">
+                        <h1 className="text-4xl sm:text-6xl md:text-[7rem] font-serif leading-tight text-white">Canvas Premium</h1>
+                        <p className="text-zinc-500 font-light text-base md:text-xl max-w-3xl mx-auto leading-relaxed">
                             Descubra a verdadeira arte em tecido canvas, utilizado pelos artistas mais exigentes e museus ao redor do mundo.
                         </p>
                     </div>
