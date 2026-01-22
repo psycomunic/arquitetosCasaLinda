@@ -123,6 +123,44 @@ export const CanvasPremium: React.FC = () => {
                         ))}
                     </div>
 
+                    {/* Dedicated Authenticity Certificate Section */}
+                    <div className="py-24 border-t border-white/5">
+                        <div className="grid lg:grid-cols-2 gap-20 items-center">
+                            <div className="space-y-8 order-2 lg:order-1">
+                                <h2 className="text-gold text-[10px] uppercase tracking-[0.6em] font-bold">Respaldo e Precisão</h2>
+                                <h3 className="text-4xl md:text-6xl font-serif text-white leading-tight">Certificado de Autenticidade</h3>
+                                <p className="text-lg text-zinc-500 font-light leading-relaxed">
+                                    Cada obra produzida pela Casa Linda é acompanhada por um documento oficial que atesta sua origem, materiais e exclusividade. O certificado assegura o valor patrimonial da arte para seu cliente, confirmando o uso de canvas 100% algodão e tintas HP Latex originais.
+                                </p>
+                                <div className="space-y-4">
+                                    {[
+                                        "Número de Série Único",
+                                        "Assinatura do Ateliê",
+                                        "Especificações Técnicas de Impressão",
+                                        "Garantia de Longevidade (30+ anos)"
+                                    ].map((item, i) => (
+                                        <div key={i} className="flex items-center gap-4 text-[10px] uppercase tracking-widest text-zinc-400 font-medium">
+                                            <div className="w-1.5 h-1.5 rounded-full bg-gold"></div>
+                                            {item}
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+
+                            <div className="relative order-1 lg:order-2">
+                                <div className="glass-3d p-4 rounded-2xl transform rotate-3 shadow-2xl hover:rotate-0 transition-transform duration-700 group">
+                                    <img
+                                        src="/images/certificado-autenticidade.png"
+                                        className="w-full h-auto drop-shadow-2xl"
+                                        alt="Documento de Autenticidade"
+                                    />
+                                    <div className="absolute inset-0 bg-gold/5 blur-3xl rounded-full -z-10 animate-pulse"></div>
+                                </div>
+                                <div className="absolute -top-10 -right-10 w-32 h-32 bg-gold/10 rounded-full blur-3xl"></div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div className="p-16 glass text-center space-y-8 bg-gold/5">
                         <h3 className="text-3xl font-serif text-white italic">"Prontos para pendurar em seu projeto."</h3>
                         <p className="text-zinc-500 text-sm font-light uppercase tracking-[0.2em] max-w-2xl mx-auto">
