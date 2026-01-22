@@ -59,61 +59,65 @@ export const Home: React.FC = () => {
       </nav>
 
       {/* Dramatic Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center px-6 overflow-hidden pt-20">
+      <section className="relative min-h-[90vh] flex items-center justify-center px-6 overflow-hidden pt-28">
         <div className="absolute inset-0 z-0">
           <img
             src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?q=80&w=2000&auto=format&fit=crop"
-            className="w-full h-full object-cover opacity-20 scale-110 animate-pulse-slow"
+            className="w-full h-full object-cover opacity-20 scale-105 animate-pulse-slow"
             alt="Interior Luxuoso"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-canvas via-transparent to-canvas"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-canvas via-canvas/50 to-canvas"></div>
         </div>
 
-        <div className="container mx-auto relative z-10 text-center space-y-10">
+        <div className="container mx-auto relative z-10 text-center space-y-12">
           {/* Social Proof / Authority Badges */}
-          <div className="flex flex-wrap justify-center gap-4 md:gap-8 mb-8">
-            <div className="glass px-4 py-2 rounded-full flex items-center gap-2">
-              <Globe size={12} className="text-gold" />
-              <span className="text-[9px] uppercase tracking-widest text-zinc-300 font-bold">Exportamos para os EUA</span>
-            </div>
-            <div className="glass px-4 py-2 rounded-full flex items-center gap-2">
-              <FileCheck size={12} className="text-gold" />
-              <span className="text-[9px] uppercase tracking-widest text-zinc-300 font-bold">Certificado de Autenticidade</span>
-            </div>
-            <div className="glass px-4 py-2 rounded-full flex items-center gap-2">
-              <Users size={12} className="text-gold" />
-              <span className="text-[9px] uppercase tracking-widest text-zinc-300 font-bold">+5.000 Arquitetos Ativos</span>
-            </div>
+          <div className="flex flex-wrap justify-center gap-3 md:gap-6 mb-12">
+            {[
+              { icon: <Globe size={10} />, text: "Exportamos para os EUA" },
+              { icon: <FileCheck size={10} />, text: "Certificado de Autenticidade" },
+              { icon: <Users size={10} />, text: "+5.000 Arquitetos Ativos" }
+            ].map((badge, i) => (
+              <div key={i} className="glass border-white/5 px-5 py-2 rounded-full flex items-center gap-2 group transition-all hover:bg-white/5">
+                <span className="text-gold group-hover:scale-110 transition-transform">{badge.icon}</span>
+                <span className="text-[8px] uppercase tracking-[0.3em] text-zinc-400 font-bold">{badge.text}</span>
+              </div>
+            ))}
           </div>
 
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-serif leading-tight tracking-tight text-white max-w-5xl mx-auto">
-            Hoje somos a maior marca brasileira de quadros decorativos e referência internacional
-            <br className="hidden md:block" />
-            <span className="text-gradient-gold italic block mt-2">e queremos arquitetos como você ao nosso lado.</span>
-          </h1>
+          <div className="space-y-6">
+            <h1 className="text-5xl md:text-7xl lg:text-[6.5rem] font-serif leading-none tracking-tighter text-white max-w-6xl mx-auto">
+              A maior referência,
+              <br className="hidden md:block" />
+              <span className="text-gradient-gold italic block mt-4">agora ao seu lado.</span>
+            </h1>
 
-          <p className="text-sm md:text-xl text-zinc-400 font-light max-w-3xl mx-auto leading-relaxed">
-            Comissão de até <span className="text-white font-bold">20%</span>, suporte dedicado e certificação de qualidade internacional.
-          </p>
+            <p className="text-xs md:text-lg text-zinc-500 font-light max-w-2xl mx-auto leading-relaxed uppercase tracking-[0.4em]">
+              Padrão galeria e <span className="text-white font-bold text-gold-leaf">20% de comissão</span> para seus projetos.
+            </p>
+          </div>
 
           <div className="flex flex-col md:flex-row gap-6 justify-center pt-8">
             <button
               onClick={() => navigate('/register')}
-              className="group bg-gold-leaf text-black px-12 py-7 text-xs uppercase tracking-[0.4em] font-bold shadow-[0_0_50px_rgba(197,160,89,0.3)] hover:shadow-[0_0_80px_rgba(197,160,89,0.5)] transition-all hover:-translate-y-1 transform active:scale-95"
+              className="group relative overflow-hidden bg-gold-leaf text-black px-12 py-7 text-[10px] uppercase tracking-[0.5em] font-bold shadow-[0_20px_60px_rgba(197,160,89,0.2)] hover:shadow-[0_20px_80px_rgba(197,160,89,0.3)] transition-all hover:-translate-y-1 transform active:scale-95"
             >
-              QUERO MEU ACESSO DE PARCEIRO
+              <span className="relative z-10">SOLICITAR ACESSO DE PARCEIRO</span>
+              <div className="absolute inset-0 bg-white translate-y-full group-hover:translate-y-0 transition-transform duration-500"></div>
             </button>
           </div>
         </div>
 
-        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4 opacity-30">
-          <p className="text-[8px] uppercase tracking-[0.5em] font-bold">Scroll para Descobrir</p>
-          <div className="w-px h-20 bg-gradient-to-b from-gold to-transparent"></div>
+        <div className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-6 opacity-40 group cursor-pointer" onClick={() => {
+          const section = document.getElementById('como-funciona');
+          section?.scrollIntoView({ behavior: 'smooth' });
+        }}>
+          <p className="text-[7px] uppercase tracking-[0.6em] font-bold text-zinc-500 group-hover:text-gold transition-colors">Scroll para Explorar</p>
+          <div className="w-px h-16 bg-gradient-to-b from-gold via-gold/50 to-transparent"></div>
         </div>
       </section>
 
       {/* Seção Como Funciona (Três Caminhos de Venda) */}
-      <section className="py-32 bg-black px-6 border-b border-white/5 relative overflow-hidden">
+      <section id="como-funciona" className="py-32 bg-black px-6 border-b border-white/5 relative overflow-hidden">
         {/* Ambient Background Glow */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-gold/5 blur-[120px] rounded-full pointer-events-none"></div>
 
@@ -136,7 +140,7 @@ export const Home: React.FC = () => {
               <p className="text-zinc-500 text-[11px] leading-relaxed mb-8 uppercase tracking-widest text-center">
                 Ideal para projetos simples e alto volume. O cliente compra sozinho via seu <b>Link Exclusivo</b> ou <b>Cupom</b>. Zero fricção operacional e escala absoluta.
               </p>
-              <button 
+              <button
                 onClick={() => navigate('/register')}
                 className="w-full mb-8 py-3 border border-white/10 text-[8px] uppercase tracking-[0.3em] font-bold text-white hover:bg-white hover:text-black transition-all duration-300"
               >
@@ -166,7 +170,7 @@ export const Home: React.FC = () => {
               <p className="text-zinc-500 text-[11px] leading-relaxed mb-8 uppercase tracking-widest text-center">
                 Nosso time sugere composições, ajusta medidas e <b>simula os quadros no seu projeto</b>. Você recebe um link personalizado para o cliente apenas realizar o pagamento.
               </p>
-              <button 
+              <button
                 onClick={() => navigate('/register')}
                 className="w-full mb-8 py-3 bg-white/5 border border-gold/30 text-[8px] uppercase tracking-[0.3em] font-bold text-gold hover:bg-gold hover:text-black transition-all duration-300"
               >
@@ -196,7 +200,7 @@ export const Home: React.FC = () => {
               <p className="text-zinc-500 text-[11px] leading-relaxed mb-8 uppercase tracking-widest text-center">
                 <b>Projetos AAA</b>: Tamanho personalizado, espelhos sob medida e artes exclusivas de nosso artista residente para obras autorais de alto padrão.
               </p>
-              <button 
+              <button
                 onClick={() => navigate('/register')}
                 className="w-full mb-8 py-3 bg-gold text-black text-[8px] uppercase tracking-[0.3em] font-bold shadow-[0_0_20px_rgba(197,160,89,0.3)] hover:shadow-[0_0_40px_rgba(197,160,89,0.5)] hover:-translate-y-0.5 transition-all duration-300"
               >
