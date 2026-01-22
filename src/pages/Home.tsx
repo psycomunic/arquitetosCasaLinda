@@ -387,21 +387,21 @@ export const Home: React.FC = () => {
 
               <div className="flex flex-wrap justify-center gap-10">
                 <div className="flex flex-col items-center gap-4 group">
-                  <div className="w-24 h-24 glass-white rounded-full flex items-center justify-center p-4 group-hover:bg-white/10 transition-all">
+                  <div className="w-32 h-32 bg-white rounded-2xl flex items-center justify-center p-4 shadow-xl transition-all hover:scale-105">
                     <img
                       src="/images/ra1000.png"
                       alt="RA1000"
-                      className="w-full h-auto object-contain px-2"
+                      className="w-full h-auto object-contain"
                     />
                   </div>
                   <p className="text-[8px] text-zinc-500 uppercase tracking-widest font-bold">Certificado RA1000</p>
                 </div>
                 <div className="flex flex-col items-center gap-4 group">
-                  <div className="w-24 h-24 glass-white rounded-full flex items-center justify-center group-hover:bg-white/10 transition-all">
+                  <div className="w-32 h-32 bg-white rounded-2xl flex items-center justify-center p-6 shadow-xl transition-all hover:scale-105">
                     <img
                       src="/images/fsc.jpg"
                       alt="FSC"
-                      className="w-12 h-auto object-contain"
+                      className="w-full h-auto object-contain"
                     />
                   </div>
                   <p className="text-[8px] text-zinc-500 uppercase tracking-widest font-bold">Manejo Sustentável</p>
