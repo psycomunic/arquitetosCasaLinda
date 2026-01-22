@@ -78,7 +78,7 @@ export const CanvasPremium: React.FC = () => {
                         </div>
                     </div>
 
-                    <div className="grid md:grid-cols-3 gap-10 pt-20">
+                    <div className="grid md:grid-cols-3 gap-10 pt-20 perspective-1000">
                         {[
                             {
                                 title: "Borda Infinita 360°",
@@ -88,21 +88,27 @@ export const CanvasPremium: React.FC = () => {
                             {
                                 title: "Moldura Premium Caixa",
                                 desc: "Eleve sua decoração. O canvas ganha uma moldura caixa de 5cm em madeira nobre revestida e selada. O contorno elegante valoriza a obra e assegura durabilidade superior a 30 anos.",
-                                image: "/images/frames/moldura-canaleta.png"
+                                image: "/images/frames/caixa-dourada.png"
                             },
                             {
                                 title: "Premium com Vidro",
                                 desc: "Elegância de museu. O acabamento em vidro float 3mm incolor de alta transparência oferece proteção extraordinária e um requinte inigualável. Obras que podem durar mais de 200 anos.",
-                                image: "/images/frames/premium-vidro.png"
+                                image: "/images/frames/trono-de-ouro.jpg"
                             }
                         ].map((type, i) => (
-                            <div key={i} className="glass group overflow-hidden">
-                                <div className="aspect-square overflow-hidden bg-black/20">
-                                    <img src={type.image} className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-1000 opacity-60 group-hover:opacity-100" />
+                            <div key={i} className="glass-3d group overflow-hidden flex flex-col items-center text-center transform hover:-translate-y-2 hover:rotate-x-2 transition-all duration-500">
+                                <div className="aspect-square w-full overflow-hidden bg-black/40">
+                                    <img
+                                        src={type.image}
+                                        className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-1000 opacity-80 group-hover:opacity-100"
+                                        alt={type.title}
+                                    />
                                 </div>
-                                <div className="p-10 space-y-4">
-                                    <h4 className="text-2xl font-serif text-white">{type.title}</h4>
-                                    <p className="text-xs text-zinc-500 leading-relaxed uppercase tracking-wider">{type.desc}</p>
+                                <div className="p-10 space-y-6">
+                                    <h4 className="text-2xl font-serif text-white tracking-wide">{type.title}</h4>
+                                    <p className="text-[10px] text-zinc-400 leading-relaxed uppercase tracking-[0.2em] font-light">
+                                        {type.desc}
+                                    </p>
                                 </div>
                             </div>
                         ))}
