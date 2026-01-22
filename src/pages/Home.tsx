@@ -60,7 +60,7 @@ export const Home: React.FC = () => {
             {/* Social Proof / Authority Badges - Moved below H1/Subtext */}
             <div className="flex flex-row justify-center gap-2 md:gap-6 mb-4 md:mb-8 animate-fade-in delay-700">
               {[
-                { icon: <Globe size={11} />, text: "EUA" },
+                { icon: <Globe size={11} />, text: "BRASIL/EUA" },
                 { icon: <FileCheck size={11} />, text: "Autenticidade" },
                 { icon: <Users size={11} />, text: "+5k Parceiros" }
               ].map((badge, i) => (
