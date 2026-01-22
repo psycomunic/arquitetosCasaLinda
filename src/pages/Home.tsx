@@ -44,25 +44,25 @@ export const Home: React.FC = () => {
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.4)_100%)]"></div>
           </div>
 
-          <div className="container mx-auto relative z-10 text-center space-y-12 md:space-y-16 mt-8 md:mt-0">
+          <div className="container mx-auto relative z-10 text-center space-y-8 md:space-y-16 mt-4 md:mt-0">
             {/* Social Proof / Authority Badges */}
-            <div className="flex flex-wrap justify-center gap-3 md:gap-6 mb-12 md:mb-16">
+            <div className="flex flex-wrap justify-center gap-2 md:gap-6 mb-8 md:mb-16">
               {[
-                { icon: <Globe size={12} />, text: "Exportamos para os EUA" },
-                { icon: <FileCheck size={12} />, text: "Certificado de Autenticidade" },
-                { icon: <Users size={12} />, text: "+5.000 Parceiros" }
+                { icon: <Globe size={11} />, text: "Exportamos para os EUA" },
+                { icon: <FileCheck size={11} />, text: "Certificado de Autenticidade" },
+                { icon: <Users size={11} />, text: "+5.000 Parceiros" }
               ].map((badge, i) => (
-                <div key={i} className="glass-white border-white/10 px-4 md:px-6 py-2 md:py-3 rounded-full flex items-center gap-2 md:gap-3 group transition-all hover:bg-white/10 hover:scale-105">
+                <div key={i} className="glass-white border-white/10 px-3 md:px-6 py-1.5 md:py-3 rounded-full flex items-center gap-2 md:gap-3 group transition-all hover:bg-white/10 hover:scale-105">
                   <span className="text-gold group-hover:rotate-12 transition-transform">{badge.icon}</span>
-                  <span className="text-[8px] md:text-[10px] uppercase tracking-[0.3em] md:tracking-[0.4em] text-zinc-300 font-bold whitespace-nowrap">{badge.text}</span>
+                  <span className="text-[7px] md:text-[10px] uppercase tracking-[0.2em] md:tracking-[0.4em] text-zinc-300 font-bold whitespace-nowrap">{badge.text}</span>
                 </div>
               ))}
             </div>
 
-            <div className="space-y-8">
-              <h1 className="text-4xl sm:text-6xl md:text-8xl lg:text-[7rem] font-serif leading-[1.1] md:leading-tight tracking-tighter text-white max-w-6xl mx-auto drop-shadow-2xl">
+            <div className="space-y-6 md:space-y-8">
+              <h1 className="text-5xl sm:text-6xl md:text-8xl lg:text-[7rem] font-serif leading-[1] md:leading-tight tracking-tighter text-white max-w-6xl mx-auto drop-shadow-2xl">
                 <span className="block opacity-90 animate-slide-up">O maior ecommerce de</span>
-                <span className="text-gradient-gold italic block mt-3 md:mt-6 animate-slide-up delay-200">quadros e espelhos do Brasil.</span>
+                <span className="text-gradient-gold italic block mt-2 md:mt-6 animate-slide-up delay-200">quadros e espelhos do Brasil.</span>
               </h1>
 
               <p className="text-xs md:text-xl text-zinc-400 font-light max-w-2xl mx-auto leading-relaxed uppercase tracking-[0.2em] md:tracking-[0.5em] animate-fade-in delay-500 px-4">
@@ -70,7 +70,7 @@ export const Home: React.FC = () => {
               </p>
             </div>
 
-            <div className="flex flex-col md:flex-row gap-6 justify-center pt-8">
+            <div className="flex flex-col md:flex-row gap-4 md:gap-6 justify-center pt-4 md:pt-8">
               <button
                 onClick={() => navigate('/register')}
                 className="group relative overflow-hidden bg-gold-leaf text-black px-12 py-7 text-[10px] uppercase tracking-[0.5em] font-bold shadow-[0_20px_60px_rgba(197,160,89,0.2)] hover:shadow-[0_20px_80px_rgba(197,160,89,0.3)] transition-all hover:-translate-y-1 transform active:scale-95"
