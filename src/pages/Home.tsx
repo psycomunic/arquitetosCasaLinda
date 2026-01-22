@@ -104,9 +104,9 @@ export const Home: React.FC = () => {
               <h3 className="text-3xl md:text-6xl font-serif text-white">3 Caminhos para sua Comissão</h3>
             </div>
 
-            <div className="grid md:grid-cols-3 gap-8">
+            <div className="grid md:grid-cols-3 gap-8 perspective-1000">
               {/* MECÂNICA 1 */}
-              <div className="group relative glass p-10 hover:border-gold/30 transition-all duration-500 flex flex-col items-center text-center">
+              <div className="group relative glass-3d p-10 flex flex-col items-center text-center transform hover:-translate-y-2 hover:rotate-x-2 transition-all duration-500">
                 <div className="text-gold mb-8">
                   <div className="w-16 h-16 rounded-full border border-gold/20 flex items-center justify-center group-hover:bg-gold group-hover:text-black transition-all">
                     <Zap size={24} />
@@ -136,7 +136,7 @@ export const Home: React.FC = () => {
               </div>
 
               {/* MECÂNICA 2 */}
-              <div className="group relative glass p-10 hover:border-gold/30 transition-all duration-500 flex flex-col items-center text-center">
+              <div className="group relative glass-3d p-10 flex flex-col items-center text-center transform hover:-translate-y-2 hover:rotate-x-2 transition-all duration-500">
                 <div className="text-gold mb-8">
                   <div className="w-16 h-16 rounded-full border border-gold/20 flex items-center justify-center group-hover:bg-gold group-hover:text-black transition-all">
                     <Monitor size={24} />
@@ -166,7 +166,7 @@ export const Home: React.FC = () => {
               </div>
 
               {/* MECÂNICA 3 */}
-              <div className="group relative glass p-10 hover:border-gold/30 transition-all duration-500 flex flex-col items-center text-center">
+              <div className="group relative glass-3d p-10 flex flex-col items-center text-center transform hover:-translate-y-2 hover:rotate-x-2 transition-all duration-500">
                 <div className="text-gold mb-8">
                   <div className="w-16 h-16 rounded-full border border-gold/20 flex items-center justify-center group-hover:bg-gold group-hover:text-black transition-all">
                     <Star size={24} />
