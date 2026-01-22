@@ -135,8 +135,8 @@ export const CanvasPremium: React.FC = () => {
                                 </div>
                             </div>
 
-                            <div className="relative order-1 lg:order-2">
-                                <div className="glass-3d-dark p-2 sm:p-6 rounded-2xl transform rotate-3 sm:rotate-3 scale-110 sm:scale-100 shadow-2xl hover:rotate-0 transition-transform duration-700 group">
+                            <div className="relative order-1 lg:order-2 px-4 sm:px-0">
+                                <div className="glass-3d-dark p-2 sm:p-6 rounded-2xl transform rotate-3 sm:rotate-3 scale-125 sm:scale-100 shadow-2xl hover:rotate-0 transition-transform duration-700 group mx-auto max-w-[90%] sm:max-w-none">
                                     <img
                                         src="/images/certificado-autenticidade.png"
                                         className="w-full h-auto drop-shadow-2xl"
@@ -144,7 +144,7 @@ export const CanvasPremium: React.FC = () => {
                                     />
                                     <div className="absolute inset-0 bg-gold/5 blur-3xl rounded-full -z-10 animate-pulse"></div>
                                 </div>
-                                <div className="absolute -top-10 -right-10 w-32 h-32 bg-gold/10 rounded-full blur-3xl"></div>
+                                <div className="absolute -top-10 -right-10 w-32 h-32 bg-gold/10 rounded-full blur-3xl hidden sm:block"></div>
                             </div>
                         </div>
                     </div>
