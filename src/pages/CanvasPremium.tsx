@@ -136,7 +136,7 @@ export const CanvasPremium: React.FC = () => {
                             </div>
 
                             <div className="relative order-1 lg:order-2">
-                                <div className="glass-3d-dark p-6 rounded-2xl transform rotate-3 shadow-2xl hover:rotate-0 transition-transform duration-700 group">
+                                <div className="glass-3d-dark p-2 sm:p-6 rounded-2xl transform rotate-3 sm:rotate-3 scale-110 sm:scale-100 shadow-2xl hover:rotate-0 transition-transform duration-700 group">
                                     <img
                                         src="/images/certificado-autenticidade.png"
                                         className="w-full h-auto drop-shadow-2xl"
