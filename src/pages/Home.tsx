@@ -11,13 +11,16 @@ import {
   Star,
   Globe,
   FileCheck,
-  Users
+  Users,
+  Menu,
+  X
 } from 'lucide-react';
 import { MovingCarousel } from '../components/MovingCarousel';
 
 export const Home: React.FC = () => {
   const [calcValue, setCalcValue] = useState<number>(15000);
   const [scrolled, setScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -29,6 +32,12 @@ export const Home: React.FC = () => {
   const formatCurrency = (val: number) =>
     val.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
+  const navLinks = [
+    { label: 'Canvas Premium', path: '/canvas-premium' },
+    { label: 'Sustentabilidade', path: '/sustentabilidade' },
+    { label: 'Artistas', path: '/artistas' },
+  ];
+
   return (
     <div className="flex flex-col bg-canvas selection:bg-gold selection:text-black">
       {/* Spotlight Effect Layer */}
@@ -38,25 +47,63 @@ export const Home: React.FC = () => {
       <nav className={`fixed top-0 w-full z-50 px-6 md:px-12 py-5 flex justify-between items-center transition-all duration-700 ${scrolled ? 'glass-dark py-4' : 'bg-transparent'
         }`}>
         <div
-          className="cursor-pointer"
+          className="cursor-pointer relative z-[60]"
           onClick={() => navigate('/')}
         >
           <img src="/logo.png" alt="Casa Linda" className="h-8 md:h-12 object-contain" />
         </div>
 
+        {/* Desktop Links */}
         <div className="hidden lg:flex gap-10 text-[9px] uppercase tracking-[0.3em] font-medium text-zinc-500">
-          <button onClick={() => navigate('/canvas-premium')} className="hover:text-gold transition-colors uppercase">Canvas Premium</button>
-          <button onClick={() => navigate('/sustentabilidade')} className="hover:text-gold transition-colors uppercase">Sustentabilidade</button>
-          <button onClick={() => navigate('/artesanato')} className="hover:text-gold transition-colors uppercase">Artesanato</button>
+          {navLinks.map((link) => (
+            <button key={link.path} onClick={() => navigate(link.path)} className="hover:text-gold transition-colors uppercase">{link.label}</button>
+          ))}
         </div>
 
-        <button
-          onClick={() => navigate('/login')}
-          className="group relative overflow-hidden bg-white text-black px-8 py-3 text-[9px] uppercase tracking-[0.3em] font-bold transition-all hover:scale-105 active:scale-95"
-        >
-          <span className="relative z-10">Acesso Restrito</span>
-          <div className="absolute inset-0 bg-gold translate-x-full group-hover:translate-x-0 transition-transform duration-500"></div>
-        </button>
+        <div className="flex items-center gap-4">
+          <button
+            onClick={() => navigate('/login')}
+            className="hidden sm:block group relative overflow-hidden bg-white text-black px-8 py-3 text-[9px] uppercase tracking-[0.3em] font-bold transition-all hover:scale-105 active:scale-95"
+          >
+            <span className="relative z-10">Acesso Restrito</span>
+            <div className="absolute inset-0 bg-gold translate-x-full group-hover:translate-x-0 transition-transform duration-500"></div>
+          </button>
+
+          {/* Mobile Menu Toggle */}
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="lg:hidden relative z-[60] p-2 text-white"
+          >
+            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+        </div>
+
+        {/* Mobile Menu Overlay */}
+        <div className={`fixed inset-0 bg-black/95 z-[55] transition-all duration-500 lg:hidden ${mobileMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`}>
+          <div className="flex flex-col items-center justify-center h-full space-y-12 text-center p-6">
+            {navLinks.map((link) => (
+              <button
+                key={link.path}
+                onClick={() => {
+                  navigate(link.path);
+                  setMobileMenuOpen(false);
+                }}
+                className="text-2xl font-serif text-white hover:text-gold transition-colors uppercase tracking-[0.2em]"
+              >
+                {link.label}
+              </button>
+            ))}
+            <button
+              onClick={() => {
+                navigate('/login');
+                setMobileMenuOpen(false);
+              }}
+              className="bg-gold-leaf text-black px-12 py-5 text-sm uppercase tracking-[0.3em] font-bold"
+            >
+              Acesso Restrito
+            </button>
+          </div>
+        </div>
       </nav>
 
       {/* Dramatic Hero Section */}
@@ -86,7 +133,7 @@ export const Home: React.FC = () => {
           </div>
 
           <div className="space-y-6">
-            <h1 className="text-5xl md:text-7xl lg:text-[6rem] font-serif leading-tight tracking-tighter text-white max-w-6xl mx-auto">
+            <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-[6rem] font-serif leading-[1.1] md:leading-tight tracking-tighter text-white max-w-6xl mx-auto">
               O maior ecommerce de
               <br className="hidden md:block" />
               <span className="text-gradient-gold italic block mt-4">quadros e espelhos do Brasil.</span>
@@ -120,14 +167,14 @@ export const Home: React.FC = () => {
       <MovingCarousel />
 
       {/* Seção Como Funciona (Três Caminhos de Venda) */}
-      <section id="como-funciona" className="py-32 bg-black px-6 border-b border-white/5 relative overflow-hidden">
+      <section id="como-funciona" className="py-20 md:py-32 bg-black px-6 border-b border-white/5 relative overflow-hidden">
         {/* Ambient Background Glow */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-gold/5 blur-[120px] rounded-full pointer-events-none"></div>
 
-        <div className="max-w-7xl mx-auto text-center space-y-20 relative z-10">
+        <div className="max-w-7xl mx-auto text-center space-y-12 md:space-y-20 relative z-10">
           <div className="space-y-6">
             <h2 className="text-gold text-[10px] uppercase tracking-[0.6em] font-bold opacity-80">Parceria Inteligente</h2>
-            <h3 className="text-4xl md:text-6xl font-serif text-white">3 Caminhos para sua Comissão</h3>
+            <h3 className="text-3xl md:text-6xl font-serif text-white">3 Caminhos para sua Comissão</h3>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
@@ -420,7 +467,7 @@ export const Home: React.FC = () => {
               <ul className="text-[10px] text-zinc-500 space-y-4 uppercase tracking-widest">
                 <li className="hover:text-white cursor-pointer transition-colors" onClick={() => navigate('/canvas-premium')}>Canvas Premium</li>
                 <li className="hover:text-white cursor-pointer transition-colors" onClick={() => navigate('/sustentabilidade')}>Sustentabilidade</li>
-                <li className="hover:text-white cursor-pointer transition-colors" onClick={() => navigate('/artesanato')}>Artesanato</li>
+                <li className="hover:text-white cursor-pointer transition-colors" onClick={() => navigate('/artistas')}>Artistas</li>
               </ul>
             </div>
             <div className="space-y-6">

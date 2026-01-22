@@ -24,11 +24,11 @@ export const MovingCarousel: React.FC = () => {
       <div className="absolute inset-y-0 right-0 w-32 md:w-64 bg-gradient-to-l from-canvas to-transparent z-10 pointer-events-none"></div>
 
       {/* Scrolling Container */}
-      <div className="flex w-fit animate-scroll gap-4 md:gap-8 px-4">
+      <div className="flex w-fit animate-scroll gap-6 md:gap-8 px-4">
         {displayImages.map((src, index) => (
           <div
             key={index}
-            className="flex-shrink-0 w-[45vw] md:w-[calc(20vw-2rem)] aspect-square group transition-all duration-500"
+            className="flex-shrink-0 w-[70vw] md:w-[calc(20vw-2rem)] aspect-square group transition-all duration-500"
           >
             <img
               src={src}

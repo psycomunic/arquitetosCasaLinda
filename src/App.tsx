@@ -11,7 +11,7 @@ import { Settings } from './pages/Settings';
 import { PortalLayout } from './layouts/PortalLayout';
 import { CanvasPremium } from './pages/CanvasPremium';
 import { Sustentabilidade } from './pages/Sustentabilidade';
-import { Artesanato } from './pages/Artesanato';
+import { Artistas } from './pages/Artistas';
 import { TermosComissao } from './pages/TermosComissao';
 import { SuportePrivate } from './pages/SuportePrivate';
 import { PrivacyPolicy } from './pages/PrivacyPolicy';
@@ -99,7 +99,7 @@ const App: React.FC = () => {
         <Route path="/register" element={<Register />} />
         <Route path="/canvas-premium" element={<CanvasPremium />} />
         <Route path="/sustentabilidade" element={<Sustentabilidade />} />
-        <Route path="/artesanato" element={<Artesanato />} />
+        <Route path="/artistas" element={<Artistas />} />
         <Route path="/termos-comissao" element={<TermosComissao />} />
         <Route path="/suporte-private" element={<SuportePrivate />} />
         <Route path="/obrigado" element={<ThankYou />} />
