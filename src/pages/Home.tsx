@@ -20,6 +20,7 @@ import { PublicLayout } from '../layouts/PublicLayout';
 
 export const Home: React.FC = () => {
   const [calcValue, setCalcValue] = useState<number>(15000);
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
   const navigate = useNavigate();
 
   const formatCurrency = (val: number) =>
@@ -316,19 +317,40 @@ export const Home: React.FC = () => {
               <h3 className="text-4xl font-serif text-white">Perguntas Comuns</h3>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-8">
+            <div className="max-w-3xl mx-auto space-y-4">
               {[
-                { q: "Preciso fechar a venda com o cliente?", a: "Não. Você pode apenas indicar ou optar pela venda assistida. O modelo é flexível." },
-                { q: "Posso indicar quadros e espelhos sob medida?", a: "Sim. Trabalhamos com tamanhos personalizados e projetos especiais." },
-                { q: "Como funciona a arte personalizada?", a: "Você envia o briefing e nosso artista residente desenvolve a arte exclusiva para o projeto." },
-                { q: "Como sei quanto vou receber?", a: "Tudo fica disponível no seu dashboard, com total transparência." },
-                { q: "Quando recebo a comissão?", a: "Mensalmente, após confirmação da venda." },
-                { q: "Posso perder meu nível?", a: "Sim, caso não atinja o volume mínimo mensal. O sistema é justo e automático." },
-                { q: "Posso usar a marca Casa Linda nos meus projetos?", a: "Sim, conforme diretrizes do Programa de Parcerias." }
+                { q: "Preciso fechar a venda com o cliente?", a: "Não. Você tem liberdade total. Pode apenas indicar o link, usar a venda assistida para maior suporte, ou fechar o pedido direto pelo portal. O modelo é flexível para se adaptar ao fluxo do seu escritório." },
+                { q: "Posso indicar quadros e espelhos sob medida?", a: "Sim, esse é um dos nossos maiores diferenciais. Trabalhamos com tamanhos personalizados e projetos técnicos complexos para atender exatamente à sua especificação." },
+                { q: "Como funciona a Criação Artística Exclusiva?", a: "Para projetos AAA, você envia o briefing (estilo, paleta e conceito) e nosso artista residente desenvolve uma obra autoral exclusiva. É o MOAT competitivo definitivo para o seu escritório." },
+                { q: "Como acompanho minhas comissões?", a: "Através do seu Dashboard Private. Lá você visualiza cada venda, o status de faturamento e o valor exato do seu repasse com total transparência e em tempo real." },
+                { q: "Qual a periodicidade dos pagamentos?", a: "Os valores são liberados em sua conta digital assim que o faturamento do pedido é confirmado pelo cliente. Garantimos liquidez e agilidade no fluxo de caixa." },
+                { q: "Existem metas ou volumes mínimos?", a: "Nosso sistema avalia o engajamento e volume para graduar os níveis de parceria (até 20%), mas o foco principal é na qualidade da especificação e no relacionamento de longo prazo." },
+                { q: "A Casa Linda faz a entrega e instalação?", a: "Sim. Cuidamos de toda a logística e oferecemos suporte para garantir que a obra chegue impecável ao destino final, preservando a experiência premium do seu cliente." }
               ].map((faq, i) => (
-                <div key={i} className="glass p-8 space-y-4 hover:bg-white/5 transition-colors">
-                  <h4 className="text-sm font-bold text-white uppercase tracking-widest">{faq.q}</h4>
-                  <p className="text-xs text-zinc-400 leading-relaxed text-justify">{faq.a}</p>
+                <div
+                  key={i}
+                  className={`glass overflow-hidden transition-all duration-500 border ${openFaq === i ? 'border-gold/30 bg-white/5' : 'border-white/5'}`}
+                >
+                  <button
+                    onClick={() => setOpenFaq(openFaq === i ? null : i)}
+                    className="w-full px-8 py-6 flex items-center justify-between text-left group"
+                  >
+                    <span className={`text-[11px] font-bold uppercase tracking-[0.2em] transition-colors ${openFaq === i ? 'text-gold' : 'text-zinc-300 group-hover:text-white'}`}>
+                      {faq.q}
+                    </span>
+                    <div className={`transition-transform duration-500 ${openFaq === i ? 'rotate-180 text-gold' : 'text-zinc-600'}`}>
+                      <Star size={14} className={openFaq === i ? 'fill-gold' : ''} />
+                    </div>
+                  </button>
+                  <div
+                    className={`transition-all duration-700 ease-in-out overflow-hidden ${openFaq === i ? 'max-h-[300px] opacity-100' : 'max-h-0 opacity-0'}`}
+                  >
+                    <div className="px-8 pb-8 pt-2">
+                      <p className="text-sm text-zinc-500 leading-relaxed font-light">
+                        {faq.a}
+                      </p>
+                    </div>
+                  </div>
                 </div>
               ))}
             </div>
