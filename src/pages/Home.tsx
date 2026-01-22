@@ -45,20 +45,6 @@ export const Home: React.FC = () => {
           </div>
 
           <div className="container mx-auto relative z-10 text-center space-y-8 md:space-y-16 mt-4 md:mt-0">
-            {/* Social Proof / Authority Badges */}
-            <div className="flex flex-wrap justify-center gap-2 md:gap-6 mb-8 md:mb-16">
-              {[
-                { icon: <Globe size={11} />, text: "Exportamos para os EUA" },
-                { icon: <FileCheck size={11} />, text: "Certificado de Autenticidade" },
-                { icon: <Users size={11} />, text: "+5.000 Parceiros" }
-              ].map((badge, i) => (
-                <div key={i} className="glass-white border-white/10 px-3 md:px-6 py-1.5 md:py-3 rounded-full flex items-center gap-2 md:gap-3 group transition-all hover:bg-white/10 hover:scale-105">
-                  <span className="text-gold group-hover:rotate-12 transition-transform">{badge.icon}</span>
-                  <span className="text-[7px] md:text-[10px] uppercase tracking-[0.2em] md:tracking-[0.4em] text-zinc-300 font-bold whitespace-nowrap">{badge.text}</span>
-                </div>
-              ))}
-            </div>
-
             <div className="space-y-6 md:space-y-8">
               <h1 className="text-5xl sm:text-6xl md:text-8xl lg:text-[7rem] font-serif leading-[1] md:leading-tight tracking-tighter text-white max-w-6xl mx-auto drop-shadow-2xl">
                 <span className="block opacity-90 animate-slide-up">O maior ecommerce de</span>
@@ -68,6 +54,20 @@ export const Home: React.FC = () => {
               <p className="text-xs md:text-xl text-zinc-400 font-light max-w-2xl mx-auto leading-relaxed uppercase tracking-[0.2em] md:tracking-[0.5em] animate-fade-in delay-500 px-4">
                 Padrão galeria e <span className="text-gold font-bold">até 20% de comissão</span> para seus projetos.
               </p>
+            </div>
+
+            {/* Social Proof / Authority Badges - Moved below H1/Subtext */}
+            <div className="flex flex-row justify-center gap-2 md:gap-6 mb-4 md:mb-8 animate-fade-in delay-700">
+              {[
+                { icon: <Globe size={11} />, text: "EUA" },
+                { icon: <FileCheck size={11} />, text: "Autenticidade" },
+                { icon: <Users size={11} />, text: "+5k Parceiros" }
+              ].map((badge, i) => (
+                <div key={i} className="glass-white border-white/5 px-2 md:px-4 py-1.5 md:py-2 rounded-full flex items-center gap-1.5 md:gap-2 group transition-all hover:bg-white/10">
+                  <span className="text-gold">{badge.icon}</span>
+                  <span className="text-[7px] md:text-[9px] uppercase tracking-widest text-zinc-400 font-bold whitespace-nowrap">{badge.text}</span>
+                </div>
+              ))}
             </div>
 
             <div className="flex flex-col md:flex-row gap-4 md:gap-6 justify-center pt-4 md:pt-8">
