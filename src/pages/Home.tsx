@@ -263,27 +263,27 @@ export const Home: React.FC = () => {
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
               {[
                 {
-                  icon: <Sparkles className="text-gold" size={24} />,
+                  icon: <Sparkles size={24} />,
                   title: "Quadros Exclusivos",
                   desc: "Artistas internos e obras registradas/patenteadas, garantindo exclusividade total da marca."
                 },
                 {
-                  icon: <Zap className="text-gold" size={24} />,
+                  icon: <Zap size={24} />,
                   title: "Produção Premium",
                   desc: "Cada quadro é feito à mão e reproduzido em impressão de última geração FULL HD 4K."
                 },
                 {
-                  icon: <Shield className="text-gold" size={24} />,
+                  icon: <Shield size={24} />,
                   title: "Canvas Autêntico",
                   desc: "Tecido 100% algodão padrão museu. Textura artística e proteção para longevidade."
                 },
                 {
-                  icon: <Heart className="text-gold" size={24} />,
+                  icon: <Heart size={24} />,
                   title: "Feito com Amor",
                   desc: "Produção artesanal brasileira. Cada peça é única, feita com cuidado pelos nossos artesãos."
                 }
               ].map((item, i) => (
-                <div key={i} className="glass-3d p-8 space-y-6 group hover:-translate-y-2 transition-all duration-500">
+                <div key={i} className="glass-3d p-8 space-y-6 group hover:-translate-y-2 transition-all duration-500 text-gold">
                   <div className="w-12 h-12 rounded-full border border-gold/20 flex items-center justify-center group-hover:bg-gold group-hover:text-black transition-all">
                     {item.icon}
                   </div>
@@ -304,7 +304,7 @@ export const Home: React.FC = () => {
               <div className="relative order-2 lg:order-1">
                 <div className="glass-3d p-4 rounded-2xl rotate-2 hover:rotate-0 transition-all duration-700 overflow-hidden group">
                   <img
-                    src="https://images.unsplash.com/photo-1513364776144-60967b0f800f?q=80&w=1000&auto=format&fit=crop"
+                    src="/images/rod-artist.jpg"
                     className="w-full h-[600px] object-cover rounded-xl opacity-60 group-hover:opacity-90 transition-opacity duration-700"
                     alt="Artista Rod"
                   />
