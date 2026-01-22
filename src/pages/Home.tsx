@@ -13,6 +13,7 @@ import {
   FileCheck,
   Users
 } from 'lucide-react';
+import { MovingCarousel } from '../components/MovingCarousel';
 
 export const Home: React.FC = () => {
   const [calcValue, setCalcValue] = useState<number>(15000);
@@ -115,6 +116,8 @@ export const Home: React.FC = () => {
           <div className="w-px h-16 bg-gradient-to-b from-gold via-gold/50 to-transparent"></div>
         </div>
       </section>
+
+      <MovingCarousel />
 
       {/* Seção Como Funciona (Três Caminhos de Venda) */}
       <section id="como-funciona" className="py-32 bg-black px-6 border-b border-white/5 relative overflow-hidden">
