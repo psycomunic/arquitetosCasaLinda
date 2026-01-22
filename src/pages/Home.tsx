@@ -389,9 +389,9 @@ export const Home: React.FC = () => {
                 <div className="flex flex-col items-center gap-4 group">
                   <div className="w-24 h-24 glass-white rounded-full flex items-center justify-center p-4 group-hover:bg-white/10 transition-all">
                     <img
-                      src="https://www.reclameaqui.com.br/assets/images/selo-ra-1000.png"
+                      src="/images/ra1000.png"
                       alt="RA1000"
-                      className="w-full h-auto object-contain grayscale group-hover:grayscale-0 transition-all px-2"
+                      className="w-full h-auto object-contain px-2"
                     />
                   </div>
                   <p className="text-[8px] text-zinc-500 uppercase tracking-widest font-bold">Certificado RA1000</p>
@@ -399,9 +399,9 @@ export const Home: React.FC = () => {
                 <div className="flex flex-col items-center gap-4 group">
                   <div className="w-24 h-24 glass-white rounded-full flex items-center justify-center group-hover:bg-white/10 transition-all">
                     <img
-                      src="https://logodownload.org/wp-content/uploads/2019/12/fsc-logo.png"
+                      src="/images/fsc.jpg"
                       alt="FSC"
-                      className="w-12 h-auto object-contain grayscale group-hover:grayscale-0 transition-all"
+                      className="w-12 h-auto object-contain"
                     />
                   </div>
                   <p className="text-[8px] text-zinc-500 uppercase tracking-widest font-bold">Manejo Sustentável</p>
