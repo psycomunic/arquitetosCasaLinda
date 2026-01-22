@@ -1,16 +1,19 @@
 import React from 'react';
 
 const images = [
-  '/images/carousel/quadro_1.png',
-  '/images/carousel/quadro_2.png',
-  '/images/carousel/quadro_3.png',
-  '/images/carousel/quadro_4.png',
-  '/images/carousel/quadro_5.png',
-  '/images/carousel/quadro_6.png',
-  '/images/carousel/quadro_7.png',
-  '/images/carousel/quadro_8.png',
-  '/images/carousel/quadro_9.png',
-  '/images/carousel/quadro_10.png',
+  '/images/carousel/premium_1.jpg',
+  '/images/carousel/premium_2.jpg',
+  '/images/carousel/premium_3.jpg',
+  '/images/carousel/premium_4.jpg',
+  '/images/carousel/premium_5.jpg',
+  '/images/carousel/premium_6.jpg',
+  '/images/carousel/premium_7.jpg',
+  '/images/carousel/premium_8.jpg',
+  '/images/carousel/premium_9.jpg',
+  '/images/carousel/premium_10.jpg',
+  '/images/carousel/premium_11.jpg',
+  '/images/carousel/premium_12.jpg',
+  '/images/carousel/premium_13.jpg',
 ];
 
 export const MovingCarousel: React.FC = () => {
