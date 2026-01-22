@@ -11,9 +11,6 @@ const images = [
   '/images/carousel/quadro_8.png',
   '/images/carousel/quadro_9.png',
   '/images/carousel/quadro_10.png',
-  '/images/carousel/quadro_11.png',
-  '/images/carousel/quadro_12.png',
-  '/images/carousel/quadro_13.png',
 ];
 
 export const MovingCarousel: React.FC = () => {
