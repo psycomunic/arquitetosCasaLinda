@@ -51,14 +51,23 @@ export const CanvasPremium: React.FC = () => {
                                 </ul>
                             </div>
 
-                            <div className="grid grid-cols-2 gap-6">
-                                <div className="glass p-8 text-center space-y-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                <div className="glass-3d p-8 text-center space-y-4 hover:-translate-y-1 transition-all">
                                     <ShieldCheck className="mx-auto text-gold" size={32} />
                                     <p className="text-[10px] uppercase tracking-[0.2em] font-bold text-white">5 Anos de Garantia</p>
                                 </div>
-                                <div className="glass p-8 text-center space-y-4">
-                                    <Award className="mx-auto text-gold" size={32} />
-                                    <p className="text-[10px] uppercase tracking-[0.2em] font-bold text-white">Certificado de Autenticidade</p>
+                                <div className="glass-3d p-4 group relative overflow-hidden flex flex-col items-center justify-center text-center space-y-4 hover:-translate-y-1 transition-all">
+                                    <div className="relative z-10 py-4">
+                                        <Award className="mx-auto text-gold mb-2" size={32} />
+                                        <p className="text-[10px] uppercase tracking-[0.2em] font-bold text-white">Certificado de Autenticidade</p>
+                                    </div>
+                                    <img
+                                        src="/images/certificado-autenticidade.png"
+                                        alt="Certificado Casa Linda"
+                                        className="h-32 object-contain group-hover:scale-110 transition-transform duration-700 opacity-90 group-hover:opacity-100"
+                                    />
+                                    {/* Light sweep effect */}
+                                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
                                 </div>
                             </div>
                         </div>
