@@ -540,7 +540,7 @@ const ProductionVoucher: React.FC<{ order: ProductionOrder, onClose: () => void 
                                 
                                 <div className="bg-zinc-100 border border-black p-2 flex flex-col justify-center">
                                     <p className="text-[6px] font-black uppercase text-zinc-500">Tamanho</p>
-                                    <p className="text-[11px] font-black">{item.product_name.match(/\d+x\d+cm/) || 'Especificado'}</p>
+                                    <p className="text-[11px] font-black">{item.product_name.match(/\d+\s*x\s*\d+\s*cm/i)?.[0] || 'Especificado'}</p>
                                 </div>
 
                                 <div className="bg-black text-white p-2 flex items-center gap-3 overflow-hidden">
