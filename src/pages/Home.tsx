@@ -86,10 +86,10 @@ export const Home: React.FC = () => {
           </div>
 
           <div className="space-y-6">
-            <h1 className="text-5xl md:text-7xl lg:text-[6.5rem] font-serif leading-none tracking-tighter text-white max-w-6xl mx-auto">
-              A maior referência,
+            <h1 className="text-5xl md:text-7xl lg:text-[6rem] font-serif leading-tight tracking-tighter text-white max-w-6xl mx-auto">
+              O maior ecommerce de
               <br className="hidden md:block" />
-              <span className="text-gradient-gold italic block mt-4">agora ao seu lado.</span>
+              <span className="text-gradient-gold italic block mt-4">quadros e espelhos do Brasil.</span>
             </h1>
 
             <p className="text-xs md:text-lg text-zinc-500 font-light max-w-2xl mx-auto leading-relaxed uppercase tracking-[0.4em]">
