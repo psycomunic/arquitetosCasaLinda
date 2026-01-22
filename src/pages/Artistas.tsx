@@ -9,8 +9,8 @@ export const Artistas: React.FC = () => {
                 <div className="max-w-7xl mx-auto space-y-32">
                     <div className="text-center space-y-8">
                         <h2 className="text-gold text-[10px] uppercase tracking-[0.6em] font-bold">Alma Brasileira</h2>
-                        <h1 className="text-6xl md:text-[7rem] font-serif leading-none text-white uppercase italic">Artistas</h1>
-                        <p className="text-zinc-500 font-light text-xl max-w-3xl mx-auto leading-relaxed">
+                        <h1 className="text-4xl sm:text-6xl md:text-[7rem] font-serif leading-tight text-white uppercase italic">Artistas</h1>
+                        <p className="text-zinc-500 font-light text-base md:text-xl max-w-3xl mx-auto leading-relaxed">
                             Onde a sensibilidade do artista encontra o rigor técnico para criar peças de alma e presença.
                         </p>
                     </div>

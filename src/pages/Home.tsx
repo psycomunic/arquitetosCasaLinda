@@ -36,6 +36,8 @@ export const Home: React.FC = () => {
     { label: 'Canvas Premium', path: '/canvas-premium' },
     { label: 'Sustentabilidade', path: '/sustentabilidade' },
     { label: 'Artistas', path: '/artistas' },
+    { label: 'Termos', path: '/termos-comissao' },
+    { label: 'Suporte', path: '/suporte-private' },
   ];
 
   return (
@@ -418,7 +420,7 @@ export const Home: React.FC = () => {
               <Star size={20} />
             </div>
           </div>
-          <h2 className="text-6xl md:text-[10rem] font-serif italic text-white leading-none tracking-tighter">
+          <h2 className="text-5xl sm:text-6xl md:text-[10rem] font-serif italic text-white leading-tight md:leading-none tracking-tighter">
             Curadoria é Poder.
           </h2>
           <p className="text-sm md:text-xl font-extralight tracking-[0.3em] text-zinc-500 uppercase max-w-2xl mx-auto leading-relaxed">
@@ -427,9 +429,9 @@ export const Home: React.FC = () => {
           <div className="flex flex-col md:flex-row gap-6 justify-center items-center">
             <button
               onClick={() => navigate('/register')}
-              className="group relative overflow-hidden bg-white text-black px-20 py-8 text-[10px] uppercase tracking-[0.5em] font-bold transition-all hover:scale-105"
+              className="group relative overflow-hidden bg-white text-black px-8 md:px-20 py-6 md:py-8 text-[9px] md:text-[10px] uppercase tracking-[0.3em] md:tracking-[0.5em] font-bold transition-all hover:scale-105 w-full md:w-auto"
             >
-              <span className="relative z-10 flex items-center gap-4">QUERO AUMENTAR MINHAS VENDAS COM CASA LINDA <ArrowRight size={16} /></span>
+              <span className="relative z-10 flex items-center justify-center gap-4">QUERO MEU ACESSO <ArrowRight size={16} /></span>
               <div className="absolute inset-0 bg-gold translate-y-full group-hover:translate-y-0 transition-transform duration-500"></div>
             </button>
           </div>
@@ -474,7 +476,9 @@ export const Home: React.FC = () => {
               <h5 className="text-gold text-[9px] uppercase tracking-widest font-bold">Social</h5>
               <ul className="text-[10px] text-zinc-500 space-y-4 uppercase tracking-widest">
                 <li className="hover:text-white cursor-pointer flex items-center gap-3">
-                  <Instagram size={12} /> Instagram
+                  <a href="https://www.instagram.com/casa.lindadecoracoes/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3">
+                    <Instagram size={12} /> Instagram
+                  </a>
                 </li>
               </ul>
             </div>

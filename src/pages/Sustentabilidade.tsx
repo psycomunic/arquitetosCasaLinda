@@ -9,8 +9,8 @@ export const Sustentabilidade: React.FC = () => {
                 <div className="max-w-7xl mx-auto space-y-32">
                     <div className="text-center space-y-8">
                         <h2 className="text-gold text-[10px] uppercase tracking-[0.6em] font-bold">Compromisso Ético</h2>
-                        <h1 className="text-6xl md:text-[7rem] font-serif leading-none text-white">Sustentabilidade</h1>
-                        <p className="text-zinc-500 font-light text-xl max-w-3xl mx-auto leading-relaxed">
+                        <h1 className="text-4xl sm:text-6xl md:text-[7rem] font-serif leading-tight text-white break-words">Sustentabilidade</h1>
+                        <p className="text-zinc-500 font-light text-base md:text-xl max-w-3xl mx-auto leading-relaxed">
                             Aliamos a sofisticação da arte à preservação ambiental. Cada peça é um reflexo do nosso respeito pela natureza.
                         </p>
                     </div>
