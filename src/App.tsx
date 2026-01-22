@@ -20,6 +20,7 @@ import { ThankYou } from './pages/ThankYou';
 import { Analytics } from './components/Analytics';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { AdminDashboard } from './pages/AdminDashboard';
+import { FloatingWhatsApp } from './components/FloatingWhatsApp';
 
 const ScrollToTop: React.FC = () => {
   const { pathname } = useLocation();
@@ -90,6 +91,7 @@ const App: React.FC = () => {
     <Router>
       <ScrollToTop />
       <Analytics />
+      <FloatingWhatsApp />
       <Routes>
         {/* Public Routes */}
         <Route path="/" element={<Home />} />
