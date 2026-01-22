@@ -543,9 +543,16 @@ const ProductionVoucher: React.FC<{ order: ProductionOrder, onClose: () => void 
                                     <p className="text-[11px] font-black">{item.product_name.match(/\d+x\d+cm/) || 'Especificado'}</p>
                                 </div>
 
-                                <div className="bg-black text-white p-2 flex flex-col justify-center overflow-hidden">
-                                    <p className="text-[6px] font-black uppercase text-zinc-400">Moldura</p>
-                                    <p className="text-[9px] font-bold truncate">{frameInfo?.name || 'A Definir'}</p>
+                                <div className="bg-black text-white p-2 flex items-center gap-3 overflow-hidden">
+                                    {frameInfo?.thumbnailUrl && (
+                                        <div className="w-10 h-10 flex-shrink-0 bg-white border border-white/20">
+                                            <img src={frameInfo.thumbnailUrl} alt="" className="w-full h-full object-cover" />
+                                        </div>
+                                    )}
+                                    <div className="flex-1 min-w-0">
+                                        <p className="text-[6px] font-black uppercase text-zinc-400 leading-none mb-1">Moldura</p>
+                                        <p className="text-[9px] font-bold truncate leading-none">{frameInfo?.name || 'A Definir'}</p>
+                                    </div>
                                 </div>
 
                                 <div className="border border-black p-2 flex flex-col justify-center">

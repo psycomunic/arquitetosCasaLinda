@@ -534,7 +534,7 @@ export const ProposalGenerator: React.FC = () => {
                                         // 2. Insert items
                                         const itemsToInsert = proposalItems.map(item => ({
                                             proposal_id: proposalData.id,
-                                            product_name: `${item.title} - ${item.frame?.name} (${item.finish?.name})`,
+                                            product_name: `${item.title} - ${item.frame?.name} (${item.finish?.name}) - ${item.size}`,
                                             product_code: item.artPiece?.id || 'CUSTOM',
                                             quantity: 1,
                                             unit_price: item.price,
