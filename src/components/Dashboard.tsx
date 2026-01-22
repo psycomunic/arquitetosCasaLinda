@@ -126,7 +126,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ onExit }) => {
                 <th className="px-10 py-5 font-bold">Data</th>
                 <th className="px-10 py-5 font-bold">Projeto/Cliente</th>
                 <th className="px-10 py-5 font-bold">Investimento</th>
-                <th className="px-10 py-5 font-bold">Repasse (20%)</th>
+                <th className="px-10 py-5 font-bold">Repasse (Até 20%)</th>
                 <th className="px-10 py-5 font-bold">Status</th>
               </tr>
             </thead>

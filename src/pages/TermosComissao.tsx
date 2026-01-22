@@ -1,6 +1,6 @@
 import React from 'react';
 import { PublicLayout } from '../layouts/PublicLayout';
-import { DollarSign, ShieldCheck, Zap, Handshake } from 'lucide-react';
+import { DollarSign, ShieldCheck, Zap, Handshake, Star } from 'lucide-react';
 
 export const TermosComissao: React.FC = () => {
     return (
@@ -15,30 +15,60 @@ export const TermosComissao: React.FC = () => {
                         </p>
                     </div>
 
-                    <div className="glass p-12 md:p-24 space-y-12">
-                        <div className="flex items-center gap-6 pb-12 border-b border-white/5">
-                            <div className="w-16 h-16 bg-gold flex items-center justify-center rounded-full text-black">
-                                <DollarSign size={32} />
+                    <div className="grid md:grid-cols-3 gap-8">
+                        {/* Pilar 1 */}
+                        <div className="glass p-10 space-y-6 hover:border-gold/30 transition-all group">
+                            <div className="w-12 h-12 bg-white/5 flex items-center justify-center rounded-lg text-gold group-hover:bg-gold group-hover:text-black transition-all">
+                                <Zap size={24} />
                             </div>
-                            <h3 className="text-4xl font-serif text-white">20% de Repasse Técnico</h3>
+                            <h3 className="text-xl font-serif text-white uppercase tracking-wider">Escala Digital</h3>
+                            <p className="text-[10px] text-zinc-500 uppercase tracking-widest leading-relaxed">
+                                Ideal para volume e projetos rápidos. Use seu link ou cupom exclusivo. O cliente compra e você recebe até 20%.
+                            </p>
+                            <div className="pt-4 border-t border-white/5">
+                                <span className="text-gold font-bold text-[10px] uppercase tracking-[0.2em]">15% a 20%</span>
+                            </div>
                         </div>
 
-                        <div className="space-y-10">
-                            <div className="space-y-4">
-                                <h4 className="text-gold text-[10px] uppercase tracking-[0.3em] font-bold">Plano Platinum</h4>
-                                <p className="text-sm text-zinc-400 leading-relaxed uppercase tracking-widest">
-                                    Ao se tornar um parceiro Private da Casa Linda, você garante uma vantagem competitiva exclusiva. Enquanto o mercado trabalha com margens menores, nós valorizamos sua especificação com <span className="text-white font-bold">20% de comissão garantida</span> sobre o valor total de cada projeto. Sem faixas, sem metas inatingíveis.
-                                </p>
+                        {/* Pilar 2 */}
+                        <div className="glass p-10 space-y-6 hover:border-gold/30 transition-all group">
+                            <div className="w-12 h-12 bg-white/5 flex items-center justify-center rounded-lg text-gold group-hover:bg-gold group-hover:text-black transition-all">
+                                <Handshake size={24} />
                             </div>
+                            <h3 className="text-xl font-serif text-white uppercase tracking-wider">Venda Assistida</h3>
+                            <p className="text-[10px] text-zinc-500 uppercase tracking-widest leading-relaxed">
+                                Suporte técnico total. Simulações no seu projeto e curadoria humanizada para elevar o ticket médio.
+                            </p>
+                            <div className="pt-4 border-t border-white/5">
+                                <span className="text-gold font-bold text-[10px] uppercase tracking-[0.2em]">15% a 20% + Bônus</span>
+                            </div>
+                        </div>
 
-                            <div className="grid md:grid-cols-2 gap-10 pt-10 border-t border-white/5">
+                        {/* Pilar 3 */}
+                        <div className="glass p-10 border border-gold/20 space-y-6 hover:border-gold transition-all group bg-gold/5">
+                            <div className="w-12 h-12 bg-gold flex items-center justify-center rounded-lg text-black">
+                                <Star size={24} />
+                            </div>
+                            <h3 className="text-xl font-serif text-white uppercase tracking-wider">Criação Artística</h3>
+                            <p className="text-[10px] text-zinc-500 uppercase tracking-widest leading-relaxed">
+                                Luxo percebido e Moat competitivo. Briefing exclusivo com nosso artista residente para obras únicas.
+                            </p>
+                            <div className="pt-4 border-t border-gold/10">
+                                <span className="text-gold font-bold text-[10px] uppercase tracking-[0.2em]">Garantida 20%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="glass p-12 md:p-24 space-y-12">
+                        <div className="space-y-10">
+                            <div className="grid md:grid-cols-2 gap-10">
                                 <div className="space-y-4">
                                     <div className="flex gap-4 text-white">
                                         <ShieldCheck className="text-gold" size={20} />
                                         <span className="text-[10px] uppercase tracking-[0.4em] font-bold">Segurança Total</span>
                                     </div>
                                     <p className="text-[10px] text-zinc-500 uppercase tracking-widest leading-loose">
-                                        Seu escritório merece transparência. Todos os repasses são formalizados, documentados e realizados com rigorosa precisão fiscal. Você acompanha tudo pelo seu painel exclusivo.
+                                        Seu escritório merece transparência. Todos os repasses são formalizados e realizados com rigorosa precisão. Você acompanha tudo pelo seu painel exclusivo.
                                     </p>
                                 </div>
                                 <div className="space-y-4">
@@ -47,19 +77,18 @@ export const TermosComissao: React.FC = () => {
                                         <span className="text-[10px] uppercase tracking-[0.4em] font-bold">Liquidez Imediata</span>
                                     </div>
                                     <p className="text-[10px] text-zinc-500 uppercase tracking-widest leading-loose">
-                                        Esqueça os prazos longos. Os valores são liberados em sua conta digital assim que o faturamento é confirmado. Fluxo de caixa ágil para o seu negócio crescer.
+                                        Esqueça os prazos longos. Os valores são liberados em sua conta assim que o faturamento é confirmado pelo cliente. Fluxo de caixa ágil para você.
                                     </p>
                                 </div>
                             </div>
                         </div>
 
                         <div className="pt-20 text-center space-y-6">
-                            <Handshake size={48} className="mx-auto text-gold mb-8 opacity-20" />
                             <p className="text-white text-xl font-serif italic max-w-2xl mx-auto">
-                                "Não é apenas sobre quadros. É sobre alavancar o faturamento do seu escritório com o parceiro certo."
+                                "Criação artística exclusiva: o diferencial que coloca seu escritório anos à frente da concorrência."
                             </p>
                             <button onClick={() => window.open('https://wa.me/554797220810', '_blank')} className="bg-gold text-black px-8 py-4 text-[10px] font-bold uppercase tracking-[0.4em] hover:bg-white transition-all shadow-xl hover:shadow-gold/20">
-                                Quero Ser Parceiro Agora
+                                Falar com Consultor Private
                             </button>
                         </div>
                     </div>

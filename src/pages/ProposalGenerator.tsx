@@ -388,7 +388,7 @@ export const ProposalGenerator: React.FC = () => {
                         {/* Custom Upload/Paste Preview */}
                         {customImage ? (
                             <div className="p-8 border-2 border-dashed border-gold/30 rounded-xl bg-gold/5 flex flex-col md:flex-row gap-10 items-center animate-fade-in relative">
-                                <button 
+                                <button
                                     onClick={() => setCustomImage(null)}
                                     className="absolute top-4 right-4 text-zinc-500 hover:text-white transition-colors"
                                 >
@@ -415,7 +415,7 @@ export const ProposalGenerator: React.FC = () => {
                                 </div>
                             </div>
                         ) : (
-                            <div 
+                            <div
                                 onClick={() => fileInputRef.current?.click()}
                                 className="border-2 border-dashed border-white/5 rounded-2xl p-20 text-center hover:border-gold/30 hover:bg-white/5 transition-all cursor-pointer group"
                             >
@@ -502,7 +502,7 @@ export const ProposalGenerator: React.FC = () => {
 
                             <div className="bg-white/5 p-6 rounded-lg border border-white/5">
                                 <div className="flex justify-between items-center mb-2">
-                                    <span className="text-zinc-500 text-[9px] font-bold uppercase tracking-[0.4em]">Seu Repasse (20%)</span>
+                                    <span className="text-zinc-500 text-[9px] font-bold uppercase tracking-[0.4em]">Seu Repasse (15% a 20%)</span>
                                     <Zap size={14} className="text-gold" />
                                 </div>
                                 <span className="font-serif text-gold text-2xl">R$ {(totalProposalValue * 0.2).toLocaleString('pt-BR')}</span>
@@ -514,7 +514,7 @@ export const ProposalGenerator: React.FC = () => {
                                     setIsSaving(true);
                                     try {
                                         const userId = (await supabase.auth.getUser()).data.user?.id;
-                                        
+
                                         // 1. Insert Proposal header
                                         const { data: proposalData, error: proposalError } = await supabase
                                             .from('proposals')

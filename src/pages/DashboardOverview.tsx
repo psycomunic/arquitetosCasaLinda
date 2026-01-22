@@ -47,9 +47,9 @@ export const DashboardOverview: React.FC = () => {
                     .select('value')
                     .eq('key', 'store_discount_percentage')
                     .single();
-                
+
                 if (settings) {
-                    setStoreDiscount(Number(settings.value));
+                    setStoreDiscount(Number((settings as any).value));
                 }
             }
             setLoading(false);
@@ -180,10 +180,10 @@ export const DashboardOverview: React.FC = () => {
                     <div className="mb-6 w-12 h-12 bg-zinc-900 rounded-full flex items-center justify-center text-zinc-500 group-hover:text-gold group-hover:scale-110 transition-all">
                         <Star size={20} />
                     </div>
-                    <h3 className="text-2xl font-serif text-white mb-2">Projetos Especiais</h3>
-                    <p className="text-xs text-zinc-500 uppercase tracking-widest mb-6 font-bold">Projetos AAA</p>
+                    <h3 className="text-2xl font-serif text-white mb-2">Criação Artística Exclusiva</h3>
+                    <p className="text-xs text-zinc-500 uppercase tracking-widest mb-6 font-bold">Luxo & Atendimento AAA</p>
                     <p className="text-zinc-400 text-xs mb-8 min-h-[60px] leading-relaxed">
-                        Tamanho personalizado, espelhos sob medida e artes exclusivas de nosso artista residente.
+                        Criação artística sob medida pelo nosso artista residente para obras autorais exclusivas.
                     </p>
 
                     <a
@@ -205,7 +205,7 @@ export const DashboardOverview: React.FC = () => {
                         <div className="h-1 flex-1 bg-zinc-800 rounded-full overflow-hidden">
                             <div className="h-full w-full bg-gold"></div>
                         </div>
-                        <span className="text-[9px] uppercase tracking-widest text-gold font-bold">20% Fixo</span>
+                        <span className="text-[9px] uppercase tracking-widest text-gold font-bold">Garantida 20%</span>
                     </div>
                 </div>
             </div>

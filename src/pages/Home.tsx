@@ -65,7 +65,7 @@ export const Home: React.FC = () => {
               </h1>
 
               <p className="text-sm md:text-xl text-zinc-400 font-light max-w-2xl mx-auto leading-relaxed uppercase tracking-[0.5em] animate-fade-in delay-500">
-                Padrão galeria e <span className="text-gold font-bold">20% de comissão</span> para seus projetos.
+                Padrão galeria e <span className="text-gold font-bold">até 20% de comissão</span> para seus projetos.
               </p>
             </div>
 
@@ -124,7 +124,7 @@ export const Home: React.FC = () => {
                 <div className="w-full space-y-3 pt-6 border-t border-white/5">
                   <div className="flex justify-between text-[8px] uppercase tracking-widest font-bold">
                     <span className="text-zinc-600">Comissão</span>
-                    <span className="text-white">Até 20%</span>
+                    <span className="text-white">Até 20%*</span>
                   </div>
                   <div className="flex justify-between text-[8px] uppercase tracking-widest font-bold">
                     <span className="text-zinc-600">Esforço</span>
@@ -171,9 +171,9 @@ export const Home: React.FC = () => {
                   </div>
                 </div>
                 <p className="text-[9px] uppercase tracking-widest text-gold font-bold mb-4">Mecânica 03</p>
-                <h4 className="text-xl font-serif text-white mb-6 uppercase tracking-wider">Projetos Especiais</h4>
+                <h4 className="text-xl font-serif text-white mb-6 uppercase tracking-wider">Criação Artística Exclusiva</h4>
                 <p className="text-zinc-500 text-[11px] leading-relaxed mb-8 uppercase tracking-widest text-center">
-                  <b>Projetos AAA</b>: Tamanho personalizado, espelhos sob medida e artes exclusivas de nosso artista residente para obras autorais de alto padrão.
+                  <b>Projetos AAA</b>: Criação artística exclusiva de nosso artista residente para obras autorais de alto padrão. Envie seu conceito e receba uma obra feita sob medida.
                 </p>
                 <button
                   onClick={() => navigate('/register')}
@@ -184,7 +184,7 @@ export const Home: React.FC = () => {
                 <div className="w-full space-y-3 pt-6 border-t border-white/5">
                   <div className="flex justify-between text-[8px] uppercase tracking-widest font-bold">
                     <span className="text-zinc-600">Comissão</span>
-                    <span className="text-white">20% FIXO</span>
+                    <span className="text-white">Garantida 20%</span>
                   </div>
                   <div className="flex justify-between text-[8px] uppercase tracking-widest font-bold">
                     <span className="text-zinc-600">Nível</span>
@@ -209,7 +209,7 @@ export const Home: React.FC = () => {
 
                 <div className="grid gap-6">
                   {[
-                    { icon: <Zap />, title: "Comissão Superior", desc: "Repasse imediato de 20% em cada indicação." },
+                    { icon: <Zap />, title: "Comissão Superior", desc: "Repasse de 15% a 20% em cada indicação." },
                     { icon: <Monitor />, title: "Portal White Label", desc: "Propostas PDF com a sua marca e logo." },
                     { icon: <Sparkles />, title: "Curadoria Curada", desc: "Acesso a obras exclusivas de artistas nacionais." }
                   ].map((item, i) => (
@@ -255,7 +255,7 @@ export const Home: React.FC = () => {
               <h3 className="text-gold text-[10px] uppercase tracking-[0.5em] font-bold">Rentabilidade Exclusiva</h3>
               <h2 className="text-5xl md:text-7xl font-serif text-white">Onde o lucro <br /> abraça a arte.</h2>
               <p className="text-zinc-500 font-light text-lg">
-                Nosso modelo de negócio foi desenhado para profissionais de elite. Enquanto o mercado oferece 10%, a Casa Linda garante <span className="text-white font-bold">20%</span>.
+                Nosso modelo de negócio foi desenhado para profissionais de elite. Enquanto o mercado oferece 10%, a Casa Linda garante <span className="text-white font-bold">até 20%</span>.
               </p>
               <div className="flex items-center gap-6 p-8 glass-dark border-l-4 border-gold">
                 <div className="w-12 h-12 bg-gold/20 flex items-center justify-center rounded-full text-gold">
@@ -288,8 +288,8 @@ export const Home: React.FC = () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-10 pt-10 border-t border-white/5">
                   <div className="space-y-2">
-                    <p className="text-[10px] uppercase tracking-widest font-bold text-gold-leaf">Seu Repasse Casa Linda</p>
-                    <p className="text-5xl font-serif text-white">{formatCurrency(calcValue * 0.2)}</p>
+                    <p className="text-[10px] uppercase tracking-widest font-bold text-gold-leaf">Seu Repasse (15% a 20%)</p>
+                    <p className="text-5xl font-serif text-white">{formatCurrency(calcValue * 0.15)} a {formatCurrency(calcValue * 0.2)}</p>
                   </div>
                   <div className="opacity-20">
                     <p className="text-[10px] uppercase tracking-widest font-bold">Lojista Comum</p>

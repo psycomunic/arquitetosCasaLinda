@@ -34,25 +34,25 @@ export const CustomProjectModal: React.FC<CustomProjectModalProps> = ({ isOpen, 
                 {step === 1 ? (
                     <div className="p-8 md:p-12">
                         <div className="mb-8">
-                            <span className="text-gold text-[10px] uppercase tracking-[0.3em] font-bold">Mecânica 03</span>
-                            <h3 className="text-3xl font-serif mt-2 mb-4">Como funcionam os Projetos Especiais</h3>
+                            <span className="text-gold text-[10px] uppercase tracking-[0.3em] font-bold">Mecânica de Elite</span>
+                            <h3 className="text-3xl font-serif mt-2 mb-4">Criação Artística Exclusiva</h3>
                             <div className="grid md:grid-cols-2 gap-8 text-sm leading-relaxed">
                                 <div className="space-y-4">
-                                    <h4 className="text-zinc-900 font-bold uppercase tracking-widest text-[10px]">O que você pode solicitar:</h4>
+                                    <h4 className="text-zinc-900 font-bold uppercase tracking-widest text-[10px]">O pilar de diferenciação:</h4>
                                     <ul className="space-y-2 text-zinc-500">
-                                        <li>• Tamanhos 100% personalizados</li>
-                                        <li>• Espelhos sob medida</li>
-                                        <li>• Artes exclusivas (Artista Residente)</li>
-                                        <li>• Projetos Corporativos / Hotéis</li>
+                                        <li>• <b>Briefing:</b> Estilo, Paleta e Conceito</li>
+                                        <li>• <b>Artista Residente:</b> Criação autoral</li>
+                                        <li>• <b>Exclusividade:</b> Obra única ou licenciada</li>
+                                        <li>• <b>Moat Competitivo:</b> Luxo percebido</li>
                                     </ul>
                                 </div>
                                 <div className="space-y-4">
-                                    <h4 className="text-zinc-900 font-bold uppercase tracking-widest text-[10px]">Fluxo de Trabalho:</h4>
+                                    <h4 className="text-zinc-900 font-bold uppercase tracking-widest text-[10px]">Benefícios AAA:</h4>
                                     <ul className="space-y-2 text-zinc-500">
-                                        <li>1. <b>Orçamento:</b> Envie a demanda via WhatsApp</li>
-                                        <li>2. <b>Produção:</b> Executamos o projeto técnico</li>
-                                        <li>3. <b>Faturamento:</b> Proposta oficial e nota fiscal</li>
-                                        <li className="text-gold font-bold">• <b>Comissão:</b> 20% FIXO</li>
+                                        <li>• 1 ou 2 revisões técnicas</li>
+                                        <li>• Projetos Corporativos / Hotéis</li>
+                                        <li>• Suporte prioritário sênior</li>
+                                        <li className="text-gold font-bold">• <b>Comissão:</b> Garantida 20%</li>
                                     </ul>
                                 </div>
                             </div>
@@ -60,7 +60,7 @@ export const CustomProjectModal: React.FC<CustomProjectModalProps> = ({ isOpen, 
 
                         <div className="space-y-4">
                             <a
-                                href="https://wa.me/5511999999999?text=Olá! Gostaria de falar sobre um Projeto Especial (Tamanho personalizado / Arte exclusiva / AAA)."
+                                href="https://wa.me/5511999999999?text=Olá! Sou arquiteto(a) AAA e gostaria de iniciar um briefing para Criação Artística Exclusiva."
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="w-full bg-[#25D366] text-white py-5 rounded-xl font-bold uppercase tracking-widest hover:opacity-90 transition-all flex items-center justify-center gap-3 shadow-lg shadow-green-500/20"
@@ -68,7 +68,7 @@ export const CustomProjectModal: React.FC<CustomProjectModalProps> = ({ isOpen, 
                                 <MessageSquare size={20} />
                                 Solicitar via WhatsApp
                             </a>
-                            
+
                             <button
                                 onClick={onClose}
                                 className="w-full bg-zinc-100 text-zinc-500 py-4 rounded-xl font-bold text-[10px] uppercase tracking-widest hover:bg-zinc-200 transition-colors"

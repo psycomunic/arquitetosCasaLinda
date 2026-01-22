@@ -33,7 +33,7 @@ export const PortalLayout: React.FC<PortalLayoutProps> = ({ children, profile })
             { id: 'production', icon: <Package size={16} />, label: 'Produção & Envios', path: '/adm?tab=production' }
         ] : []),
         { id: 'proposals', icon: <FilePlus size={16} />, label: 'Nova Proposta', path: '/proposals' },
-        { id: 'sales', icon: <History size={16} />, label: 'Repasses', path: '/earnings' },
+        { id: 'sales', icon: <History size={16} />, label: 'Comissões', path: '/earnings' },
         { id: 'settings', icon: <Settings size={16} />, label: 'Branding', path: '/settings' }
     ];
 

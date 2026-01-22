@@ -22,7 +22,7 @@ export const PublicLayout: React.FC<PublicLayoutProps> = ({ children }) => {
         { label: 'Canvas Premium', path: '/canvas-premium' },
         { label: 'Sustentabilidade', path: '/sustentabilidade' },
         { label: 'Artistas', path: '/artistas' },
-        { label: 'Termos', path: '/termos-comissao' },
+        { label: 'Comissão', path: '/termos-comissao' },
         { label: 'Suporte', path: '/suporte-private' },
     ];
 
@@ -115,7 +115,7 @@ export const PublicLayout: React.FC<PublicLayoutProps> = ({ children }) => {
                             <h5 className="text-gold text-[9px] uppercase tracking-widest font-bold">Parceria</h5>
                             <ul className="text-[10px] text-zinc-500 space-y-4 uppercase tracking-widest">
                                 <li className="hover:text-white cursor-pointer transition-colors" onClick={() => navigate('/login')}>Portal Arquiteto</li>
-                                <li className="hover:text-white cursor-pointer transition-colors" onClick={() => navigate('/termos-comissao')}>Termos de Comissão</li>
+                                <li className="hover:text-white cursor-pointer transition-colors" onClick={() => navigate('/termos-comissao')}>Comissão</li>
                                 <li className="hover:text-white cursor-pointer transition-colors" onClick={() => navigate('/suporte-private')}>Suporte Private</li>
                             </ul>
                         </div>
