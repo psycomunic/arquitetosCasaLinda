@@ -129,10 +129,11 @@ export const Register: React.FC = () => {
                                     </div>
 
                                     <div className="space-y-3">
-                                        <label className="block text-[9px] font-bold text-zinc-500 uppercase tracking-[0.4em]">CAU / ABD</label>
+                                        <label className="block text-[9px] font-bold text-zinc-500 uppercase tracking-[0.4em]">
+                                            CAU / ABD <span className="text-[8px] text-zinc-600 ml-1 opacity-50">(Opcional)</span>
+                                        </label>
                                         <input
                                             type="text"
-                                            required
                                             placeholder="Reg. Profissional"
                                             value={formData.cau}
                                             onChange={(e) => setFormData({ ...formData, cau: e.target.value })}
