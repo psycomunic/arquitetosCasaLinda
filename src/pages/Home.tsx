@@ -39,7 +39,7 @@ export const Home: React.FC = () => {
         <div className="fixed inset-0 pointer-events-none spotlight z-0"></div>
 
         {/* Dramatic Hero Section */}
-        <section className="relative min-h-[95vh] flex items-center justify-center px-6 overflow-hidden pt-32 pb-20">
+        <section className="relative min-h-[85vh] md:min-h-[95vh] flex items-start md:items-center justify-center px-6 overflow-hidden pt-28 md:pt-32 pb-20">
           <div className="absolute inset-0 z-0 scale-110">
             <img
               src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?q=80&w=2000&auto=format&fit=crop"
@@ -50,9 +50,9 @@ export const Home: React.FC = () => {
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.4)_100%)]"></div>
           </div>
 
-          <div className="container mx-auto relative z-10 text-center space-y-12 md:space-y-16 mt-4 md:mt-0">
-            <div className="space-y-6 md:space-y-8">
-              <h1 className="text-4xl sm:text-6xl md:text-8xl lg:text-[7rem] font-serif leading-[1.1] md:leading-tight tracking-tighter text-white max-w-6xl mx-auto drop-shadow-2xl">
+          <div className="container mx-auto relative z-10 text-center space-y-8 md:space-y-16 mt-0 md:mt-0">
+            <div className="space-y-4 md:space-y-8">
+              <h1 className="text-5xl sm:text-6xl md:text-8xl lg:text-[7rem] font-serif leading-[1.1] md:leading-tight tracking-tighter text-white max-w-6xl mx-auto drop-shadow-2xl">
                 <span className="block opacity-90 animate-slide-up whitespace-nowrap">O maior ecommerce de</span>
                 <span className="text-gradient-gold italic block mt-2 md:mt-4 animate-slide-up delay-200">quadros e espelhos</span>
                 <span className="text-gradient-gold italic block animate-slide-up delay-300">do Brasil.</span>
