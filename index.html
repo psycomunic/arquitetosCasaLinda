@@ -1,20 +1,37 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR" class="scroll-smooth">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Casa Linda | Exclusive Gallery</title>
-    
-    <!-- Open Graph / Social Media Meta Tags -->
-    <meta property="og:title" content="Casa Linda | Exclusive Gallery" />
-    <meta property="og:description" content="Portal exclusivo para arquitetos e decoradores. Acesse nossa galeria de molduras premium e obras de arte." />
-    <meta property="og:image" content="https://arquitetoscasalinda.com.br/og-image.jpg" />
-    <meta property="og:url" content="https://arquitetoscasalinda.com.br/" />
+
+    <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://arquitetoscasalinda.com.br/" />
+    <meta property="og:title" content="Casa Linda | Exclusive Gallery" />
+    <meta property="og:description"
+        content="Portal exclusivo para arquitetos e decoradores. Acesse nossa galeria de molduras premium e obras de arte." />
+    <meta property="og:image" content="https://arquitetoscasalinda.com.br/og-image.jpg" />
     <meta property="og:locale" content="pt_BR" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://arquitetoscasalinda.com.br/" />
+    <meta property="twitter:title" content="Casa Linda | Exclusive Gallery" />
+    <meta property="twitter:description"
+        content="Portal exclusivo para arquitetos e decoradores. Acesse nossa galeria de molduras premium e obras de arte." />
+    <meta property="twitter:image" content="https://arquitetoscasalinda.com.br/og-image.jpg" />
+
+    <!-- Schema.org / WhatsApp -->
+    <meta itemprop="name" content="Casa Linda | Exclusive Gallery" />
+    <meta itemprop="description"
+        content="Portal exclusivo para arquitetos e decoradores. Acesse nossa galeria de molduras premium e obras de arte." />
+    <meta itemprop="image" content="https://arquitetoscasalinda.com.br/og-image.jpg" />
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Montserrat:wght@100;200;300;400;600&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Montserrat:wght@100;200;300;400;600&display=swap"
+        rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
@@ -40,7 +57,7 @@
             overflow-x: hidden;
             font-family: 'Montserrat', sans-serif;
         }
-        
+
         .glass {
             background: rgba(255, 255, 255, 0.03);
             backdrop-filter: blur(12px);
@@ -58,10 +75,14 @@
         .grainy {
             position: relative;
         }
+
         .grainy::before {
             content: "";
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             opacity: 0.05;
             pointer-events: none;
             z-index: 9999;
@@ -75,34 +96,66 @@
         }
 
         @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-15px); }
-            100% { transform: translateY(0px); }
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-15px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
         }
+
         .animate-float {
             animation: float 6s ease-in-out infinite;
         }
 
         @keyframes spotlight {
-            0% { opacity: 0.3; }
-            50% { opacity: 0.6; }
-            100% { opacity: 0.3; }
+            0% {
+                opacity: 0.3;
+            }
+
+            50% {
+                opacity: 0.6;
+            }
+
+            100% {
+                opacity: 0.3;
+            }
         }
+
         .spotlight {
             background: radial-gradient(circle at 50% 50%, rgba(197, 160, 89, 0.15), transparent 70%);
             animation: spotlight 8s infinite;
         }
 
         @media print {
-            .no-print { display: none !important; }
-            body { background: white !important; color: black !important; }
+            .no-print {
+                display: none !important;
+            }
+
+            body {
+                background: white !important;
+                color: black !important;
+            }
         }
-        
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-track { background: #0a0a0a; }
-        ::-webkit-scrollbar-thumb { background: #c5a059; }
+
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0a0a0a;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #c5a059;
+        }
     </style>
-<script type="importmap">
+    <script type="importmap">
 {
   "imports": {
     "react": "https://esm.sh/react@^19.2.3",
@@ -112,10 +165,12 @@
   }
 }
 </script>
-<link rel="stylesheet" href="/index.css">
+    <link rel="stylesheet" href="/index.css">
 </head>
+
 <body class="grainy">
     <div id="root"></div>
-<script type="module" src="/src/index.tsx"></script>
+    <script type="module" src="/src/index.tsx"></script>
 </body>
+
 </html>
