@@ -229,49 +229,31 @@ export const Home: React.FC = () => {
         {/* Seção Proposta de Valor (O que oferecemos) */}
         <section id="proposta" className="py-20 md:py-40 px-6 bg-ebonite relative">
           <div className="max-w-7xl mx-auto">
-            <div className="grid lg:grid-cols-2 gap-24 items-center">
-              <div className="space-y-10">
+            <div className="space-y-16 text-center">
+              <div className="space-y-10 max-w-4xl mx-auto">
                 <h2 className="text-gold text-[10px] uppercase tracking-[0.6em] font-bold">Diferencial Elite</h2>
                 <h3 className="text-4xl md:text-6xl font-serif text-white leading-tight">Sua marca em primeiro plano. <br /> Nosso acervo como suporte.</h3>
-                <p className="text-lg text-zinc-500 font-light leading-relaxed">
+                <p className="text-lg text-zinc-500 font-light leading-relaxed max-w-2xl mx-auto">
                   Desenvolvemos um ecossistema exclusivo para que você tenha o controle total. Gere propostas imersivas em segundos, personalizadas com a <span className="text-white border-b border-gold">identidade do seu escritório</span>.
                 </p>
-
-                <div className="grid gap-6">
-                  {[
-                    { icon: <Zap />, title: "Comissão Superior", desc: "Repasse de 15% a 20% em cada indicação." },
-                    { icon: <Monitor />, title: "Portal White Label", desc: "Propostas PDF com a sua marca e assinatura." },
-                    { icon: <Sparkles />, title: "Produção Própria", desc: "Acesso a obras exclusivas de artistas nacionais." }
-                  ].map((item, i) => (
-                    <div key={i} className="glass p-8 group hover:bg-white/5 transition-all">
-                      <div className="flex gap-6 items-center">
-                        <div className="text-gold group-hover:scale-110 transition-transform">{item.icon}</div>
-                        <div>
-                          <h5 className="text-sm font-bold uppercase tracking-widest text-white">{item.title}</h5>
-                          <p className="text-[11px] text-zinc-500 mt-1 uppercase tracking-wider">{item.desc}</p>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
               </div>
 
-              <div className="relative h-full flex items-center justify-center">
-                <div className="relative w-full max-w-md mx-auto">
-                  <div className="absolute -inset-1 bg-gradient-to-r from-gold to-white opacity-20 blur rounded-2xl"></div>
-                  <div className="relative bg-zinc-900 rounded-2xl p-2 shadow-2xl border border-white/10">
-                    <img
-                      src="/images/frame-showcase.jpg"
-                      className="w-full h-auto rounded-xl shadow-inner"
-                      alt="Arte Canvas"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent flex items-end p-8 rounded-xl">
-                      <p className="text-2xl font-serif text-white italic drop-shadow-md">O padrão de galeria que seu cliente exige.</p>
+              <div className="grid md:grid-cols-3 gap-6">
+                {[
+                  { icon: <Zap />, title: "Comissão Superior", desc: "Repasse de 15% a 20% em cada indicação." },
+                  { icon: <Monitor />, title: "Portal White Label", desc: "Propostas PDF com a sua marca e assinatura." },
+                  { icon: <Sparkles />, title: "Produção Própria", desc: "Acesso a obras exclusivas de artistas nacionais." }
+                ].map((item, i) => (
+                  <div key={i} className="glass p-8 group hover:bg-white/5 transition-all text-left">
+                    <div className="flex flex-col gap-6 items-center text-center">
+                      <div className="text-gold group-hover:scale-110 transition-transform">{item.icon}</div>
+                      <div>
+                        <h5 className="text-sm font-bold uppercase tracking-widest text-white">{item.title}</h5>
+                        <p className="text-[11px] text-zinc-500 mt-2 uppercase tracking-wider leading-relaxed">{item.desc}</p>
+                      </div>
                     </div>
                   </div>
-                </div>
-                {/* Decorative elements */}
-                <div className="absolute -top-20 -right-20 w-60 h-60 bg-gold/10 rounded-full blur-[80px] pointer-events-none"></div>
+                ))}
               </div>
             </div>
           </div>
