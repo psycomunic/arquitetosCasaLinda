@@ -240,7 +240,7 @@ export const Home: React.FC = () => {
                 <div className="grid gap-6">
                   {[
                     { icon: <Zap />, title: "Comissão Superior", desc: "Repasse de 15% a 20% em cada indicação." },
-                    { icon: <Monitor />, title: "Portal White Label", desc: "Propostas PDF com a sua marca e logo." },
+                    { icon: <Monitor />, title: "Portal White Label", desc: "Propostas PDF com a sua marca e assinatura." },
                     { icon: <Sparkles />, title: "Curadoria Curada", desc: "Acesso a obras exclusivas de artistas nacionais." }
                   ].map((item, i) => (
                     <div key={i} className="glass p-8 group hover:bg-white/5 transition-all">
