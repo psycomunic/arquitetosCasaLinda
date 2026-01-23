@@ -361,7 +361,7 @@ export const Home: React.FC = () => {
           <div className="max-w-7xl mx-auto">
             <div className="flex flex-col lg:flex-row justify-between items-center gap-20">
               <div className="space-y-8 text-center lg:text-left lg:max-w-xl">
-                <h3 className="text-white text-3xl md:text-5xl font-serif">Vendemos para o Brasil e para o Mundo</h3>
+                <h3 className="text-white text-3xl md:text-5xl font-serif">Estrutura logística para projetos nacionais e internacionais</h3>
                 <p className="text-zinc-500 text-sm uppercase tracking-[0.2em] font-light">
                   Nossa logística premium garante que sua obra chegue impecável a qualquer lugar do globo.
                 </p>
