@@ -75,41 +75,164 @@ export const CanvasPremium: React.FC = () => {
                         </div>
                     </div>
 
-                    <div className="grid md:grid-cols-3 gap-10 pt-20 perspective-1000">
-                        {[
-                            {
-                                title: "Borda Infinita 360°",
-                                desc: "Transforme seu ambiente em uma galeria. Imagem contínua nas laterais que envolve toda a peça. Com proteção UV contra desbotamento.",
-                                image: "/images/frames/borda-infinita.jpg"
-                            },
-                            {
-                                title: "Moldura Premium Caixa",
-                                desc: "Estilo canaleta (float). O canvas ganha uma moldura de 5cm em madeira nobre revestida. Elegância com durabilidade superior a 30 anos.",
-                                image: "/images/frames/caixa-dourada.png"
-                            },
-                            {
-                                title: "Premium com Vidro",
-                                desc: "Máximo requinte. Moldura com vidro float 3mm de alta transparência. Proteção extraordinária para obras que atravessam gerações.",
-                                image: "/images/frames/trono-de-ouro.jpg"
-                            }
-                        ].map((type, i) => (
-                            <div key={i} className="glass-3d group overflow-hidden flex flex-col items-center text-center transform hover:-translate-y-2 hover:rotate-x-2 transition-all duration-500">
-                                <div className="aspect-square w-full overflow-hidden bg-black/40">
+                    {/* --- CATALOGO DE MOLDURAS --- */}
+                    <div className="space-y-40 pt-20">
+
+                        {/* 1. Borda Infinita */}
+                        <div className="grid md:grid-cols-2 gap-12 items-center">
+                            <div className="glass-3d p-8 rounded-2xl group overflow-hidden">
+                                <div className="aspect-square bg-black/40 rounded-xl overflow-hidden relative">
                                     <img
-                                        src={type.image}
-                                        className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-1000 opacity-80 group-hover:opacity-100"
-                                        alt={type.title}
+                                        src="/images/frames/borda-infinita.jpg"
+                                        alt="Borda Infinita 360"
+                                        className="w-full h-full object-contain transform group-hover:scale-110 transition-transform duration-1000"
                                     />
-                                </div>
-                                <div className="p-10 space-y-6">
-                                    <h4 className="text-2xl font-serif text-white tracking-wide">{type.title}</h4>
-                                    <p className="text-[10px] text-zinc-400 leading-relaxed uppercase tracking-[0.2em] font-light">
-                                        {type.desc}
-                                    </p>
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-60"></div>
+                                    <div className="absolute bottom-6 left-6 right-6">
+                                        <h3 className="text-2xl font-serif text-white mb-2">Borda Infinita 360°</h3>
+                                        <p className="text-sm text-zinc-300 font-light">A imagem continua nas laterais de 4cm, criando um efeito de imersão total.</p>
+                                    </div>
                                 </div>
                             </div>
-                        ))}
+                            <div className="space-y-6">
+                                <h2 className="text-gold text-[10px] uppercase tracking-[0.6em] font-bold">Moderna & Clean</h2>
+                                <h3 className="text-4xl font-serif text-white">Estética de Galeria</h3>
+                                <p className="text-zinc-400 font-light leading-relaxed">
+                                    A opção favorita para obras contemporâneas e fotografias Fine Art. O acabamento em borda infinita elimina a necessidade de moldura externa, permitindo que a obra interaja diretamente com o ambiente.
+                                </p>
+                                <ul className="space-y-3">
+                                    <li className="flex items-center gap-3 text-sm text-zinc-300">
+                                        <div className="w-1.5 h-1.5 bg-gold rounded-full"></div>
+                                        Chassi de madeira nobre tratada (4cm de espessura)
+                                    </li>
+                                    <li className="flex items-center gap-3 text-sm text-zinc-300">
+                                        <div className="w-1.5 h-1.5 bg-gold rounded-full"></div>
+                                        Impressão contínua nas laterais (efeito espelhado ou estendido)
+                                    </li>
+                                    <li className="flex items-center gap-3 text-sm text-zinc-300">
+                                        <div className="w-1.5 h-1.5 bg-gold rounded-full"></div>
+                                        Verso com acabamento selado e fita de proteção
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        {/* 2. Coleção Minimalista (Caixa) */}
+                        <div className="space-y-12">
+                            <div className="text-center space-y-4">
+                                <h2 className="text-gold text-[10px] uppercase tracking-[0.6em] font-bold">Coleção Minimalista</h2>
+                                <h3 className="text-4xl md:text-5xl font-serif text-white">Moldura Caixa (Float)</h3>
+                                <p className="text-zinc-500 max-w-2xl mx-auto font-light">
+                                    Conhecida como "Canaleta", esta moldura cria um espaço de respiro entre a obra e a madeira, dando a sensação de que o quadro está flutuando.
+                                </p>
+                            </div>
+
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                                {[
+                                    { name: "Caixa Preta", img: "/images/frames/caixa-preta.png", desc: "Elegância atemporal" },
+                                    { name: "Caixa Branca", img: "/images/frames/caixa-branca.png", desc: "Leveza e amplitude" },
+                                    { name: "Caixa Madeira", img: "/images/frames/caixa-madeira.png", desc: "Aconchego natural" },
+                                    { name: "Caixa Dourada", img: "/images/frames/caixa-dourada.png", desc: "Sofisticação moderna" },
+                                ].map((item, i) => (
+                                    <div key={i} className="group cursor-pointer">
+                                        <div className="glass-3d p-4 rounded-xl aspect-square flex items-center justify-center mb-4 transition-all duration-500 group-hover:bg-white/5">
+                                            <img
+                                                src={item.img}
+                                                alt={item.name}
+                                                className="w-full h-full object-contain drop-shadow-2xl transform group-hover:scale-110 transition-transform duration-500"
+                                            />
+                                        </div>
+                                        <div className="text-center">
+                                            <h4 className="text-white font-serif">{item.name}</h4>
+                                            <p className="text-[10px] text-zinc-500 uppercase tracking-widest mt-1">{item.desc}</p>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* 3. Coleção Clássica (Côncava) */}
+                        <div className="space-y-12">
+                            <div className="text-center space-y-4">
+                                <h2 className="text-gold text-[10px] uppercase tracking-[0.6em] font-bold">Coleção Clássica</h2>
+                                <h3 className="text-4xl md:text-5xl font-serif text-white">Moldura Côncava</h3>
+                                <p className="text-zinc-500 max-w-2xl mx-auto font-light">
+                                    Perfil robusto com curvatura interna que conduz o olhar para a obra. Uma escolha tradicional que nunca sai de moda.
+                                </p>
+                            </div>
+
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                                {[
+                                    { name: "Côncava Preta", img: "/images/frames/concava-preta.png" },
+                                    { name: "Côncava Branca", img: "/images/frames/concava-branca.jpg" },
+                                    { name: "Côncava Madeira", img: "/images/frames/concava-madeira.jpg" },
+                                    { name: "Côncava Dourada", img: "/images/frames/concava-dourada.png" },
+                                ].map((item, i) => (
+                                    <div key={i} className="group cursor-pointer">
+                                        <div className="glass-3d p-4 rounded-xl aspect-square flex items-center justify-center mb-4 transition-all duration-500 group-hover:bg-white/5">
+                                            <img
+                                                src={item.img}
+                                                alt={item.name}
+                                                className="w-full h-full object-contain drop-shadow-2xl transform group-hover:scale-110 transition-transform duration-500"
+                                            />
+                                        </div>
+                                        <div className="text-center">
+                                            <h4 className="text-white font-serif">{item.name}</h4>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* 4. Coleção Imperial (Premium com Vidro) */}
+                        <div className="glass p-12 rounded-3xl border border-gold/20 relative overflow-hidden">
+                            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-gold to-transparent opacity-50"></div>
+
+                            <div className="grid md:grid-cols-2 gap-16 items-center relative z-10">
+                                <div className="space-y-8">
+                                    <div>
+                                        <h2 className="text-gold text-[10px] uppercase tracking-[0.6em] font-bold mb-2">Linha Signature</h2>
+                                        <h3 className="text-4xl md:text-5xl font-serif text-white leading-tight">Coleção Imperial <br /><span className="text-2xl text-zinc-400 italic font-light">& Premium Glass</span></h3>
+                                    </div>
+                                    <p className="text-zinc-300 font-light leading-relaxed">
+                                        Para obras que exigem o máximo de protagonismo. Seleção exclusiva de molduras ornamentadas, com acabamentos em folha de ouro, prata e texturas nobres. Todas protegidas por vidro Crystal Clear de alta transparência.
+                                    </p>
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div className="bg-white/5 p-4 rounded-lg text-center border border-white/10">
+                                            <span className="block text-gold font-serif text-xl mb-1">98%</span>
+                                            <span className="text-[9px] uppercase tracking-widest text-zinc-400">Proteção UV</span>
+                                        </div>
+                                        <div className="bg-white/5 p-4 rounded-lg text-center border border-white/10">
+                                            <span className="block text-gold font-serif text-xl mb-1">3mm</span>
+                                            <span className="text-[9px] uppercase tracking-widest text-zinc-400">Vidro Crystal</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="grid grid-cols-2 gap-4">
+                                    {[
+                                        { name: "Roma Moderna", img: "/images/frames/roma-moderna.jpg" },
+                                        { name: "Palaciana", img: "/images/frames/palaciana.jpg" },
+                                        { name: "Realce Imperial", img: "/images/frames/realce-imperial.jpg" },
+                                        { name: "Trono de Ouro", img: "/images/frames/trono-de-ouro.jpg" },
+                                    ].map((item, i) => (
+                                        <div key={i} className="group relative rounded-xl overflow-hidden aspect-square border border-white/10">
+                                            <img
+                                                src={item.img}
+                                                alt={item.name}
+                                                className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
+                                            />
+                                            <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                                                <span className="text-white font-serif text-sm tracking-widest uppercase border-b border-gold pb-1">{item.name}</span>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
+
 
                     {/* Dedicated Authenticity Certificate Section */}
                     <div className="py-24 border-t border-white/5">
