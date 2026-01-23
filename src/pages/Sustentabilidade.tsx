@@ -49,6 +49,9 @@ export const Sustentabilidade: React.FC = () => {
                                 alt="Blumenau Santa Catarina"
                             />
                             <div className="absolute inset-0 bg-gradient-to-t from-canvas to-transparent"></div>
+                            <div className="absolute bottom-6 left-0 right-0 text-center">
+                                <p className="text-white/80 text-[10px] uppercase tracking-[0.4em] font-bold">Blumenau/SC</p>
+                            </div>
                         </div>
                         <div className="space-y-10">
                             <h3 className="text-gold text-[10px] uppercase tracking-[0.6em] font-bold">Produção Local</h3>
