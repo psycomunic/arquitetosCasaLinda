@@ -53,7 +53,7 @@ export const Home: React.FC = () => {
           <div className="container mx-auto relative z-10 text-center space-y-8 md:space-y-16 mt-0 md:mt-0">
             <div className="space-y-4 md:space-y-8">
               <h1 className="text-5xl sm:text-6xl md:text-8xl lg:text-[7rem] font-serif leading-[1.1] md:leading-tight tracking-tighter text-white max-w-6xl mx-auto drop-shadow-2xl">
-                <span className="block opacity-90 animate-slide-up whitespace-normal md:whitespace-nowrap">O maior ecommerce de</span>
+                <span className="block opacity-90 animate-slide-up whitespace-normal md:whitespace-nowrap">O maior ecommerce&nbsp;de</span>
                 <span className="text-gradient-gold italic block mt-2 md:mt-4 animate-slide-up delay-200">quadros e espelhos</span>
                 <span className="text-gradient-gold italic block animate-slide-up delay-300">do Brasil <br className="md:hidden" /> agora ao lado dos arquitetos.</span>
               </h1>
