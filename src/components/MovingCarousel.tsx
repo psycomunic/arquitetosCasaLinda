@@ -1,19 +1,13 @@
 import React from 'react';
 
 const images = [
-  '/images/carousel/premium_1.jpg',
-  '/images/carousel/premium_2.jpg',
-  '/images/carousel/premium_3.jpg',
-  '/images/carousel/premium_4.jpg',
-  '/images/carousel/premium_5.jpg',
-  '/images/carousel/premium_6.jpg',
-  '/images/carousel/premium_7.jpg',
-  '/images/carousel/premium_8.jpg',
-  '/images/carousel/premium_9.jpg',
-  '/images/carousel/premium_10.jpg',
-  '/images/carousel/premium_11.jpg',
-  '/images/carousel/premium_12.jpg',
-  '/images/carousel/premium_13.jpg',
+  '/images/carousel/client-1.jpg',
+  '/images/carousel/client-2.jpg',
+  '/images/carousel/client-3.jpg',
+  '/images/carousel/client-4.jpg',
+  '/images/carousel/client-5.jpg',
+  '/images/carousel/client-6.jpg',
+  '/images/carousel/client-7.jpg',
 ];
 
 export const MovingCarousel: React.FC = () => {
@@ -35,8 +29,8 @@ export const MovingCarousel: React.FC = () => {
           >
             <img
               src={src}
-              alt={`Quadro ${index + 1}`}
-              className="w-full h-full object-contain drop-shadow-[0_20px_40px_rgba(0,0,0,0.5)] group-hover:scale-105 transition-transform duration-500"
+              alt={`Ambiente Cliente ${index + 1}`}
+              className="w-full h-full object-cover rounded-lg shadow-xl group-hover:scale-105 transition-transform duration-500"
             />
           </div>
         ))}
