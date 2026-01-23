@@ -99,6 +99,26 @@ export const Home: React.FC = () => {
 
         <MovingCarousel />
 
+        {/* Benefits Bar - "Segunda Dobra" Feature List */}
+        <section className="py-12 bg-ebonite border-y border-white/5 relative z-20">
+          <div className="max-w-7xl mx-auto px-6">
+            <div className="flex flex-col md:flex-row justify-center items-center gap-6 md:gap-16 text-center md:text-left">
+              {[
+                "Sem exclusividade",
+                "Sem metas obrigatórias",
+                "Comissão acompanhada em dashboard"
+              ].map((benefit, i) => (
+                <div key={i} className="flex items-center gap-3 group">
+                  <div className="w-8 h-8 rounded-full bg-gold/10 flex items-center justify-center text-gold group-hover:bg-gold group-hover:text-black transition-all">
+                    <CheckCircle2 size={16} />
+                  </div>
+                  <span className="text-sm md:text-base text-zinc-300 uppercase tracking-wider font-light">{benefit}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
         {/* Seção Como Funciona (Três Caminhos de Venda) */}
         <section id="como-funciona" className="py-20 md:py-32 bg-black px-6 border-b border-white/5 relative overflow-hidden">
           {/* Ambient Background Glow */}
