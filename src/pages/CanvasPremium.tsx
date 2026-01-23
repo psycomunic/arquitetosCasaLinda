@@ -341,6 +341,17 @@ export const CanvasPremium: React.FC = () => {
                             </div>
                         </div>
 
+                        {/* Disclaimer +250 Molduras */}
+                        <div className="glass p-8 rounded-xl border border-gold/10 text-center relative overflow-hidden group">
+                            <div className="absolute inset-0 bg-gold/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                            <p className="text-gold text-[10px] uppercase tracking-[0.4em] font-bold mb-2 relative z-10">Personalização Ilimitada</p>
+                            <h3 className="text-2xl md:text-3xl font-serif text-white relative z-10">
+                                +250 Molduras Disponíveis
+                            </h3>
+                            <p className="text-zinc-400 font-light mt-4 max-w-2xl mx-auto relative z-10">
+                                Além da nossa curadoria online, dispomos de um acervo físico completo com centenas de perfis, acabamentos e texturas para harmonizar perfeitamente com seu projeto.
+                            </p>
+                        </div>
                     </div>
 
 
