@@ -117,8 +117,8 @@ export const PublicLayout: React.FC<PublicLayoutProps> = ({ children }) => {
                             <img src="/logo.png" alt="Casa Linda" className="h-10 md:h-20 object-contain" />
                         </div>
                         <div className="space-y-2">
-                            <p className="text-[10px] text-zinc-500 uppercase tracking-widest leading-relaxed">Rodovia Paul Fritz Kuehnrich, 990 - Fortaleza</p>
-                            <p className="text-[10px] text-zinc-500 uppercase tracking-widest leading-relaxed">Blumenau/SC | CEP: 89052-381</p>
+                            <p className="text-[10px] text-zinc-500 uppercase tracking-widest leading-relaxed">Rodovia Paul Fritz Kuehnrich, 990 - Bairro Fortaleza</p>
+                            <p className="text-[10px] text-zinc-500 uppercase tracking-widest leading-relaxed">Blumenau - Santa Catarina | CEP: 89052-381</p>
                         </div>
                     </div>
 

@@ -121,9 +121,9 @@ export const CanvasPremium: React.FC = () => {
                         <div className="space-y-12">
                             <div className="text-center space-y-4">
                                 <h2 className="text-gold text-[10px] uppercase tracking-[0.6em] font-bold">Coleção Minimalista</h2>
-                                <h3 className="text-4xl md:text-5xl font-serif text-white">Moldura Caixa (Float)</h3>
+                                <h3 className="text-4xl md:text-5xl font-serif text-white">Moldura Caixa</h3>
                                 <p className="text-zinc-500 max-w-2xl mx-auto font-light">
-                                    Conhecida como "Canaleta", esta moldura cria um espaço de respiro entre a obra e a madeira, dando a sensação de que o quadro está flutuando.
+                                    Moldura reta que envolve diretamente o chassi, proporcionando um acabamento firme e clássico para sua obra.
                                 </p>
                             </div>
 
@@ -133,6 +133,40 @@ export const CanvasPremium: React.FC = () => {
                                     { name: "Caixa Branca", img: "/images/frames/caixa-branca.png", desc: "Leveza e amplitude" },
                                     { name: "Caixa Madeira", img: "/images/frames/caixa-madeira.png", desc: "Aconchego natural" },
                                     { name: "Caixa Dourada", img: "/images/frames/caixa-dourada.png", desc: "Sofisticação moderna" },
+                                ].map((item, i) => (
+                                    <div key={i} className="group cursor-pointer">
+                                        <div className="glass-3d p-4 rounded-xl aspect-square flex items-center justify-center mb-4 transition-all duration-500 group-hover:bg-white/5">
+                                            <img
+                                                src={item.img}
+                                                alt={item.name}
+                                                className="w-full h-full object-contain drop-shadow-2xl transform group-hover:scale-110 transition-transform duration-500"
+                                            />
+                                        </div>
+                                        <div className="text-center">
+                                            <h4 className="text-white font-serif">{item.name}</h4>
+                                            <p className="text-[10px] text-zinc-500 uppercase tracking-widest mt-1">{item.desc}</p>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* 3. Coleção Flutuante (Float) */}
+                        <div className="space-y-12">
+                            <div className="text-center space-y-4">
+                                <h2 className="text-gold text-[10px] uppercase tracking-[0.6em] font-bold">Design Contemporâneo</h2>
+                                <h3 className="text-4xl md:text-5xl font-serif text-white">Moldura Flutuante (Float)</h3>
+                                <p className="text-zinc-500 max-w-2xl mx-auto font-light">
+                                    A flutuante dá um efeito de descolamento da moldura para o canvas, como se estivesse flutuando.
+                                </p>
+                            </div>
+
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                                {[
+                                    { name: "Flutuante Preta", img: "/images/frames/caixa-preta.png", desc: "Profundidade & Contraste" },
+                                    { name: "Flutuante Branca", img: "/images/frames/caixa-branca.png", desc: "Minimalismo Puro" },
+                                    { name: "Flutuante Madeira", img: "/images/frames/caixa-madeira.png", desc: "Toque Orgânico" },
+                                    { name: "Flutuante Dourada", img: "/images/frames/caixa-dourada.png", desc: "Luxo Discreto" },
                                 ].map((item, i) => (
                                     <div key={i} className="group cursor-pointer">
                                         <div className="glass-3d p-4 rounded-xl aspect-square flex items-center justify-center mb-4 transition-all duration-500 group-hover:bg-white/5">

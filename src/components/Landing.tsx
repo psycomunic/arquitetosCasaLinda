@@ -251,68 +251,57 @@ export const Landing: React.FC<LandingProps> = ({ onEnter }) => {
         </div>
       </section>
 
-      import {FloatingWhatsApp} from './FloatingWhatsApp';
 
-      // ... (imports remain the same, just adding FloatingWhatsApp import above)
-
-      export const Landing: React.FC<LandingProps> = ({onEnter}) => {
-  // ... (existing code)
-
-  return (
-        <div className="flex flex-col bg-canvas selection:bg-gold selection:text-black">
-          <FloatingWhatsApp />
-          {/* ... (rest of the component) */}
-
-          {/* Footer Minimalista Dark */}
-          <footer className="py-20 px-6 md:px-12 bg-ebonite border-t border-white/5">
-            <div className="flex flex-col md:flex-row justify-between items-start gap-16">
-              <div className="space-y-8">
-                <div className="cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-                  <img src="/logo.png" alt="Casa Linda" className="h-10 md:h-16 object-contain" />
-                </div>
-                <div className="space-y-2">
-                  <p className="text-[10px] text-zinc-500 uppercase tracking-widest leading-relaxed">Rodovia Paul Fritz Kuehnrich, 990 - Fortaleza</p>
-                  <p className="text-[10px] text-zinc-500 uppercase tracking-widest leading-relaxed">Blumenau/SC | CEP: 89052-381</p>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-20">
-                <div className="space-y-6">
-                  <h5 className="text-gold text-[9px] uppercase tracking-widest font-bold">Parceria</h5>
-                  <ul className="text-[10px] text-zinc-500 space-y-4 uppercase tracking-widest">
-                    <li className="hover:text-white cursor-pointer transition-colors" onClick={() => navigate('/login')}>Portal Arquiteto</li>
-                    <li className="hover:text-white cursor-pointer transition-colors" onClick={() => navigate('/termos-comissao')}>Termos de Comissão</li>
-                    <li className="hover:text-white cursor-pointer transition-colors" onClick={() => navigate('/suporte-private')}>Suporte Private</li>
-                  </ul>
-                </div>
-                <div className="space-y-6">
-                  <h5 className="text-gold text-[9px] uppercase tracking-widest font-bold">Processo</h5>
-                  <ul className="text-[10px] text-zinc-500 space-y-4 uppercase tracking-widest">
-                    <li className="hover:text-white cursor-pointer transition-colors" onClick={() => navigate('/canvas-premium')}>Canvas Premium</li>
-                    <li className="hover:text-white cursor-pointer transition-colors" onClick={() => navigate('/sustentabilidade')}>Sustentabilidade</li>
-                    <li className="hover:text-white cursor-pointer transition-colors" onClick={() => navigate('/artesanato')}>Artesanato</li>
-                  </ul>
-                </div>
-                <div className="space-y-6">
-                  <h5 className="text-gold text-[9px] uppercase tracking-widest font-bold">Social</h5>
-                  <ul className="text-[10px] text-zinc-500 space-y-4 uppercase tracking-widest">
-                    <li className="hover:text-white cursor-pointer flex items-center gap-3">
-                      <Instagram size={12} /> Instagram
-                    </li>
-                  </ul>
-                </div>
-              </div>
+      {/* Footer Minimalista Dark */}
+      <footer className="py-20 px-6 md:px-12 bg-ebonite border-t border-white/5">
+        <div className="flex flex-col md:flex-row justify-between items-start gap-16">
+          <div className="space-y-8">
+            <div className="cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+              <img src="/logo.png" alt="Casa Linda" className="h-10 md:h-16 object-contain" />
             </div>
-            <div className="mt-24 pt-10 border-t border-white/5 flex flex-col md:flex-row justify-between items-center text-[8px] uppercase tracking-[0.6em] text-zinc-600 font-bold gap-8">
-              <p>© 2024 Casa Linda Decorações. Exclusividade e Arte.</p>
-              <div className="flex gap-12">
-                <span className="hover:text-zinc-400 cursor-pointer transition-colors" onClick={() => navigate('/privacidade')}>Privacidade</span>
-                <span className="hover:text-zinc-400 cursor-pointer transition-colors" onClick={() => navigate('/lgpd')}>LGPD Compliance</span>
-              </div>
+            <div className="space-y-2">
+              <p className="text-[10px] text-zinc-500 uppercase tracking-widest leading-relaxed">Rodovia Paul Fritz Kuehnrich, 990 - Bairro Fortaleza</p>
+              <p className="text-[10px] text-zinc-500 uppercase tracking-widest leading-relaxed">Blumenau - Santa Catarina | CEP: 89052-381</p>
             </div>
-          </footer>
+          </div>
 
-          <style>{`
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-20">
+            <div className="space-y-6">
+              <h5 className="text-gold text-[9px] uppercase tracking-widest font-bold">Parceria</h5>
+              <ul className="text-[10px] text-zinc-500 space-y-4 uppercase tracking-widest">
+                <li className="hover:text-white cursor-pointer transition-colors" onClick={() => navigate('/login')}>Portal Arquiteto</li>
+                <li className="hover:text-white cursor-pointer transition-colors" onClick={() => navigate('/termos-comissao')}>Termos de Comissão</li>
+                <li className="hover:text-white cursor-pointer transition-colors" onClick={() => navigate('/suporte-private')}>Suporte Private</li>
+              </ul>
+            </div>
+            <div className="space-y-6">
+              <h5 className="text-gold text-[9px] uppercase tracking-widest font-bold">Processo</h5>
+              <ul className="text-[10px] text-zinc-500 space-y-4 uppercase tracking-widest">
+                <li className="hover:text-white cursor-pointer transition-colors" onClick={() => navigate('/canvas-premium')}>Canvas Premium</li>
+                <li className="hover:text-white cursor-pointer transition-colors" onClick={() => navigate('/sustentabilidade')}>Sustentabilidade</li>
+                <li className="hover:text-white cursor-pointer transition-colors" onClick={() => navigate('/artesanato')}>Artesanato</li>
+              </ul>
+            </div>
+            <div className="space-y-6">
+              <h5 className="text-gold text-[9px] uppercase tracking-widest font-bold">Social</h5>
+              <ul className="text-[10px] text-zinc-500 space-y-4 uppercase tracking-widest">
+                <li className="hover:text-white cursor-pointer flex items-center gap-3">
+                  <Instagram size={12} /> Instagram
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div className="mt-24 pt-10 border-t border-white/5 flex flex-col md:flex-row justify-between items-center text-[8px] uppercase tracking-[0.6em] text-zinc-600 font-bold gap-8">
+          <p>© 2024 Casa Linda Decorações. Exclusividade e Arte.</p>
+          <div className="flex gap-12">
+            <span className="hover:text-zinc-400 cursor-pointer transition-colors" onClick={() => navigate('/privacidade')}>Privacidade</span>
+            <span className="hover:text-zinc-400 cursor-pointer transition-colors" onClick={() => navigate('/lgpd')}>LGPD Compliance</span>
+          </div>
+        </div>
+      </footer>
+
+      <style>{`
         @keyframes pulse-slow {
           0% { transform: scale(1.1); opacity: 0.15; }
           50% { transform: scale(1.15); opacity: 0.25; }
@@ -333,6 +322,6 @@ export const Landing: React.FC<LandingProps> = ({ onEnter }) => {
         }
         section { scroll-margin-top: 100px; }
       `}</style>
-        </div>
-        );
+    </div>
+  );
 };
