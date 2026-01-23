@@ -262,10 +262,13 @@ export const CanvasPremium: React.FC = () => {
 
                                 <div className="grid grid-cols-2 gap-4">
                                     {[
+                                        { name: "Roma Moderna", img: "/images/frames/roma-moderna.jpg" },
                                         { name: "Palaciana", img: "/images/frames/palaciana.jpg" },
-                                        { name: "Trono de Ouro", img: "/images/frames/trono-de-ouro.jpg" },
+                                        { name: "Realce Imperial", img: "/images/frames/realce-imperial.jpg" },
+                                        { name: "Imperial Prata e Ouro", img: "/images/frames/palaciana.jpg" }, // Placeholder
+                                        { name: "Barroco Imperial", img: "/images/frames/trono-de-ouro.jpg" }, // Placeholder
                                     ].map((item, i) => (
-                                        <div key={i} className="group relative rounded-xl overflow-hidden aspect-square border border-white/10">
+                                        <div key={i} className={`group relative rounded-xl overflow-hidden aspect-square border border-white/10 ${i === 4 ? 'col-span-2 aspect-video' : ''}`}>
                                             <img
                                                 src={item.img}
                                                 alt={item.name}
@@ -286,10 +289,11 @@ export const CanvasPremium: React.FC = () => {
                                 <div className="space-y-8 order-2 md:order-1">
                                     <div className="grid grid-cols-2 gap-4">
                                         {[
-                                            { name: "Roma Moderna", img: "/images/frames/roma-moderna.jpg" },
-                                            { name: "Realce Imperial", img: "/images/frames/realce-imperial.jpg" },
+                                            { name: "Trono de Ouro", img: "/images/frames/trono-de-ouro.jpg" },
+                                            { name: "Majestade Negra", img: "/images/frames/concava-preta.png" }, // Placeholder
+                                            { name: "Galeria Imperial", img: "/images/frames/realce-imperial.jpg" }, // Placeholder
                                         ].map((item, i) => (
-                                            <div key={i} className="group relative rounded-xl overflow-hidden aspect-square border border-white/10">
+                                            <div key={i} className={`group relative rounded-xl overflow-hidden aspect-square border border-white/10 ${i === 2 ? 'col-span-2 aspect-video' : ''}`}>
                                                 <img
                                                     src={item.img}
                                                     alt={item.name}
