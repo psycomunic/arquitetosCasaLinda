@@ -254,19 +254,22 @@ export const Home: React.FC = () => {
                 </div>
               </div>
 
-              <div className="relative">
-                <div className="glass-dark p-2 rounded-2xl rotate-2 shadow-2xl overflow-hidden group">
-                  <img
-                    src="/arte-exemplo.png"
-                    className="w-full h-auto rounded-xl opacity-80 group-hover:opacity-100 transition-opacity duration-700"
-                    alt="Arte Canvas"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end p-12">
-                    <p className="text-3xl font-serif text-white italic">O padrão de galeria que seu cliente exige.</p>
+              <div className="relative h-full flex items-center justify-center">
+                <div className="relative w-full max-w-md mx-auto">
+                  <div className="absolute -inset-1 bg-gradient-to-r from-gold to-white opacity-20 blur rounded-2xl"></div>
+                  <div className="relative bg-zinc-900 rounded-2xl p-2 shadow-2xl border border-white/10">
+                    <img
+                      src="/images/frame-showcase.jpg"
+                      className="w-full h-auto rounded-xl shadow-inner"
+                      alt="Arte Canvas"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent flex items-end p-8 rounded-xl">
+                      <p className="text-2xl font-serif text-white italic drop-shadow-md">O padrão de galeria que seu cliente exige.</p>
+                    </div>
                   </div>
                 </div>
                 {/* Decorative elements */}
-                <div className="absolute -top-10 -left-10 w-40 h-40 bg-gold/10 rounded-full blur-3xl"></div>
+                <div className="absolute -top-20 -right-20 w-60 h-60 bg-gold/10 rounded-full blur-[80px] pointer-events-none"></div>
               </div>
             </div>
           </div>
