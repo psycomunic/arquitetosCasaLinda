@@ -102,17 +102,19 @@ export const Home: React.FC = () => {
         {/* Benefits Bar - "Segunda Dobra" Feature List */}
         <section className="py-12 bg-ebonite border-y border-white/5 relative z-20">
           <div className="max-w-7xl mx-auto px-6">
-            <div className="flex flex-col md:flex-row justify-center items-center gap-6 md:gap-16 text-center md:text-left">
+            <div className="flex flex-col md:flex-row justify-center items-center gap-8 md:gap-16">
               {[
                 "Sem exclusividade",
                 "Sem metas obrigatórias",
                 "Comissão acompanhada em dashboard"
               ].map((benefit, i) => (
-                <div key={i} className="flex items-center gap-3 group">
-                  <div className="w-8 h-8 rounded-full bg-gold/10 flex items-center justify-center text-gold group-hover:bg-gold group-hover:text-black transition-all">
-                    <CheckCircle2 size={16} />
+                <div key={i} className="flex flex-col md:flex-row items-center gap-4 group text-center md:text-left">
+                  <div className="w-12 h-12 rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center text-gold group-hover:bg-gold group-hover:text-black transition-all shadow-[0_0_15px_rgba(197,160,89,0.1)]">
+                    <CheckCircle2 size={20} />
                   </div>
-                  <span className="text-sm md:text-base text-zinc-300 uppercase tracking-wider font-light">{benefit}</span>
+                  <span className="text-sm md:text-base text-zinc-200 uppercase tracking-widest font-bold group-hover:text-white transition-colors max-w-[200px] md:max-w-none leading-relaxed">
+                    {benefit}
+                  </span>
                 </div>
               ))}
             </div>
