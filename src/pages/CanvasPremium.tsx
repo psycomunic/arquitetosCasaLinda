@@ -125,6 +125,10 @@ export const CanvasPremium: React.FC = () => {
                                 <p className="text-zinc-500 max-w-2xl mx-auto font-light">
                                     Moldura reta que envolve diretamente o chassi, proporcionando um acabamento firme e clássico para sua obra.
                                 </p>
+                                <div className="inline-flex items-center gap-2 px-4 py-2 border border-gold/30 rounded-full bg-gold/5">
+                                    <div className="w-1.5 h-1.5 rounded-full bg-gold animate-pulse"></div>
+                                    <span className="text-[10px] uppercase tracking-widest text-gold">Opção com Vidro Disponível</span>
+                                </div>
                             </div>
 
                             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
@@ -159,14 +163,17 @@ export const CanvasPremium: React.FC = () => {
                                 <p className="text-zinc-500 max-w-2xl mx-auto font-light">
                                     A flutuante dá um efeito de descolamento da moldura para o canvas, como se estivesse flutuando.
                                 </p>
+                                <div className="inline-flex items-center gap-2 px-4 py-2 border border-zinc-700 rounded-full bg-zinc-900/50">
+                                    <span className="text-[10px] uppercase tracking-widest text-zinc-400">Não aceita vidro (Design Original)</span>
+                                </div>
                             </div>
 
                             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                                 {[
-                                    { name: "Flutuante Preta", img: "/images/frames/caixa-preta.png", desc: "Profundidade & Contraste" },
-                                    { name: "Flutuante Branca", img: "/images/frames/caixa-branca.png", desc: "Minimalismo Puro" },
-                                    { name: "Flutuante Madeira", img: "/images/frames/caixa-madeira.png", desc: "Toque Orgânico" },
-                                    { name: "Flutuante Dourada", img: "/images/frames/caixa-dourada.png", desc: "Luxo Discreto" },
+                                    { name: "Flutuante Preta", img: "/images/frames/flutuante-preta.png", desc: "Profundidade & Contraste" },
+                                    { name: "Flutuante Branca", img: "/images/frames/flutuante-branca.png", desc: "Minimalismo Puro" },
+                                    { name: "Flutuante Madeira", img: "/images/frames/flutuante-madeira.jpg", desc: "Toque Orgânico" },
+                                    { name: "Flutuante Dourada", img: "/images/frames/flutuante-dourada.jpg", desc: "Luxo Discreto" },
                                 ].map((item, i) => (
                                     <div key={i} className="group cursor-pointer">
                                         <div className="glass-3d p-4 rounded-xl aspect-square flex items-center justify-center mb-4 transition-all duration-500 group-hover:bg-white/5">
@@ -193,6 +200,10 @@ export const CanvasPremium: React.FC = () => {
                                 <p className="text-zinc-500 max-w-2xl mx-auto font-light">
                                     Perfil robusto com curvatura interna que conduz o olhar para a obra. Uma escolha tradicional que nunca sai de moda.
                                 </p>
+                                <div className="inline-flex items-center gap-2 px-4 py-2 border border-gold/30 rounded-full bg-gold/5">
+                                    <div className="w-1.5 h-1.5 rounded-full bg-gold animate-pulse"></div>
+                                    <span className="text-[10px] uppercase tracking-widest text-gold">Opção com Vidro Disponível</span>
+                                </div>
                             </div>
 
                             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
@@ -218,7 +229,7 @@ export const CanvasPremium: React.FC = () => {
                             </div>
                         </div>
 
-                        {/* 4. Coleção Imperial (Premium com Vidro) */}
+                        {/* 4. Coleção Premium Luxo */}
                         <div className="glass p-12 rounded-3xl border border-gold/20 relative overflow-hidden">
                             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-gold to-transparent opacity-50"></div>
 
@@ -226,11 +237,17 @@ export const CanvasPremium: React.FC = () => {
                                 <div className="space-y-8">
                                     <div>
                                         <h2 className="text-gold text-[10px] uppercase tracking-[0.6em] font-bold mb-2">Linha Signature</h2>
-                                        <h3 className="text-4xl md:text-5xl font-serif text-white leading-tight">Coleção Imperial <br /><span className="text-2xl text-zinc-400 italic font-light">& Premium Glass</span></h3>
+                                        <h3 className="text-4xl md:text-5xl font-serif text-white leading-tight">Coleção Premium <br /><span className="text-2xl text-zinc-400 italic font-light">Luxo</span></h3>
                                     </div>
                                     <p className="text-zinc-300 font-light leading-relaxed">
-                                        Para obras que exigem o máximo de protagonismo. Seleção exclusiva de molduras ornamentadas, com acabamentos em folha de ouro, prata e texturas nobres. Todas protegidas por vidro Crystal Clear de alta transparência.
+                                        O ápice da molduraria fina. Acabamentos ornamentados inspirados na realeza, com detalhes em folha de ouro e prata. Ideal para obras que exigem imponência.
                                     </p>
+                                    <div className="flex gap-4">
+                                        <div className="inline-flex items-center gap-2 px-4 py-2 border border-gold/30 rounded-full bg-gold/10">
+                                            <div className="w-1.5 h-1.5 rounded-full bg-gold"></div>
+                                            <span className="text-[10px] uppercase tracking-widest text-gold text-nowrap">Com Vidro Crystal</span>
+                                        </div>
+                                    </div>
                                     <div className="grid grid-cols-2 gap-4">
                                         <div className="bg-white/5 p-4 rounded-lg text-center border border-white/10">
                                             <span className="block text-gold font-serif text-xl mb-1">98%</span>
@@ -245,9 +262,7 @@ export const CanvasPremium: React.FC = () => {
 
                                 <div className="grid grid-cols-2 gap-4">
                                     {[
-                                        { name: "Roma Moderna", img: "/images/frames/roma-moderna.jpg" },
                                         { name: "Palaciana", img: "/images/frames/palaciana.jpg" },
-                                        { name: "Realce Imperial", img: "/images/frames/realce-imperial.jpg" },
                                         { name: "Trono de Ouro", img: "/images/frames/trono-de-ouro.jpg" },
                                     ].map((item, i) => (
                                         <div key={i} className="group relative rounded-xl overflow-hidden aspect-square border border-white/10">
@@ -261,6 +276,53 @@ export const CanvasPremium: React.FC = () => {
                                             </div>
                                         </div>
                                     ))}
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* 5. Coleção Premium Clássica */}
+                        <div className="glass p-12 rounded-3xl border border-white/10 relative overflow-hidden">
+                            <div className="grid md:grid-cols-2 gap-16 items-center relative z-10">
+                                <div className="space-y-8 order-2 md:order-1">
+                                    <div className="grid grid-cols-2 gap-4">
+                                        {[
+                                            { name: "Roma Moderna", img: "/images/frames/roma-moderna.jpg" },
+                                            { name: "Realce Imperial", img: "/images/frames/realce-imperial.jpg" },
+                                        ].map((item, i) => (
+                                            <div key={i} className="group relative rounded-xl overflow-hidden aspect-square border border-white/10">
+                                                <img
+                                                    src={item.img}
+                                                    alt={item.name}
+                                                    className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
+                                                />
+                                                <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                                                    <span className="text-white font-serif text-sm tracking-widest uppercase border-b border-gold pb-1">{item.name}</span>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                <div className="space-y-8 order-1 md:order-2 text-right">
+                                    <div>
+                                        <h2 className="text-gold text-[10px] uppercase tracking-[0.6em] font-bold mb-2">Linha Signature</h2>
+                                        <h3 className="text-4xl md:text-5xl font-serif text-white leading-tight">Coleção Premium <br /><span className="text-2xl text-zinc-400 italic font-light">Clássica</span></h3>
+                                    </div>
+                                    <p className="text-zinc-300 font-light leading-relaxed ml-auto">
+                                        Sofisticação equilibrada. Molduras com perfis nobres e acabamentos refinados, perfeitas para ambientes que buscam elegância sem excessos.
+                                    </p>
+                                    <div className="flex justify-end gap-4">
+                                        <div className="inline-flex items-center gap-2 px-4 py-2 border border-gold/30 rounded-full bg-gold/10">
+                                            <div className="w-1.5 h-1.5 rounded-full bg-gold"></div>
+                                            <span className="text-[10px] uppercase tracking-widest text-gold text-nowrap">Com Vidro Crystal</span>
+                                        </div>
+                                    </div>
+                                    <div className="grid grid-cols-2 gap-4 justify-end">
+                                        <div className="bg-white/5 p-4 rounded-lg text-center border border-white/10 col-start-2">
+                                            <span className="block text-gold font-serif text-xl mb-1">Crystal</span>
+                                            <span className="text-[9px] uppercase tracking-widest text-zinc-400">Vidro 3mm</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
