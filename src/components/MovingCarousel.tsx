@@ -15,25 +15,32 @@ export const MovingCarousel: React.FC = () => {
   const displayImages = [...images, ...images, ...images];
 
   return (
-    <section className="relative w-full py-20 bg-canvas overflow-hidden">
-      {/* Side Fades */}
-      <div className="absolute inset-y-0 left-0 w-32 md:w-64 bg-gradient-to-r from-canvas to-transparent z-10 pointer-events-none"></div>
-      <div className="absolute inset-y-0 right-0 w-32 md:w-64 bg-gradient-to-l from-canvas to-transparent z-10 pointer-events-none"></div>
+    <section className="relative w-full py-20 bg-canvas overflow-hidden flex flex-col gap-12">
+      <div className="text-center space-y-4 px-6 relative z-10">
+        <h2 className="text-gold text-[10px] uppercase tracking-[0.6em] font-bold">Galeria Real</h2>
+        <h3 className="text-2xl md:text-5xl font-serif text-white">Fotos enviadas por clientes em seus ambientes</h3>
+      </div>
 
-      {/* Scrolling Container */}
-      <div className="flex w-fit animate-scroll gap-6 md:gap-8 px-4">
-        {displayImages.map((src, index) => (
-          <div
-            key={index}
-            className="flex-shrink-0 w-[70vw] md:w-[calc(20vw-2rem)] aspect-square group transition-all duration-500"
-          >
-            <img
-              src={src}
-              alt={`Ambiente Cliente ${index + 1}`}
-              className="w-full h-full object-cover rounded-lg shadow-xl group-hover:scale-105 transition-transform duration-500"
-            />
-          </div>
-        ))}
+      <div className="relative w-full">
+        {/* Side Fades */}
+        <div className="absolute inset-y-0 left-0 w-32 md:w-64 bg-gradient-to-r from-canvas to-transparent z-10 pointer-events-none"></div>
+        <div className="absolute inset-y-0 right-0 w-32 md:w-64 bg-gradient-to-l from-canvas to-transparent z-10 pointer-events-none"></div>
+
+        {/* Scrolling Container */}
+        <div className="flex w-fit animate-scroll gap-6 md:gap-8 px-4">
+          {displayImages.map((src, index) => (
+            <div
+              key={index}
+              className="flex-shrink-0 w-[70vw] md:w-[calc(20vw-2rem)] aspect-square group transition-all duration-500"
+            >
+              <img
+                src={src}
+                alt={`Ambiente Cliente ${index + 1}`}
+                className="w-full h-full object-cover rounded-lg shadow-xl group-hover:scale-105 transition-transform duration-500"
+              />
+            </div>
+          ))}
+        </div>
       </div>
 
       <style>{`
