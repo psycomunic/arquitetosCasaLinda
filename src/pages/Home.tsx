@@ -263,7 +263,7 @@ export const Home: React.FC = () => {
         <section className="py-32 bg-canvas relative overflow-hidden px-6">
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-24 space-y-6">
-              <h2 className="text-gold text-[10px] uppercase tracking-[0.6em] font-bold">Respaldo Total</h2>
+              {/* <h2 className="text-gold text-[10px] uppercase tracking-[0.6em] font-bold">Respaldo Total</h2> */}
               <h3 className="text-4xl md:text-6xl font-serif text-white">Porque comprar conosco?</h3>
             </div>
 
