@@ -59,7 +59,7 @@ export const Home: React.FC = () => {
               </h1>
 
               <p className="text-xs md:text-xl text-zinc-400 font-light max-w-2xl mx-auto leading-relaxed uppercase tracking-[0.2em] md:tracking-[0.5em] animate-fade-in delay-500 px-4">
-                Padrão galeria e <span className="text-gold font-bold">até 20% de comissão</span> para seus projetos.
+                Padrão galeria, produção sob medida e <span className="text-gold font-bold">comissão profissional de até 20%</span> para seus projetos.
               </p>
             </div>
 
@@ -68,7 +68,7 @@ export const Home: React.FC = () => {
               {[
                 { icon: <Globe size={11} />, text: "BRASIL/EUA" },
                 { icon: <FileCheck size={11} />, text: "Autenticidade" },
-                { icon: <Users size={11} />, text: "+5k Parceiros" }
+                { icon: <Users size={11} />, text: "+750 Parceiros" }
               ].map((badge, i) => (
                 <div key={i} className="glass-white border-white/5 px-2 md:px-4 py-1.5 md:py-2 rounded-full flex items-center gap-1.5 md:gap-2 group transition-all hover:bg-white/10">
                   <span className="text-gold">{badge.icon}</span>
