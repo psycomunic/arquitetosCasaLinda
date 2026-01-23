@@ -210,7 +210,7 @@ export const Home: React.FC = () => {
             <div className="grid lg:grid-cols-2 gap-24 items-center">
               <div className="space-y-10">
                 <h2 className="text-gold text-[10px] uppercase tracking-[0.6em] font-bold">Diferencial Elite</h2>
-                <h3 className="text-5xl md:text-7xl font-serif text-white">Sua Marca, <br /> Nosso Acervo.</h3>
+                <h3 className="text-4xl md:text-6xl font-serif text-white leading-tight">Sua marca em primeiro plano. <br /> Nosso acervo como suporte.</h3>
                 <p className="text-lg text-zinc-500 font-light leading-relaxed">
                   Desenvolvemos um ecossistema exclusivo para que você tenha o controle total. Gere propostas imersivas em segundos, personalizadas com a <span className="text-white border-b border-gold">identidade do seu escritório</span>.
                 </p>
