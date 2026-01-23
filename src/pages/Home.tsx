@@ -205,7 +205,7 @@ export const Home: React.FC = () => {
         </section>
 
         {/* Seção Proposta de Valor (O que oferecemos) */}
-        <section id="proposta" className="py-40 px-6 bg-ebonite relative">
+        <section id="proposta" className="py-20 md:py-40 px-6 bg-ebonite relative">
           <div className="max-w-7xl mx-auto">
             <div className="grid lg:grid-cols-2 gap-24 items-center">
               <div className="space-y-10">
