@@ -264,10 +264,10 @@ export const Home: React.FC = () => {
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-24 space-y-6">
               {/* <h2 className="text-gold text-[10px] uppercase tracking-[0.6em] font-bold">Respaldo Total</h2> */}
-              <h3 className="text-4xl md:text-6xl font-serif text-white">Respaldo Total</h3>
+              <h3 className="text-4xl md:text-6xl font-serif text-white">Por que arquitetos escolhem a Casa Linda</h3>
             </div>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
               {[
                 {
                   icon: <Sparkles size={24} />,
@@ -283,11 +283,6 @@ export const Home: React.FC = () => {
                   icon: <Shield size={24} />,
                   title: "Canvas Autêntico",
                   desc: "Tecido 100% algodão padrão museu. Textura artística e proteção para longevidade."
-                },
-                {
-                  icon: <Heart size={24} />,
-                  title: "Feito com Amor",
-                  desc: "Produção artesanal brasileira. Cada peça é única, feita com cuidado pelos nossos artesãos."
                 }
               ].map((item, i) => (
                 <div key={i} className="glass-3d p-8 space-y-6 group hover:-translate-y-2 transition-all duration-500 text-gold">
