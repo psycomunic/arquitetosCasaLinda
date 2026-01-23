@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { PublicLayout } from '../layouts/PublicLayout';
-import { ShieldCheck, Award, Zap, Ruler } from 'lucide-react';
+import { ShieldCheck, Award, Zap, Ruler, X } from 'lucide-react';
 
 export const CanvasPremium: React.FC = () => {
+    const [selectedImage, setSelectedImage] = useState<string | null>(null);
+
     return (
         <PublicLayout>
             <section className="pt-40 pb-20 px-6">
@@ -268,7 +270,11 @@ export const CanvasPremium: React.FC = () => {
                                         { name: "Imperial Prata e Ouro", img: "/images/frames/imperial-prata-e-ouro.jpg" },
                                         { name: "Barroco Imperial", img: "/images/frames/barroco-imperial.jpg" },
                                     ].map((item, i) => (
-                                        <div key={i} className={`group relative rounded-xl overflow-hidden aspect-square border border-white/10 ${i === 4 ? 'col-span-2 aspect-video' : ''}`}>
+                                        <div
+                                            key={i}
+                                            className="group relative rounded-xl overflow-hidden aspect-square border border-white/10 cursor-pointer"
+                                            onClick={() => setSelectedImage(item.img)}
+                                        >
                                             <img
                                                 src={item.img}
                                                 alt={item.name}
@@ -293,7 +299,11 @@ export const CanvasPremium: React.FC = () => {
                                             { name: "Majestade Negra", img: "/images/frames/majestade-negra.jpg" },
                                             { name: "Galeria Imperial", img: "/images/frames/galeria-imperial.jpg" },
                                         ].map((item, i) => (
-                                            <div key={i} className={`group relative rounded-xl overflow-hidden aspect-square border border-white/10 ${i === 2 ? 'col-span-2 aspect-video' : ''}`}>
+                                            <div
+                                                key={i}
+                                                className="group relative rounded-xl overflow-hidden aspect-square border border-white/10 cursor-pointer"
+                                                onClick={() => setSelectedImage(item.img)}
+                                            >
                                                 <img
                                                     src={item.img}
                                                     alt={item.name}
@@ -380,6 +390,28 @@ export const CanvasPremium: React.FC = () => {
                     </div>
                 </div>
             </section>
+
+            {/* Lightbox Modal */}
+            {selectedImage && (
+                <div
+                    className="fixed inset-0 bg-black/95 z-50 flex items-center justify-center p-4 animate-in fade-in duration-300"
+                    onClick={() => setSelectedImage(null)}
+                >
+                    <button
+                        onClick={() => setSelectedImage(null)}
+                        className="absolute top-6 right-6 text-white/50 hover:text-white transition-colors"
+                    >
+                        <X size={32} />
+                    </button>
+                    <img
+                        src={selectedImage}
+                        alt="Zoomed detailed view"
+                        className="max-w-full max-h-[90vh] object-contain rounded-lg shadow-2xl"
+                        onClick={(e) => e.stopPropagation()}
+                    />
+                </div>
+            )}
         </PublicLayout>
     );
 };
+
