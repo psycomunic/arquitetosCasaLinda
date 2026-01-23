@@ -189,7 +189,7 @@ export const Landing: React.FC<LandingProps> = ({ onEnter }) => {
               <div className="space-y-6">
                 <div className="flex justify-between items-baseline">
                   <span className="text-[10px] uppercase tracking-widest font-bold text-zinc-500">Valor do Projeto Curado</span>
-                  <span className="text-4xl font-serif text-gold">{formatCurrency(calcValue)}</span>
+                  <span className="text-5xl md:text-6xl font-serif text-white">{formatCurrency(calcValue)}</span>
                 </div>
                 <input
                   type="range"
@@ -204,10 +204,10 @@ export const Landing: React.FC<LandingProps> = ({ onEnter }) => {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-10 pt-10 border-t border-white/5">
                 <div className="space-y-2">
-                  <p className="text-[10px] uppercase tracking-widest font-bold text-gold-leaf">Seu Repasse Casa Linda</p>
-                  <p className="text-5xl font-serif text-white">{formatCurrency(calcValue * 0.2)}</p>
+                  <p className="text-xs uppercase tracking-widest font-bold text-gold-leaf">Seu Repasse Casa Linda</p>
+                  <p className="text-6xl md:text-8xl font-serif text-gold drop-shadow-[0_0_20px_rgba(197,160,89,0.3)]">{formatCurrency(calcValue * 0.2)}</p>
                 </div>
-                <div className="opacity-20">
+                <div className="opacity-40">
                   <p className="text-[10px] uppercase tracking-widest font-bold">Lojista Comum</p>
                   <p className="text-4xl font-serif">{formatCurrency(calcValue * 0.1)}</p>
                 </div>

@@ -44,8 +44,9 @@ export const Sustentabilidade: React.FC = () => {
                     <div className="grid md:grid-cols-2 gap-24 items-center">
                         <div className="relative aspect-square overflow-hidden rounded-2xl">
                             <img
-                                src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?q=80&w=1000&auto=format&fit=crop"
+                                src="/images/blumenau.jpg"
                                 className="w-full h-full object-cover opacity-60 hover:opacity-100 transition-opacity duration-1000"
+                                alt="Blumenau Santa Catarina"
                             />
                             <div className="absolute inset-0 bg-gradient-to-t from-canvas to-transparent"></div>
                         </div>
