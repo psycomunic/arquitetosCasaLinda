@@ -55,7 +55,7 @@ export const Home: React.FC = () => {
               <h1 className="text-5xl sm:text-6xl md:text-8xl lg:text-[7rem] font-serif leading-[1.1] md:leading-tight tracking-tighter text-white max-w-6xl mx-auto drop-shadow-2xl">
                 <span className="block opacity-90 animate-slide-up whitespace-nowrap">O maior ecommerce de</span>
                 <span className="text-gradient-gold italic block mt-2 md:mt-4 animate-slide-up delay-200">quadros e espelhos</span>
-                <span className="text-gradient-gold italic block animate-slide-up delay-300">do Brasil.</span>
+                <span className="text-gradient-gold italic block animate-slide-up delay-300">do Brasil <br className="md:hidden" /> agora ao lado dos arquitetos.</span>
               </h1>
 
               <p className="text-xs md:text-xl text-zinc-400 font-light max-w-2xl mx-auto leading-relaxed uppercase tracking-[0.2em] md:tracking-[0.5em] animate-fade-in delay-500 px-4">
