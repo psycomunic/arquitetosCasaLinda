@@ -264,7 +264,7 @@ export const Home: React.FC = () => {
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-24 space-y-6">
               {/* <h2 className="text-gold text-[10px] uppercase tracking-[0.6em] font-bold">Respaldo Total</h2> */}
-              <h3 className="text-4xl md:text-6xl font-serif text-white">Porque comprar conosco?</h3>
+              <h3 className="text-4xl md:text-6xl font-serif text-white">Respaldo Total</h3>
             </div>
 
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
