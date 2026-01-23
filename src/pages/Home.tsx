@@ -39,7 +39,7 @@ export const Home: React.FC = () => {
         <div className="fixed inset-0 pointer-events-none spotlight z-0"></div>
 
         {/* Dramatic Hero Section */}
-        <section className="relative min-h-[85vh] md:min-h-[95vh] flex items-start md:items-center justify-center px-6 overflow-hidden pt-28 md:pt-32 pb-20">
+        <section className="relative min-h-[60vh] md:min-h-[95vh] flex items-center justify-center px-6 overflow-hidden pt-24 md:pt-32 pb-12 md:pb-20">
           <div className="absolute inset-0 z-0 scale-110">
             <img
               src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?q=80&w=2000&auto=format&fit=crop"
