@@ -85,15 +85,17 @@ export const Landing: React.FC<LandingProps> = ({ onEnter }) => {
             <span className="text-[9px] uppercase tracking-[0.4em] font-bold text-zinc-300">Apenas para Arquitetos e Designers</span>
           </div>
 
-          <h1 className="text-6xl md:text-[9rem] font-serif leading-none tracking-tighter text-white">
-            Onde a Técnica <br />
-            <span className="text-gradient-gold italic font-light">Encontra a Obra.</span>
+          <h1 className="text-4xl md:text-7xl font-serif leading-tight tracking-tighter text-white">
+            O maior ecommerce de <br />
+            quadros e espelhos do Brasil <br />
+            <span className="text-gradient-gold italic font-light">agora ao lado dos arquitetos.</span>
           </h1>
 
-          <p className="text-sm md:text-xl text-zinc-400 font-light max-w-2xl mx-auto leading-relaxed uppercase tracking-[0.1em]">
-            Elevamos a curadoria de arte a um padrão de elite. <br />
-            <span className="text-white font-bold">20% de comissão direta</span> e ferramentas de luxo para o seu escritório.
-          </p>
+          <h2 className="text-[10px] md:text-xs text-zinc-400 font-light max-w-3xl mx-auto leading-loose uppercase tracking-[0.3em] mt-8">
+            PADRÃO GALERIA, PRODUÇÃO SOB MEDIDA <br />
+            E COMISSÃO PROFISSIONAL DE ATÉ 20% <br />
+            PARA SEUS PROJETOS
+          </h2>
 
           <div className="flex flex-col md:flex-row gap-6 justify-center pt-8">
             <button
