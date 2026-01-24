@@ -53,14 +53,16 @@ export const Home: React.FC = () => {
           <div className="container mx-auto relative z-10 text-center space-y-8 md:space-y-16 mt-0 md:mt-0">
             <div className="space-y-4 md:space-y-8">
               <h1 className="text-5xl sm:text-6xl md:text-8xl lg:text-[7rem] font-serif leading-[1.1] md:leading-tight tracking-tighter text-white max-w-6xl mx-auto drop-shadow-2xl">
-                <span className="block opacity-90 animate-slide-up whitespace-normal md:whitespace-nowrap">O maior ecommerce&nbsp;de</span>
-                <span className="text-gradient-gold italic block mt-2 md:mt-4 animate-slide-up delay-200">quadros e espelhos</span>
-                <span className="text-gradient-gold italic block animate-slide-up delay-300">do Brasil <br className="md:hidden" /> agora ao lado dos arquitetos.</span>
+                <span className="block opacity-90 animate-slide-up whitespace-normal md:whitespace-nowrap">O maior ecommerce de</span>
+                <span className="block mt-2 md:mt-4 animate-slide-up delay-200">quadros e espelhos do Brasil</span>
+                <span className="text-gradient-gold italic block animate-slide-up delay-300">agora ao lado dos arquitetos.</span>
               </h1>
 
-              <p className="text-xs md:text-xl text-zinc-400 font-light max-w-2xl mx-auto leading-relaxed uppercase tracking-[0.2em] md:tracking-[0.5em] animate-fade-in delay-500 px-4">
-                Padrão galeria, produção sob medida e <span className="text-gold font-bold">comissão profissional de até 20%</span> para seus projetos.
-              </p>
+              <h2 className="text-[10px] md:text-xs text-zinc-400 font-light max-w-3xl mx-auto leading-loose uppercase tracking-[0.3em] md:tracking-[0.3em] animate-fade-in delay-500 px-4 mt-8">
+                PADRÃO GALERIA, PRODUÇÃO SOB MEDIDA <br className="hidden md:block" />
+                E COMISSÃO PROFISSIONAL DE ATÉ 20% <br className="hidden md:block" />
+                PARA SEUS PROJETOS
+              </h2>
             </div>
 
             {/* Social Proof / Authority Badges - Moved below H1/Subtext */}
