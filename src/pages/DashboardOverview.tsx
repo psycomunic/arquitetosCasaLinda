@@ -8,6 +8,7 @@ import { Ranking } from '../components/Ranking';
 import { AssistanceModal } from '../components/AssistanceModal';
 import { CustomProjectModal } from '../components/CustomProjectModal';
 import { ArchitectHandbook } from '../components/ArchitectHandbook';
+import { InternalFAQ } from '../components/InternalFAQ';
 
 export const DashboardOverview: React.FC = () => {
     const navigate = useNavigate();
@@ -282,6 +283,7 @@ export const DashboardOverview: React.FC = () => {
                         </div>
                         <div className="space-y-4">
                             <ArchitectHandbook />
+                            <InternalFAQ />
                             <div className="p-4 rounded-xl border border-white/5 bg-white/5 opacity-50 cursor-not-allowed">
                                 <div className="flex items-center gap-3">
                                     <div className="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center text-zinc-500">
