@@ -48,7 +48,7 @@ export const PartnerGuide: React.FC = () => {
                         </div>
                     </div>
 
-                    <div className="space-y-6">
+                    <div className="space-y-5 pb-24">
                         {/* 1. Sobre a Casa Linda */}
                         <section>
                             <h2 className="text-sm font-bold text-[#C5A059] uppercase tracking-widest mb-1">01. Sobre a Casa  Linda</h2>
@@ -107,7 +107,7 @@ export const PartnerGuide: React.FC = () => {
                         </div>
 
                         {/* 5, 6, 8, 9, 10, 11 - Compact Grid */}
-                        <div className="grid grid-cols-2 gap-x-6 gap-y-4">
+                        <div className="grid grid-cols-2 gap-x-6 gap-y-3">
                             <section>
                                 <h2 className="text-xs font-bold text-[#1a1a1a] uppercase tracking-widest mb-1">05. Sob Medida</h2>
                                 <p className="text-[9px] text-[#333]">Produzimos quadros e espelhos em diversos tamanhos e formatos, adequando cada peça ao ambiente.</p>
@@ -144,7 +144,7 @@ export const PartnerGuide: React.FC = () => {
                     </div>
 
                     {/* Footer - Moved closer */}
-                    <div className="border-t border-[#eee] pt-4 mt-6 flex justify-between items-center">
+                    <div className="absolute bottom-[10mm] left-[15mm] right-[15mm] border-t border-[#eee] pt-4 flex justify-between items-center">
                         <p className="text-[9px] text-[#999] uppercase tracking-widest">Casa Linda Decorações - Guia do Parceiro</p>
                         <p className="text-[9px] text-[#999] uppercase tracking-widest">Página 1 de 1</p>
                     </div>
