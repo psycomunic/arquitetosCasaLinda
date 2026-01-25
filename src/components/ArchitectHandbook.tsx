@@ -48,7 +48,7 @@ export const ArchitectHandbook: React.FC = () => {
                         </div>
                     </div>
 
-                    <div className="space-y-10">
+                    <div className="space-y-10 pb-24">
                         {/* 1. Objetivo */}
                         <section>
                             <h2 className="flex items-center gap-3 text-lg font-bold text-[#C5A059] uppercase tracking-widest mb-4">
