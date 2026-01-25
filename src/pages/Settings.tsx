@@ -427,7 +427,7 @@ export const Settings: React.FC = () => {
                 </div>
 
                 {/* Save Button */}
-                <div className="fixed bottom-8 right-8 z-50">
+                <div className="fixed bottom-8 right-28 z-50">
                     <button
                         onClick={handleSave}
                         disabled={saving}
