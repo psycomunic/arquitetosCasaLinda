@@ -7,6 +7,7 @@ import { Architect } from '../types/database';
 import { Ranking } from '../components/Ranking';
 import { AssistanceModal } from '../components/AssistanceModal';
 import { CustomProjectModal } from '../components/CustomProjectModal';
+import { ArchitectHandbook } from '../components/ArchitectHandbook';
 
 export const DashboardOverview: React.FC = () => {
     const navigate = useNavigate();
@@ -262,6 +263,37 @@ export const DashboardOverview: React.FC = () => {
                     <div className="flex-1 flex flex-col items-center justify-center p-12 text-zinc-600">
                         <Inbox size={48} strokeWidth={1} className="mb-4 opacity-20" />
                         <p className="text-[10px] uppercase tracking-[0.3em]">Nenhuma venda registrada ainda</p>
+                    </div>
+                </div>
+            </div>
+
+            {/* EDUCATION & RESOURCES SECTION - NEW */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div className="lg:col-span-1">
+                    <div className="glass p-8 h-full">
+                        <div className="flex items-center gap-4 mb-6">
+                            <div className="w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center text-gold">
+                                <Crown size={20} />
+                            </div>
+                            <div>
+                                <h3 className="font-serif text-xl text-white">Academia Casa Linda</h3>
+                                <p className="text-[10px] uppercase tracking-widest text-zinc-500">Materiais Exclusivos</p>
+                            </div>
+                        </div>
+                        <div className="space-y-4">
+                            <ArchitectHandbook />
+                            <div className="p-4 rounded-xl border border-white/5 bg-white/5 opacity-50 cursor-not-allowed">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center text-zinc-500">
+                                        <Award size={16} />
+                                    </div>
+                                    <div>
+                                        <h4 className="text-zinc-400 text-xs font-bold uppercase">Certificação Premium</h4>
+                                        <p className="text-zinc-600 text-[10px]">Em breve</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

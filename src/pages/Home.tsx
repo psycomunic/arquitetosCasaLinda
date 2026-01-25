@@ -262,11 +262,11 @@ export const Home: React.FC = () => {
         </section>
 
         {/* PORQUE COMPRAR CONOSCO Section */}
-        <section className="py-32 bg-canvas relative overflow-hidden px-6">
+        <section className="py-12 md:py-32 bg-canvas relative overflow-hidden px-6">
           <div className="max-w-7xl mx-auto">
-            <div className="text-center mb-24 space-y-6">
+            <div className="text-center mb-12 md:mb-24 space-y-6">
               {/* <h2 className="text-gold text-[10px] uppercase tracking-[0.6em] font-bold">Respaldo Total</h2> */}
-              <h3 className="text-4xl md:text-6xl font-serif text-white">Por que arquitetos escolhem a Casa Linda</h3>
+              <h3 className="text-3xl md:text-6xl font-serif text-white">Por que arquitetos escolhem a Casa Linda</h3>
             </div>
 
             <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
@@ -302,7 +302,7 @@ export const Home: React.FC = () => {
         </section>
 
         {/* NOSSO ARTISTA Section */}
-        <section className="py-40 bg-ebonite relative overflow-hidden px-6 border-y border-white/5">
+        <section className="py-12 md:py-40 bg-ebonite relative overflow-hidden px-6 border-y border-white/5">
           <div className="max-w-7xl mx-auto">
             <div className="grid lg:grid-cols-2 gap-20 items-center">
               <div className="relative order-2 lg:order-1">
