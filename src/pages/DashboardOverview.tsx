@@ -9,6 +9,8 @@ import { AssistanceModal } from '../components/AssistanceModal';
 import { CustomProjectModal } from '../components/CustomProjectModal';
 import { ArchitectHandbook } from '../components/ArchitectHandbook';
 import { InternalFAQ } from '../components/InternalFAQ';
+import { PartnerGuide } from '../components/PartnerGuide';
+import { SalesMechanics } from '../components/SalesMechanics';
 
 export const DashboardOverview: React.FC = () => {
     const navigate = useNavigate();
@@ -282,6 +284,8 @@ export const DashboardOverview: React.FC = () => {
                             </div>
                         </div>
                         <div className="space-y-4">
+                            <SalesMechanics />
+                            <PartnerGuide />
                             <ArchitectHandbook />
                             <InternalFAQ />
                             <div className="p-4 rounded-xl border border-white/5 bg-white/5 opacity-50 cursor-not-allowed">
