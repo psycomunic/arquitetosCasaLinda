@@ -11,6 +11,7 @@ import { ArchitectHandbook } from '../components/ArchitectHandbook';
 import { InternalFAQ } from '../components/InternalFAQ';
 import { PartnerGuide } from '../components/PartnerGuide';
 import { SalesMechanics } from '../components/SalesMechanics';
+import { ArchitectSalesManual } from '../components/ArchitectSalesManual';
 
 export const DashboardOverview: React.FC = () => {
     const navigate = useNavigate();
@@ -41,7 +42,8 @@ export const DashboardOverview: React.FC = () => {
                         commissionRate: Number(architect.commission_rate),
                         totalEarnings: Number(architect.total_earnings),
                         logoUrl: architect.logo_url,
-                        couponCode: architect.coupon_code
+                        couponCode: architect.coupon_code,
+                        isAdmin: architect.is_admin
                     });
                 }
 
@@ -284,10 +286,15 @@ export const DashboardOverview: React.FC = () => {
                             </div>
                         </div>
                         <div className="space-y-4">
+                            <ArchitectSalesManual />
                             <SalesMechanics />
                             <PartnerGuide />
-                            <ArchitectHandbook />
-                            <InternalFAQ />
+                            {profile?.isAdmin && (
+                                <>
+                                    <ArchitectHandbook />
+                                    <InternalFAQ />
+                                </>
+                            )}
                             <div className="p-4 rounded-xl border border-white/5 bg-white/5 opacity-50 cursor-not-allowed">
                                 <div className="flex items-center gap-3">
                                     <div className="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center text-zinc-500">
