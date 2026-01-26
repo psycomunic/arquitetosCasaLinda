@@ -5,6 +5,7 @@ export interface Frame {
   price: number;
   category: 'Caixa' | 'Premium' | 'Inox' | 'Sem Moldura';
   subCategory?: 'Clássicas' | 'Luxo' | 'Flutuante/Canaleta' | 'Côncava';
+  pricingGroup?: string; // Links to the specific pricing table key
   allowsGlass: boolean;
   thumbnailUrl?: string;
 }

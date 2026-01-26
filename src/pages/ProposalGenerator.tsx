@@ -15,7 +15,7 @@ import {
     Maximize,
     Loader2
 } from 'lucide-react';
-import { MOCK_ARTS, FRAMES, FINISHES, FORMATS } from '../constants';
+import { MOCK_ARTS, FRAMES, FINISHES, FORMATS, PRICING_TABLE } from '../constants';
 import { ArtPiece, ProposalItem, Frame, Finish, ArchitectProfile, Format } from '../types';
 import { supabase } from '../lib/supabase';
 import { ProposalPrintView } from '../components/ProposalPrintView';
@@ -98,12 +98,43 @@ export const ProposalGenerator: React.FC = () => {
         );
     }, [searchTerm]);
 
-    const calculateItemPrice = (basePrice: number, frame: Frame, finish: Finish) => {
+    const calculateItemPrice = (basePrice: number | null, frame: Frame, finish: Finish) => {
         let multiplier = 1;
         if (selectedFormat.id === 'dupla') multiplier = 2;
         if (selectedFormat.id === 'tripla') multiplier = 3;
 
-        return (basePrice + frame.price + finish.price) * multiplier;
+        // Default logic: (Base + Frame + Finish)
+        // If no base price provided (e.g. invalid art), treat as 0 or handle upstream.
+        // But for calculation:
+        let calculatedPrice = (basePrice || 0) + frame.price + finish.price;
+
+        // OVERRIDE: Use strict pricing table ONLY for '1 Tela' (id: 'padrao')
+        // AND if the frame has a mapped group in the table.
+        // User requested: "adicione os preços que mandei apenas nos quadros de 1 tela"
+        // This implies for Dupla/Tripla or Custom sizes, we fall back to the old logic (or maybe simple multiplier if we assume single canvas price * count?)
+        // The user specifically said "only for 1 tela", implying Dupla/Tripla might have different rules or they are happy with the approximation.
+        // I will interpret "apenas nos quadros de 1 tela" strictly:
+        // IF format == 'padrao', use Table.
+        // ELSE use (Base + Frame + Finish) * Multiplier.
+
+        if (selectedFormat.id === 'padrao' && frame.pricingGroup && PRICING_TABLE[frame.pricingGroup]) {
+            const glassKey = finish.isGlass ? 'com_vidro' : 'sem_vidro';
+            const sizeKey = selectedSize;
+            const cleanSize = sizeKey.replace(' cada', '').trim();
+
+            const groupPrices = PRICING_TABLE[frame.pricingGroup];
+            const finishPrices = groupPrices[glassKey] || groupPrices['sem_vidro'];
+
+            if (finishPrices && finishPrices[cleanSize] !== undefined) {
+                // Table price is the FINAL price for this item (assumed inclusive)
+                // So we disregard calculatedPrice and use Table Price directly.
+                // Since multiplier is 1 for padrao, we can just return this.
+                return finishPrices[cleanSize];
+            }
+        }
+
+        // Return legacy/fallback calculation for other cases
+        return calculatedPrice * multiplier;
     };
 
     const handleAddArtToProposal = (art: ArtPiece) => {
@@ -508,6 +539,15 @@ export const ProposalGenerator: React.FC = () => {
                                 <span className="font-serif text-gold text-2xl">R$ {(totalProposalValue * 0.2).toLocaleString('pt-BR')}</span>
                             </div>
 
+                            <div className="text-center space-y-1">
+                                <p className="text-[10px] text-zinc-400 uppercase tracking-wider">
+                                    5% de desconto no <span className="text-white font-bold">PIX</span>
+                                </p>
+                                <p className="text-[10px] text-zinc-400 uppercase tracking-wider">
+                                    ou em até <span className="text-white font-bold">12x sem juros</span>
+                                </p>
+                            </div>
+
                             <button
                                 onClick={async () => {
                                     if (!architectProfile || isSaving) return;
@@ -529,11 +569,11 @@ export const ProposalGenerator: React.FC = () => {
                                             .select()
                                             .single();
 
-                                        if (proposalError) throw proposalError;
+                                        if (!proposalData) throw new Error('Falha ao criar proposta');
 
                                         // 2. Insert items
                                         const itemsToInsert = proposalItems.map(item => ({
-                                            proposal_id: proposalData.id,
+                                            proposal_id: (proposalData as any).id,
                                             product_name: `${item.title} - ${item.frame?.name} (${item.finish?.name}) - ${item.size}`,
                                             product_code: item.artPiece?.id || 'CUSTOM',
                                             quantity: 1,

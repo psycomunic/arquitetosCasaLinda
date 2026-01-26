@@ -230,6 +230,14 @@ export const ProposalPrintView: React.FC<ProposalPrintViewProps> = ({
                                 <span className="text-sm font-sans uppercase tracking-[0.4em] text-gold">Valor Total</span>
                                 <span className="text-6xl font-serif italic">R$ {totalValue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
                             </div>
+                            <div className="text-center space-y-2 opacity-60">
+                                <p className="text-xs font-sans uppercase tracking-[0.2em] text-zinc-400">
+                                    5% de desconto no <span className="text-white font-bold">PIX</span>
+                                </p>
+                                <p className="text-xs font-sans uppercase tracking-[0.2em] text-zinc-400">
+                                    ou em até <span className="text-white font-bold">12x sem juros</span>
+                                </p>
+                            </div>
                         </div>
 
                         <div className="mt-20 grid grid-cols-2 gap-20 max-w-4xl mx-auto">
