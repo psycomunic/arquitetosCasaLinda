@@ -12,56 +12,36 @@ const images = [
 ];
 
 export const MovingCarousel: React.FC = () => {
-  // Use enough duplication to ensure the scroll never runs out before reset
-  // 4 sets should be plenty for smooth infinite scrolling on wide screens
+  // Use enough duplication
   const displayImages = [...images, ...images, ...images, ...images];
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const scrollPosRef = useRef(0);
   const animationFrameRef = useRef<number>(0);
+  const isPausedRef = useRef(false);
 
   // Configuration
   const SCROLL_SPEED = 0.5; // Pixels per frame
   const MANUAL_SCROLL_AMOUNT = 300; // Pixels to scroll on arrow click
 
   const animate = () => {
-    if (scrollContainerRef.current) {
+    if (scrollContainerRef.current && !isPausedRef.current) {
       const container = scrollContainerRef.current;
-      const maxScroll = container.scrollWidth / 4; // Width of one set of images
+      const maxScroll = container.scrollWidth / 4; // Width of one set (approx)
 
-      // Increment scroll position
-      scrollPosRef.current += SCROLL_SPEED;
+      // Add speed to scroll
+      container.scrollLeft += SCROLL_SPEED;
 
-      // Reset position seamlessly when we've scrolled past the first set
-      if (scrollPosRef.current >= maxScroll) {
-        scrollPosRef.current = 0;
-        // Adjust the container's actual scroll position instantly
-        container.scrollLeft = 0;
-      } else {
-        // Apply the auto-scroll
-        // We use scrollLeft for the actual movement
-        // But we need to play nice with manual scrolling too.
-        // Simple auto-scroll implementation:
-        // Just increment container.scrollLeft. 
-        // If user drags, container.scrollLeft changes. We need to sync our ref?
-        // Actually, for a marquee effect that allows manual interaction:
-        // We can just keep ADDING to scrollLeft.
-        container.scrollLeft += SCROLL_SPEED;
-
-        // If we reach the end of the total track, reset (handled by the duplication logic usually, 
-        // but let's check bound based on scrollWidth)
-        if (container.scrollLeft >= maxScroll * 3) {
-          container.scrollLeft = maxScroll;
-        }
+      // Reset seamless loop
+      if (container.scrollLeft >= maxScroll * 2) { // Allow going further before reset to be safe
+        // Reset back to range 1
+        container.scrollLeft -= maxScroll;
       }
     }
     animationFrameRef.current = requestAnimationFrame(animate);
   };
 
   useEffect(() => {
-    // Start animation
     animationFrameRef.current = requestAnimationFrame(animate);
-
     return () => {
       if (animationFrameRef.current) {
         cancelAnimationFrame(animationFrameRef.current);
@@ -69,7 +49,7 @@ export const MovingCarousel: React.FC = () => {
     };
   }, []);
 
-  const handleScroll = (direction: 'left' | 'right') => {
+  const handleManualScroll = (direction: 'left' | 'right') => {
     if (scrollContainerRef.current) {
       const container = scrollContainerRef.current;
       const amount = direction === 'left' ? -MANUAL_SCROLL_AMOUNT : MANUAL_SCROLL_AMOUNT;
@@ -78,12 +58,6 @@ export const MovingCarousel: React.FC = () => {
         left: amount,
         behavior: 'smooth'
       });
-
-      // We don't stop the auto-scroll loop, it will just continue adding small increments
-      // which might feel like it's "fighting" slightly but with smooth behavior it usually blends ok.
-      // For perfectly "pause on hover" or "resume after" we'd need more state.
-      // User request: "fique em movimento quando está está sendo clicada" (keep moving when clicked/interacted)
-      // So we do NOTHING to stop it.
     }
   };
 
@@ -94,19 +68,25 @@ export const MovingCarousel: React.FC = () => {
         <h3 className="text-2xl md:text-5xl font-serif text-white">Fotos enviadas por clientes em seus ambientes</h3>
       </div>
 
-      <div className="relative w-full">
-        {/* Navigation Arrows - Visible on Desktop & Mobile as requested */}
-        <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-between px-4 md:px-12 z-20 pointer-events-none">
+      <div
+        className="relative w-full"
+        onMouseEnter={() => (isPausedRef.current = true)}
+        onMouseLeave={() => (isPausedRef.current = false)}
+        onTouchStart={() => (isPausedRef.current = true)}
+        onTouchEnd={() => (isPausedRef.current = false)}
+      >
+        {/* Navigation Arrows */}
+        <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-between px-4 md:px-12 z-30 pointer-events-none">
           <button
-            onClick={() => handleScroll('left')}
-            className="pointer-events-auto bg-black/50 backdrop-blur-sm border border-white/10 text-white p-3 md:p-4 rounded-full hover:bg-gold hover:text-black hover:scale-110 transition-all active:scale-95 shadow-lg"
+            onClick={() => handleManualScroll('left')}
+            className="pointer-events-auto bg-black/50 backdrop-blur-sm border border-white/10 text-white p-3 md:p-4 rounded-full hover:bg-gold hover:text-black hover:scale-110 transition-all active:scale-95 shadow-lg group/btn"
             aria-label="Anterior"
           >
             <ChevronLeft size={24} />
           </button>
           <button
-            onClick={() => handleScroll('right')}
-            className="pointer-events-auto bg-black/50 backdrop-blur-sm border border-white/10 text-white p-3 md:p-4 rounded-full hover:bg-gold hover:text-black hover:scale-110 transition-all active:scale-95 shadow-lg"
+            onClick={() => handleManualScroll('right')}
+            className="pointer-events-auto bg-black/50 backdrop-blur-sm border border-white/10 text-white p-3 md:p-4 rounded-full hover:bg-gold hover:text-black hover:scale-110 transition-all active:scale-95 shadow-lg group/btn"
             aria-label="Próximo"
           >
             <ChevronRight size={24} />
@@ -114,8 +94,8 @@ export const MovingCarousel: React.FC = () => {
         </div>
 
         {/* Side Fades */}
-        <div className="hidden md:block absolute inset-y-0 left-0 w-32 md:w-64 bg-gradient-to-r from-canvas to-transparent z-10 pointer-events-none"></div>
-        <div className="hidden md:block absolute inset-y-0 right-0 w-32 md:w-64 bg-gradient-to-l from-canvas to-transparent z-10 pointer-events-none"></div>
+        <div className="hidden md:block absolute inset-y-0 left-0 w-32 md:w-64 bg-gradient-to-r from-canvas to-transparent z-20 pointer-events-none"></div>
+        <div className="hidden md:block absolute inset-y-0 right-0 w-32 md:w-64 bg-gradient-to-l from-canvas to-transparent z-20 pointer-events-none"></div>
 
         {/* Scrolling Container */}
         <div
