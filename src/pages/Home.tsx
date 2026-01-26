@@ -124,7 +124,7 @@ export const Home: React.FC = () => {
         </section>
 
         {/* Seção Como Funciona (Três Caminhos de Venda) */}
-        <section id="como-funciona" className="py-20 md:py-32 bg-black px-6 border-b border-white/5 relative overflow-hidden">
+        <section id="como-funciona" className="py-16 md:py-24 bg-black px-6 border-b border-white/5 relative overflow-hidden">
           {/* Ambient Background Glow */}
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-gold/5 blur-[120px] rounded-full pointer-events-none"></div>
 
@@ -229,7 +229,7 @@ export const Home: React.FC = () => {
         </section>
 
         {/* Seção Proposta de Valor (O que oferecemos) */}
-        <section id="proposta" className="py-20 md:py-40 px-6 bg-ebonite relative">
+        <section id="proposta" className="py-16 md:py-24 px-6 bg-ebonite relative">
           <div className="max-w-7xl mx-auto">
             <div className="space-y-16 text-center">
               <div className="space-y-10 max-w-4xl mx-auto">
@@ -262,7 +262,7 @@ export const Home: React.FC = () => {
         </section>
 
         {/* PORQUE COMPRAR CONOSCO Section */}
-        <section className="py-12 md:py-32 bg-canvas relative overflow-hidden px-6">
+        <section className="py-12 md:py-24 bg-canvas relative overflow-hidden px-6">
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-12 md:mb-24 space-y-6">
               {/* <h2 className="text-gold text-[10px] uppercase tracking-[0.6em] font-bold">Respaldo Total</h2> */}
@@ -278,7 +278,7 @@ export const Home: React.FC = () => {
                 },
                 {
                   icon: <Zap size={24} />,
-                  title: "Produção Premium",
+                  title: "Produção Artesanal",
                   desc: "Cada quadro é feito à mão e reproduzido em impressão de última geração FULL HD 4K."
                 },
                 {
@@ -302,14 +302,14 @@ export const Home: React.FC = () => {
         </section>
 
         {/* NOSSO ARTISTA Section */}
-        <section className="py-12 md:py-40 bg-ebonite relative overflow-hidden px-6 border-y border-white/5">
+        <section className="py-12 md:py-24 bg-ebonite relative overflow-hidden px-6 border-y border-white/5">
           <div className="max-w-7xl mx-auto">
             <div className="grid lg:grid-cols-2 gap-20 items-center">
               <div className="relative order-2 lg:order-1">
                 <div className="glass-3d p-4 rounded-2xl rotate-2 hover:rotate-0 transition-all duration-700 overflow-hidden group">
                   <img
                     src="/images/rod-artist.jpg"
-                    className="w-full h-[600px] object-cover rounded-xl opacity-60 group-hover:opacity-90 transition-opacity duration-700"
+                    className="w-full h-[450px] md:h-[600px] object-cover rounded-xl opacity-60 group-hover:opacity-90 transition-opacity duration-700"
                     alt="Artista Rod"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
@@ -329,12 +329,12 @@ export const Home: React.FC = () => {
                 </div>
 
                 <p className="text-xl text-zinc-400 font-light leading-relaxed">
-                  Rod é um renomado artista brasileiro, premiado e reconhecido por suas criações originais, que unem <span className="text-white italic">autenticidade</span>, <span className="text-white italic">emoção</span> e <span className="text-white italic">sofisticação</span>.
+                  Rod é artista residente da Casa Linda, com obras autorais desenvolvidas exclusivamente para projetos arquitetônicos. Suas criações unem <span className="text-white italic">autenticidade</span>, <span className="text-white italic">sofisticação</span> e <span className="text-white italic">controle criativo</span>, permitindo obras sob medida alinhadas ao conceito do seu projeto.
                 </p>
 
                 <div className="grid grid-cols-2 gap-8 pt-10 border-t border-white/5">
                   <div className="space-y-2">
-                    <p className="text-gold text-[10px] uppercase tracking-widest font-bold">Projetos VIP</p>
+                    <p className="text-gold text-[10px] uppercase tracking-widest font-bold">Projetos Personalizados</p>
                     <p className="text-[11px] text-zinc-500 uppercase tracking-widest leading-relaxed">
                       Criações artísticas sob medida para seu projeto.
                     </p>
@@ -359,13 +359,13 @@ export const Home: React.FC = () => {
         </section>
 
         {/* TRUST & INTERNATIONAL Section */}
-        <section className="py-32 bg-canvas px-6 border-b border-white/5 relative">
+        <section className="py-20 bg-canvas px-6 border-b border-white/5 relative">
           <div className="max-w-7xl mx-auto">
             <div className="flex flex-col lg:flex-row justify-between items-center gap-20">
               <div className="space-y-8 text-center lg:text-left lg:max-w-xl">
                 <h3 className="text-white text-3xl md:text-5xl font-serif">Estrutura logística para projetos nacionais e internacionais</h3>
                 <p className="text-zinc-500 text-sm uppercase tracking-[0.2em] font-light">
-                  Nossa logística premium garante que sua obra chegue impecável a qualquer lugar do globo.
+                  Nossa logística dedicada garante que sua obra chegue impecável a qualquer lugar do globo.
                 </p>
                 <div className="flex justify-center lg:justify-start gap-8">
                   <div className="flex items-center gap-3">
@@ -418,7 +418,7 @@ export const Home: React.FC = () => {
 
 
         {/* Calculadora de Ganhos: Gatilho Massivo de Conversão */}
-        <section id="comissao" className="py-40 bg-ebonite px-6 relative overflow-hidden">
+        <section id="comissao" className="py-24 bg-ebonite px-6 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-1/2 h-full bg-gold/5 blur-[120px] rounded-full -z-10"></div>
 
           <div className="max-w-6xl mx-auto flex flex-col lg:flex-row gap-20 items-center">
@@ -443,7 +443,7 @@ export const Home: React.FC = () => {
               <div className="space-y-12">
                 <div className="space-y-6">
                   <div className="flex justify-between items-baseline">
-                    <span className="text-[10px] uppercase tracking-widest font-bold text-zinc-500">Valor do Projeto Curado</span>
+                    <span className="text-[10px] uppercase tracking-widest font-bold text-zinc-500">Investimento Artístico do Projeto</span>
                     <span className="text-4xl font-serif text-gold">{formatCurrency(calcValue)}</span>
                   </div>
                   <input
@@ -459,7 +459,7 @@ export const Home: React.FC = () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-10 pt-10 border-t border-white/5">
                   <div className="space-y-2">
-                    <p className="text-[10px] uppercase tracking-widest font-bold text-gold-leaf">Seu Repasse (15% a 20%)</p>
+                    <p className="text-[10px] uppercase tracking-widest font-bold text-gold-leaf">Retorno Profissional Estimado (15% a 20%)</p>
                     <p className="text-5xl font-serif text-white">{formatCurrency(calcValue * 0.15)} a {formatCurrency(calcValue * 0.2)}</p>
                   </div>
                   <div className="opacity-20">
@@ -495,7 +495,7 @@ export const Home: React.FC = () => {
                 { q: "Como acompanho minhas comissões?", a: "Através do seu Dashboard Private. Lá você visualiza cada venda, o status de faturamento e o valor exato do seu repasse com total transparência e em tempo real." },
                 { q: "Qual a periodicidade dos pagamentos?", a: "Os valores são liberados em sua conta digital assim que o faturamento do pedido é confirmado pelo cliente. Garantimos liquidez e agilidade no fluxo de caixa." },
                 { q: "Existem metas ou volumes mínimos?", a: "Nosso sistema avalia o engajamento e volume para graduar os níveis de parceria (até 20%), mas o foco principal é na qualidade da especificação e no relacionamento de longo prazo." },
-                { q: "A Casa Linda faz a entrega e instalação?", a: "Sim. Cuidamos de toda a logística e oferecemos suporte para garantir que a obra chegue impecável ao destino final, preservando a experiência premium do seu cliente." }
+                { q: "A Casa Linda faz a entrega e instalação?", a: "Sim. Cuidamos de toda a logística e oferecemos suporte para garantir que a obra chegue impecável ao destino final, preservando a experiência única do seu cliente." }
               ].map((faq, i) => (
                 <div
                   key={i}
@@ -528,7 +528,7 @@ export const Home: React.FC = () => {
         </section>
 
         {/* CTA Final: High Urgency */}
-        <section className="py-60 bg-canvas text-center px-6 relative">
+        <section className="py-32 bg-canvas text-center px-6 relative">
           <div className="max-w-4xl mx-auto space-y-16">
             <div className="flex justify-center">
               <div className="w-12 h-12 glass flex items-center justify-center rounded-full text-gold animate-bounce">

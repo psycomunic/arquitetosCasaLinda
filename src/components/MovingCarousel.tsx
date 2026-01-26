@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { X, ZoomIn } from 'lucide-react';
 
 const images = [
   '/images/carousel/client-1.jpg',
@@ -13,6 +14,7 @@ const images = [
 export const MovingCarousel: React.FC = () => {
   // Triple the images to ensure seamless loop
   const displayImages = [...images, ...images, ...images];
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   return (
     <section className="relative w-full py-20 bg-canvas overflow-hidden flex flex-col gap-12">
@@ -22,28 +24,76 @@ export const MovingCarousel: React.FC = () => {
       </div>
 
       <div className="relative w-full">
-        {/* Side Fades */}
-        <div className="absolute inset-y-0 left-0 w-32 md:w-64 bg-gradient-to-r from-canvas to-transparent z-10 pointer-events-none"></div>
-        <div className="absolute inset-y-0 right-0 w-32 md:w-64 bg-gradient-to-l from-canvas to-transparent z-10 pointer-events-none"></div>
+        {/* Side Fades - Hidden on mobile during swipe interaction for better visibility */}
+        <div className="hidden md:block absolute inset-y-0 left-0 w-32 md:w-64 bg-gradient-to-r from-canvas to-transparent z-10 pointer-events-none"></div>
+        <div className="hidden md:block absolute inset-y-0 right-0 w-32 md:w-64 bg-gradient-to-l from-canvas to-transparent z-10 pointer-events-none"></div>
 
         {/* Scrolling Container */}
-        <div className="flex w-fit animate-scroll gap-6 md:gap-8 px-4">
+        {/* Mobile: Horizontal scroll (overflow-x-auto) with snap */}
+        {/* Desktop: Animate scroll */}
+        <div className="
+          flex gap-6 md:gap-8 px-4 
+          overflow-x-auto snap-x snap-mandatory scrollbar-hide
+          md:overflow-x-hidden md:animate-scroll md:w-fit
+        ">
           {displayImages.map((src, index) => (
             <div
               key={index}
-              className="flex-shrink-0 w-[70vw] md:w-[calc(20vw-2rem)] aspect-square group transition-all duration-500"
+              className="
+                flex-shrink-0 relative group
+                w-[85vw] snap-center
+                md:w-[calc(20vw-2rem)] md:snap-align-none
+                aspect-square cursor-pointer
+              "
+              onClick={() => setSelectedImage(src)}
             >
+              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 z-10 flex items-center justify-center opacity-0 group-hover:opacity-100">
+                <ZoomIn className="text-white drop-shadow-lg" size={32} />
+              </div>
               <img
                 src={src}
                 alt={`Ambiente Cliente ${index + 1}`}
-                className="w-full h-full object-cover rounded-lg shadow-xl group-hover:scale-105 transition-transform duration-500"
+                className="w-full h-full object-cover rounded-lg shadow-xl"
               />
             </div>
           ))}
         </div>
       </div>
 
+      {/* Lightbox Modal */}
+      {selectedImage && (
+        <div
+          className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-sm flex items-center justify-center p-4 animate-fade-in"
+          onClick={() => setSelectedImage(null)}
+        >
+          <button
+            className="absolute top-6 right-6 text-white/50 hover:text-white transition-colors"
+            onClick={() => setSelectedImage(null)}
+          >
+            <X size={32} />
+          </button>
+
+          <img
+            src={selectedImage}
+            alt="Zoom da imagem do cliente"
+            className="max-w-full max-h-[90vh] object-contain rounded-lg shadow-2xl animate-zoom-in"
+            onClick={(e) => e.stopPropagation()} // Prevent close when clicking image
+          />
+        </div>
+      )}
+
       <style>{`
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Hide scrollbar for IE, Edge and Firefox */
+        .scrollbar-hide {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+
         @keyframes scroll {
           0% {
             transform: translateX(0);
@@ -57,6 +107,14 @@ export const MovingCarousel: React.FC = () => {
         }
         .animate-scroll:hover {
           animation-play-state: paused;
+        }
+        
+        @keyframes zoom-in {
+          from { transform: scale(0.9); opacity: 0; }
+          to { transform: scale(1); opacity: 1; }
+        }
+        .animate-zoom-in {
+          animation: zoom-in 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
       `}</style>
     </section>
