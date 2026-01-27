@@ -39,6 +39,7 @@ const App: React.FC = () => {
     name: '',
     officeName: '',
     logoUrl: '',
+    profilePhotoUrl: '',
     isAdmin: false
   });
   const [authLoading, setAuthLoading] = React.useState(true);
@@ -60,6 +61,7 @@ const App: React.FC = () => {
               name: data.name,
               officeName: data.office_name,
               logoUrl: data.logo_url || '',
+              profilePhotoUrl: data.profile_photo_url || '', // Fetch profile photo
               isAdmin: data.is_admin || false
             });
           }

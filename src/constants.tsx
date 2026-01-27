@@ -45,13 +45,21 @@ export const PRICING_TABLE: Record<string, Record<string, Record<string, number>
       '85x55cm': 897.36,
       '115x75cm': 981.46,
       '145x95cm': 1157.00,
-      '175x100cm': 1437.30
+      '175x100cm': 1437.30,
+      // Quadrados
+      '85x85cm': 986.87,
+      '115x115cm': 1078.39,
+      '145x145cm': 1270.68
     },
     com_vidro: {
       '85x55cm': 897.36, // Fallback same as no glass if requested but shouldn't happen usually for borda infinita if logic allows
       '115x75cm': 981.46,
       '145x95cm': 1157.00,
-      '175x100cm': 1437.30
+      '175x100cm': 1437.30,
+      // Quadrados
+      '85x85cm': 986.87,
+      '115x115cm': 1078.39,
+      '145x145cm': 1270.68
     }
   },
   caixa: {
@@ -59,13 +67,21 @@ export const PRICING_TABLE: Record<string, Record<string, Record<string, number>
       '85x55cm': 964.98,
       '115x75cm': 1072.89,
       '145x95cm': 1511.59,
-      '175x100cm': 1888.60
+      '175x100cm': 1888.60,
+      // Quadrados
+      '85x85cm': 1061.01,
+      '115x115cm': 1179.16,
+      '145x145cm': 1661.02
     },
     com_vidro: {
       '85x55cm': 1313.97,
       '115x75cm': 2241.79,
       '145x95cm': 2999.70,
-      '175x100cm': 3357.45
+      '175x100cm': 3357.45,
+      // Quadrados
+      '85x85cm': 1444.41,
+      '115x115cm': 2464.90,
+      '145x145cm': 3297.71
     }
   },
   premium_standard: { // Trono, Majestade, Roma, Imperial Prata, Barroco
@@ -143,13 +159,21 @@ export const PRICING_TABLE: Record<string, Record<string, Record<string, number>
       '85x55cm': 1165.90,
       '115x75cm': 1294.18,
       '145x95cm': 1433.86,
-      '175x100cm': 2208.16
+      '175x100cm': 2208.16,
+      // Quadrados
+      '85x85cm': 1305.80,
+      '115x115cm': 1449.47,
+      '145x145cm': 1605.91
     },
     com_vidro: {
       '85x55cm': 1586.68,
       '115x75cm': 2716.62,
       '145x95cm': 3622.16,
-      '175x100cm': 4225.00
+      '175x100cm': 4225.00,
+      // Quadrados
+      '85x85cm': 1777.06,
+      '115x115cm': 3042.63,
+      '145x145cm': 4056.81
     }
   },
   inox: {

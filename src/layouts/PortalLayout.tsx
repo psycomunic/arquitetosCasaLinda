@@ -18,6 +18,7 @@ interface PortalLayoutProps {
         name: string;
         officeName: string;
         logoUrl: string;
+        profilePhotoUrl?: string;
         isAdmin?: boolean;
     };
 }
@@ -34,7 +35,7 @@ export const PortalLayout: React.FC<PortalLayoutProps> = ({ children, profile })
         ] : []),
         { id: 'proposals', icon: <FilePlus size={16} />, label: 'Nova Proposta', path: '/proposals' },
         { id: 'sales', icon: <History size={16} />, label: 'Comissões', path: '/earnings' },
-        { id: 'settings', icon: <Settings size={16} />, label: 'Branding', path: '/settings' }
+        { id: 'settings', icon: <Settings size={16} />, label: 'Perfil', path: '/settings' }
     ];
 
     const handleLogout = async () => {
@@ -57,7 +58,13 @@ export const PortalLayout: React.FC<PortalLayoutProps> = ({ children, profile })
                     <div className="space-y-16 flex-1">
                         <div className="flex items-center gap-5 p-4 glass rounded-xl border-white/5">
                             <div className="w-14 h-14 glass flex items-center justify-center grayscale overflow-hidden rounded-lg">
-                                {profile.logoUrl ? <img src={profile.logoUrl} className="w-full h-full object-cover" alt="" /> : <ImageIcon size={20} />}
+                                {profile.profilePhotoUrl ? (
+                                    <img src={profile.profilePhotoUrl} className="w-full h-full object-cover" alt="" />
+                                ) : profile.logoUrl ? (
+                                    <img src={profile.logoUrl} className="w-full h-full object-cover" alt="" />
+                                ) : (
+                                    <ImageIcon size={20} />
+                                )}
                             </div>
                             <div className="overflow-hidden">
                                 <p className="text-[10px] font-bold uppercase tracking-widest truncate text-white">{profile.name}</p>
