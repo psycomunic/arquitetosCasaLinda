@@ -56,8 +56,8 @@ export const ForgotPassword: React.FC = () => {
                 JSON.stringify(err).toLowerCase().includes('rate limit');
 
             if (isRateLimit) {
-                setCountdown(60);
-                setError('Muitas tentativas. Por favor, aguarde 60 segundos antes de tentar novamente.');
+                setCountdown(300); // 5 minutes wait
+                setError('Muitas tentativas. Por favor, aguarde 300 segundos antes de tentar novamente.');
             } else {
                 setError('Erro ao enviar e-mail. Verifique se o endereço está correto e tente novamente.');
             }
