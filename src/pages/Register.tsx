@@ -26,35 +26,19 @@ export const Register: React.FC = () => {
                 email: formData.email,
                 password: formData.password,
                 options: {
+                    emailRedirectTo: `${window.location.origin}/login`,
                     data: {
                         full_name: formData.name,
-                        cau: formData.cau // Store CAU in metadata since we don't have a column yet
+                        cau: formData.cau
                     }
                 }
             });
 
             if (authError) throw authError;
 
+            // Profile is created automatically by database trigger now
+
             if (authData.user) {
-                // 2. Create profile in architects table
-                const { error: profileError } = await supabase
-                    .from('architects')
-                    .insert({
-                        id: authData.user.id,
-                        email: formData.email,
-                        name: formData.name,
-                        office_name: '', // Will be filled in settings
-                        approval_status: 'pending',
-                        commission_rate: 20,
-                        total_earnings: 0
-                    } as any);
-
-                // If profile creation fails, we might want to alert but standard signup worked
-                // For now log it. RLS might block if not configured for insert.
-                if (profileError) {
-                    console.error('Error creating profile:', profileError);
-                }
-
                 navigate('/obrigado');
             }
         } catch (err: any) {
