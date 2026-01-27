@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'r
 import { supabase } from './lib/supabase';
 import { Home } from './pages/Home';
 import { Login } from './pages/Login';
+import { ForgotPassword } from './pages/ForgotPassword';
 import { Register } from './pages/Register';
 import { DashboardOverview } from './pages/DashboardOverview';
 import { ProposalGenerator } from './pages/ProposalGenerator';
@@ -96,6 +97,7 @@ const App: React.FC = () => {
         {/* Public Routes */}
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/register" element={<Register />} />
         <Route path="/canvas-premium" element={<CanvasPremium />} />
         <Route path="/sustentabilidade" element={<Sustentabilidade />} />

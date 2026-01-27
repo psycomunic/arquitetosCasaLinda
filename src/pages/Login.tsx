@@ -29,7 +29,9 @@ export const Login: React.FC = () => {
             console.error('Login error:', err);
             setError(err.message === 'Invalid login credentials'
                 ? 'E-mail ou senha incorretos.'
-                : 'Erro ao conectar. Verifique seus dados.');
+                : err.message.includes('Email not confirmed')
+                    ? 'E-mail não confirmado. Verifique sua caixa de entrada.'
+                    : 'Erro ao conectar. Verifique seus dados.');
         } finally {
             setIsLoading(false);
         }
@@ -71,7 +73,13 @@ export const Login: React.FC = () => {
                             <div className="space-y-4">
                                 <div className="flex justify-between">
                                     <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-[0.4em]">Senha</label>
-                                    <button type="button" className="text-[9px] text-gold uppercase tracking-widest hover:text-white transition-colors">Esqueceu?</button>
+                                    <button
+                                        type="button"
+                                        onClick={() => navigate('/forgot-password')}
+                                        className="text-[9px] text-gold uppercase tracking-widest hover:text-white transition-colors"
+                                    >
+                                        Esqueceu?
+                                    </button>
                                 </div>
                                 <input
                                     type="password"
