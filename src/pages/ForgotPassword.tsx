@@ -47,7 +47,15 @@ export const ForgotPassword: React.FC = () => {
             setSuccess(true);
         } catch (err: any) {
             console.error('Reset password error:', err);
-            if (err.status === 429 || err.message?.includes('rate limit')) {
+
+            // Check for various forms of rate limit error
+            const isRateLimit =
+                err.status === 429 ||
+                err.message?.toLowerCase().includes('rate limit') ||
+                err.message?.includes('429') ||
+                JSON.stringify(err).toLowerCase().includes('rate limit');
+
+            if (isRateLimit) {
                 setCountdown(60);
                 setError('Muitas tentativas. Por favor, aguarde 60 segundos antes de tentar novamente.');
             } else {
