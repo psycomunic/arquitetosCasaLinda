@@ -11,6 +11,27 @@ export const ForgotPassword: React.FC = () => {
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState(false);
 
+    const [countdown, setCountdown] = useState<number | null>(null);
+
+    React.useEffect(() => {
+        if (countdown === null) return;
+
+        if (countdown === 0) {
+            setCountdown(null);
+            setError(null);
+            return;
+        }
+
+        const timer = setTimeout(() => {
+            setCountdown(countdown - 1);
+            if (error?.includes('aguarde')) {
+                setError(`Muitas tentativas. Por favor, aguarde ${countdown - 1} segundos antes de tentar novamente.`);
+            }
+        }, 1000);
+
+        return () => clearTimeout(timer);
+    }, [countdown, error]);
+
     const handleResetPassword = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
@@ -27,6 +48,7 @@ export const ForgotPassword: React.FC = () => {
         } catch (err: any) {
             console.error('Reset password error:', err);
             if (err.status === 429 || err.message?.includes('rate limit')) {
+                setCountdown(60);
                 setError('Muitas tentativas. Por favor, aguarde 60 segundos antes de tentar novamente.');
             } else {
                 setError('Erro ao enviar e-mail. Verifique se o endereço está correto e tente novamente.');
@@ -72,7 +94,7 @@ export const ForgotPassword: React.FC = () => {
 
                                 <button
                                     type="submit"
-                                    disabled={isLoading}
+                                    disabled={isLoading || countdown !== null}
                                     className="w-full group relative overflow-hidden bg-white text-black py-7 text-[10px] uppercase tracking-[0.5em] font-bold transition-all hover:scale-[1.02] shadow-2xl disabled:opacity-70 disabled:cursor-not-allowed"
                                 >
                                     <span className="relative z-10 flex items-center justify-center gap-4">
