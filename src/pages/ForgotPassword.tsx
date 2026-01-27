@@ -26,7 +26,11 @@ export const ForgotPassword: React.FC = () => {
             setSuccess(true);
         } catch (err: any) {
             console.error('Reset password error:', err);
-            setError('Erro ao enviar e-mail. Verifique se o endereço está correto e tente novamente.');
+            if (err.status === 429 || err.message?.includes('rate limit')) {
+                setError('Muitas tentativas. Por favor, aguarde 60 segundos antes de tentar novamente.');
+            } else {
+                setError('Erro ao enviar e-mail. Verifique se o endereço está correto e tente novamente.');
+            }
         } finally {
             setIsLoading(false);
         }

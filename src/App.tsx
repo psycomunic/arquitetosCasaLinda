@@ -4,6 +4,7 @@ import { supabase } from './lib/supabase';
 import { Home } from './pages/Home';
 import { Login } from './pages/Login';
 import { ForgotPassword } from './pages/ForgotPassword';
+import { UpdatePassword } from './pages/UpdatePassword';
 import { Register } from './pages/Register';
 import { DashboardOverview } from './pages/DashboardOverview';
 import { ProposalGenerator } from './pages/ProposalGenerator';
@@ -98,6 +99,7 @@ const App: React.FC = () => {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/update-password" element={<UpdatePassword />} />
         <Route path="/register" element={<Register />} />
         <Route path="/canvas-premium" element={<CanvasPremium />} />
         <Route path="/sustentabilidade" element={<Sustentabilidade />} />
