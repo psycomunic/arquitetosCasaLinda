@@ -382,13 +382,24 @@ export const ProposalGenerator: React.FC = () => {
                                             key={f.id}
                                             disabled={isDisabled}
                                             onClick={() => setSelectedFinish(f)}
-                                            className={`p-4 text-left border transition-all rounded-lg relative ${selectedFinish.id === f.id ? 'border-gold bg-gold/5' : isDisabled ? 'border-white/5 bg-white/5 opacity-30 cursor-not-allowed' : 'border-white/5 bg-white/5 hover:border-white/20'}`}
+                                            className={`p-0 text-left border transition-all rounded-lg relative flex flex-col items-stretch overflow-hidden h-full ${selectedFinish.id === f.id ? 'border-gold bg-gold/5' : isDisabled ? 'border-white/5 bg-white/5 opacity-30 cursor-not-allowed' : 'border-white/5 bg-white/5 hover:border-white/20'}`}
                                         >
-                                            <p className="text-[9px] uppercase tracking-widest font-bold text-white">{f.name}</p>
-                                            <p className="text-[10px] text-gold mt-1">+ R$ {f.price}</p>
+                                            {f.thumbnailUrl ? (
+                                                <div className="aspect-video w-full bg-zinc-900 border-b border-white/5 relative">
+                                                    <img src={f.thumbnailUrl} alt={f.name} className="w-full h-full object-cover" />
+                                                </div>
+                                            ) : (
+                                                <div className="h-20 bg-zinc-800 border-b border-white/5"></div>
+                                            )}
+
+                                            <div className="p-4">
+                                                <p className="text-[9px] uppercase tracking-widest font-bold text-white">{f.name}</p>
+                                                <p className="text-[10px] text-gold mt-1">+ R$ {f.price}</p>
+                                            </div>
+
                                             {isDisabled && (
-                                                <div className="absolute inset-0 flex items-center justify-center">
-                                                    <span className="text-[7px] text-white/40 uppercase tracking-tighter bg-black/60 px-2 py-1 rounded">Sem Vidro</span>
+                                                <div className="absolute inset-0 flex items-center justify-center bg-black/50 z-10">
+                                                    <span className="text-[7px] text-white uppercase tracking-tighter bg-black/80 px-2 py-1 rounded border border-white/10">Indisponível</span>
                                                 </div>
                                             )}
                                         </button>

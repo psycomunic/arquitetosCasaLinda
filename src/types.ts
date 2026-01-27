@@ -15,6 +15,7 @@ export interface Finish {
   name: string;
   price: number;
   isGlass: boolean;
+  thumbnailUrl?: string;
 }
 
 export interface ArtPiece {

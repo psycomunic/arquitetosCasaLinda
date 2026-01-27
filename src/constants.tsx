@@ -193,8 +193,8 @@ export const PRICING_TABLE: Record<string, Record<string, Record<string, number>
 };
 
 export const FINISHES: Finish[] = [
-  { id: 'f1', name: 'Sem Vidro', price: 0.00, isGlass: false },
-  { id: 'f2', name: 'Com Vidro', price: 250.00, isGlass: true } // Price is now ignored, used only for flag
+  { id: 'f1', name: 'Sem Vidro', price: 0.00, isGlass: false, thumbnailUrl: '/images/finishes/sem-vidro.png' },
+  { id: 'f2', name: 'Com Vidro', price: 250.00, isGlass: true, thumbnailUrl: '/images/finishes/com-vidro.png' } // Price is now ignored, used only for flag
 ];
 
 export const FORMATS = [
