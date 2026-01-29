@@ -243,7 +243,7 @@ export const DashboardOverview: React.FC = () => {
                 <div className="glass p-10 border-l-2 border-gold relative">
                     <p className="text-[10px] uppercase tracking-[0.4em] font-bold text-zinc-500 mb-6">Taxa de Parceria</p>
                     <div className="flex items-baseline gap-3">
-                        <h3 className="text-5xl font-serif text-gold">{profile?.commissionRate || 10}%</h3>
+                        <h3 className="text-5xl font-serif text-gold">{profile?.commissionRate || 15}%</h3>
                     </div>
                     <p className="mt-4 text-[10px] text-zinc-400 font-medium uppercase tracking-[0.2em] leading-relaxed">
                         Sua graduação atual.

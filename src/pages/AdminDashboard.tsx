@@ -188,6 +188,19 @@ export const AdminDashboard: React.FC = () => {
 
         setActionLoading(architectToApprove.id);
         try {
+            // Check for duplicate coupon
+            const { data: existingCoupon } = await supabase
+                .from('architects')
+                .select('id')
+                .eq('coupon_code', couponCode)
+                .single();
+
+            if (existingCoupon) {
+                alert('Este código de cupom já está em uso por outro arquiteto. Por favor, escolha outro.');
+                setActionLoading(null);
+                return;
+            }
+
             // Update architect with approval status AND coupon code
             const { error } = await (supabase
                 .from('architects') as any)
