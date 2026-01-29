@@ -434,6 +434,7 @@ export const AdminDashboard: React.FC = () => {
                                     <tr className="border-b border-white/10 text-left">
                                         <th className="pb-4 text-[10px] uppercase tracking-widest text-zinc-500 font-bold">Arquiteto</th>
                                         <th className="pb-4 text-[10px] uppercase tracking-widest text-zinc-500 font-bold text-right">Vendas Totais</th>
+                                        <th className="pb-4 text-[10px] uppercase tracking-widest text-zinc-500 font-bold text-center">Cupom</th>
                                         <th className="pb-4 text-[10px] uppercase tracking-widest text-zinc-500 font-bold text-right">Comissão Atual</th>
                                         <th className="pb-4 text-[10px] uppercase tracking-widest text-zinc-500 font-bold text-center">Ações</th>
                                     </tr>
@@ -451,6 +452,15 @@ export const AdminDashboard: React.FC = () => {
                                                 <span className="text-white font-mono">
                                                     {arch.total_earnings?.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
                                                 </span>
+                                            </td>
+                                            <td className="py-4 text-center">
+                                                {arch.coupon_code ? (
+                                                    <span className="text-zinc-400 font-mono text-xs border border-white/10 px-2 py-1 rounded bg-white/5">
+                                                        {arch.coupon_code}
+                                                    </span>
+                                                ) : (
+                                                    <span className="text-zinc-600 text-[10px] italic">Sem cupom</span>
+                                                )}
                                             </td>
                                             <td className="py-4 text-right">
                                                 <span className="bg-gold/10 text-gold text-xs px-2 py-1 rounded border border-gold/20 font-bold">
