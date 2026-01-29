@@ -35,7 +35,7 @@ export const AssistanceModal: React.FC<AssistanceModalProps> = ({ isOpen, onClos
                     <div className="p-8 md:p-12">
                         <div className="mb-8">
                             <span className="text-gold text-[10px] uppercase tracking-[0.3em] font-bold">Mecânica 02</span>
-                            <h3 className="text-3xl font-serif mt-2 mb-4">Como funciona a Venda Assistida</h3>
+                            <h3 className="text-3xl font-serif mt-2 mb-4 text-zinc-900">Como funciona a Venda Assistida</h3>
                             <div className="space-y-4 text-zinc-500 text-sm leading-relaxed">
                                 <p>1. <b>Você envia o projeto:</b> Clique no botão de WhatsApp para falar com nossa curadoria.</p>
                                 <p>2. <b>Nós fazemos a curadoria:</b> Sugerimos composições e ajustamos medidas para o seu ambiente.</p>
