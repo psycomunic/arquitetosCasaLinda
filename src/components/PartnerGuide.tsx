@@ -37,62 +37,62 @@ export const PartnerGuide: React.FC = () => {
 
             {/* Hidden Content for PDF Generation */}
             <div className="fixed left-[-9999px] top-0">
-                <div ref={contentRef} className="w-[210mm] min-h-[297mm] bg-white text-black p-[20mm] font-sans relative flex flex-col justify-between">
+                <div ref={contentRef} className="w-[210mm] h-[297mm] bg-white text-black p-[15mm] font-sans relative flex flex-col justify-between overflow-hidden">
 
                     <div>
                         {/* Header */}
-                        <div className="flex justify-between items-end border-b-2 border-[#C5A059] pb-6 mb-10">
-                            <img src="/logo.png" alt="Casa Linda" className="h-12 object-contain filter brightness-0" />
+                        <div className="flex justify-between items-end border-b-2 border-[#C5A059] pb-4 mb-6">
+                            <img src="/logo.png" alt="Casa Linda" className="h-10 object-contain filter brightness-0" />
                             <div className="text-right">
-                                <h1 className="text-2xl font-serif text-[#1a1a1a] uppercase tracking-widest leading-none">Programa de<br />Arquitetos</h1>
-                                <p className="text-[10px] text-[#666] uppercase tracking-[0.2em] mt-2">Casa Linda Decorações</p>
+                                <h1 className="text-xl font-serif text-[#1a1a1a] uppercase tracking-widest leading-none">Programa de<br />Arquitetos</h1>
+                                <p className="text-[10px] text-[#666] uppercase tracking-[0.2em] mt-1">Casa Linda Decorações</p>
                             </div>
                         </div>
 
                         {/* Intro */}
-                        <div className="mb-10">
-                            <p className="text-sm text-[#333] leading-relaxed text-justify">
+                        <div className="mb-6">
+                            <p className="text-xs text-[#333] leading-relaxed text-justify">
                                 Esta tabela foi desenhada para refletir a realidade dos projetos arquitetônicos, permitindo
                                 evolução rápida, metas acessíveis e estímulo contínuo à parceria.
                             </p>
                         </div>
 
                         {/* Tabela de Progressão */}
-                        <section className="mb-12">
-                            <h2 className="text-lg font-bold text-[#C5A059] uppercase tracking-widest mb-6 border-l-4 border-[#C5A059] pl-3">Tabela de Progressão Mensal</h2>
+                        <section className="mb-8">
+                            <h2 className="text-sm font-bold text-[#C5A059] uppercase tracking-widest mb-4 border-l-4 border-[#C5A059] pl-3">Tabela de Progressão Mensal</h2>
 
                             <div className="w-full bg-[#f8f8f8] rounded-lg overflow-hidden border border-[#eee]">
                                 <table className="w-full text-left border-collapse">
                                     <thead>
                                         <tr className="bg-[#1a1a1a] text-white">
-                                            <th className="p-4 text-xs uppercase tracking-wider font-semibold w-2/3">Volume de Vendas Mensal</th>
-                                            <th className="p-4 text-xs uppercase tracking-wider font-semibold text-right">Comissão</th>
+                                            <th className="p-2 text-[10px] uppercase tracking-wider font-semibold w-2/3">Volume de Vendas Mensal</th>
+                                            <th className="p-2 text-[10px] uppercase tracking-wider font-semibold text-right">Comissão</th>
                                         </tr>
                                     </thead>
-                                    <tbody className="text-sm text-[#333]">
+                                    <tbody className="text-xs text-[#333]">
                                         <tr className="border-b border-[#ddd]">
-                                            <td className="p-4 font-medium">Até R$ 5.999</td>
-                                            <td className="p-4 text-right font-bold text-[#C5A059]">15%</td>
+                                            <td className="p-2 font-medium">Até R$ 5.999</td>
+                                            <td className="p-2 text-right font-bold text-[#C5A059]">15%</td>
                                         </tr>
                                         <tr className="border-b border-[#ddd] bg-white">
-                                            <td className="p-4 font-medium">De R$ 6.000 a R$ 11.999</td>
-                                            <td className="p-4 text-right font-bold text-[#C5A059]">16%</td>
+                                            <td className="p-2 font-medium">De R$ 6.000 a R$ 11.999</td>
+                                            <td className="p-2 text-right font-bold text-[#C5A059]">16%</td>
                                         </tr>
                                         <tr className="border-b border-[#ddd]">
-                                            <td className="p-4 font-medium">De R$ 12.000 a R$ 19.999</td>
-                                            <td className="p-4 text-right font-bold text-[#C5A059]">17%</td>
+                                            <td className="p-2 font-medium">De R$ 12.000 a R$ 19.999</td>
+                                            <td className="p-2 text-right font-bold text-[#C5A059]">17%</td>
                                         </tr>
                                         <tr className="border-b border-[#ddd] bg-white">
-                                            <td className="p-4 font-medium">De R$ 20.000 a R$ 29.999</td>
-                                            <td className="p-4 text-right font-bold text-[#C5A059]">18%</td>
+                                            <td className="p-2 font-medium">De R$ 20.000 a R$ 29.999</td>
+                                            <td className="p-2 text-right font-bold text-[#C5A059]">18%</td>
                                         </tr>
                                         <tr className="border-b border-[#ddd]">
-                                            <td className="p-4 font-medium">De R$ 30.000 a R$ 39.999</td>
-                                            <td className="p-4 text-right font-bold text-[#C5A059]">19%</td>
+                                            <td className="p-2 font-medium">De R$ 30.000 a R$ 39.999</td>
+                                            <td className="p-2 text-right font-bold text-[#C5A059]">19%</td>
                                         </tr>
                                         <tr className="bg-[#C5A059]/10">
-                                            <td className="p-4 font-bold text-[#1a1a1a]">A partir de R$ 40.000</td>
-                                            <td className="p-4 text-right font-bold text-[#1a1a1a] text-lg">20%</td>
+                                            <td className="p-2 font-bold text-[#1a1a1a]">A partir de R$ 40.000</td>
+                                            <td className="p-2 text-right font-bold text-[#1a1a1a] text-sm">20%</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -100,9 +100,9 @@ export const PartnerGuide: React.FC = () => {
                         </section>
 
                         {/* Regras Importantes */}
-                        <section className="mb-10">
-                            <h2 className="text-lg font-bold text-[#1a1a1a] uppercase tracking-widest mb-4 border-l-4 border-[#1a1a1a] pl-3">Regras Importantes</h2>
-                            <ul className="space-y-3">
+                        <section className="mb-6">
+                            <h2 className="text-sm font-bold text-[#1a1a1a] uppercase tracking-widest mb-3 border-l-4 border-[#1a1a1a] pl-3">Regras Importantes</h2>
+                            <ul className="space-y-2">
                                 {[
                                     "A comissão é calculada sobre vendas confirmadas no mês.",
                                     "A progressão é automática e reavaliada mensalmente.",
@@ -110,7 +110,7 @@ export const PartnerGuide: React.FC = () => {
                                     "Não existem metas mínimas obrigatórias.",
                                     "Projetos personalizados e VIP podem ter condições especiais."
                                 ].map((rule, idx) => (
-                                    <li key={idx} className="text-xs text-[#333] flex items-start gap-2">
+                                    <li key={idx} className="text-[10px] text-[#333] flex items-start gap-2">
                                         <span className="text-[#C5A059] font-bold">•</span>
                                         {rule}
                                     </li>
@@ -121,10 +121,10 @@ export const PartnerGuide: React.FC = () => {
 
                     <div>
                         {/* Compromisso Casa Linda */}
-                        <section className="bg-[#1a1a1a] text-white p-6 rounded-lg mb-8 relative overflow-hidden">
+                        <section className="bg-[#1a1a1a] text-white p-4 rounded-lg mb-4 relative overflow-hidden">
                             <div className="absolute top-0 right-0 w-24 h-24 bg-[#C5A059] rounded-full blur-[40px] opacity-20 -mr-10 -mt-10"></div>
-                            <h2 className="text-base font-bold text-[#C5A059] uppercase tracking-widest mb-3">Compromisso Casa Linda</h2>
-                            <p className="text-xs font-light leading-relaxed text-zinc-300">
+                            <h2 className="text-xs font-bold text-[#C5A059] uppercase tracking-widest mb-2">Compromisso Casa Linda</h2>
+                            <p className="text-[10px] font-light leading-relaxed text-zinc-300">
                                 A Casa Linda acredita em parcerias de longo prazo. Esta estrutura de comissão foi criada para
                                 incentivar crescimento constante, recompensar a recorrência e manter uma relação clara, justa
                                 e sustentável.
@@ -132,9 +132,9 @@ export const PartnerGuide: React.FC = () => {
                         </section>
 
                         {/* Footer */}
-                        <div className="border-t border-[#eee] pt-4 flex justify-between items-center">
-                            <p className="text-[10px] text-[#999] uppercase tracking-widest">Casa Linda Decorações</p>
-                            <p className="text-[10px] text-[#999] uppercase tracking-widest">Portal do Arquiteto</p>
+                        <div className="border-t border-[#eee] pt-3 flex justify-between items-center">
+                            <p className="text-[9px] text-[#999] uppercase tracking-widest">Casa Linda Decorações</p>
+                            <p className="text-[9px] text-[#999] uppercase tracking-widest">Portal do Arquiteto</p>
                         </div>
                     </div>
 
