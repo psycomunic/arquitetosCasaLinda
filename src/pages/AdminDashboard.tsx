@@ -174,12 +174,33 @@ export const AdminDashboard: React.FC = () => {
         }
     };
 
-    const initiateApproval = (architect: Architect) => {
+    const initiateApproval = async (architect: Architect) => {
         setArchitectToApprove(architect);
-        // Generate default coupon: firstName + storeDiscount
+
         const firstName = architect.name.split(' ')[0].toLowerCase().trim();
-        const discount = storeDiscount || '15'; // Default to 15 if not set
-        setCouponCode(`${firstName}${discount}`);
+        const discount = storeDiscount || '15';
+        let baseCode = `${firstName}${discount}`;
+        let finalCode = baseCode;
+        let isUnique = false;
+        let attempts = 0;
+
+        // Check uniqueness and suggest alternative
+        while (!isUnique && attempts < 10) {
+            const { data } = await supabase
+                .from('architects')
+                .select('id')
+                .eq('coupon_code', finalCode)
+                .single();
+
+            if (!data) {
+                isUnique = true;
+            } else {
+                attempts++;
+                finalCode = `${baseCode}${attempts}`;
+            }
+        }
+
+        setCouponCode(finalCode);
         setApprovalModalOpen(true);
     };
 
