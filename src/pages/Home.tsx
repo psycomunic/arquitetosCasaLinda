@@ -417,6 +417,83 @@ export const Home: React.FC = () => {
 
 
 
+        {/* PROGRAMA DE ARQUITETOS Section */}
+        <section id="programa" className="py-24 bg-canvas px-6 border-b border-white/5 relative">
+          <div className="max-w-7xl mx-auto">
+            <div className="text-center space-y-6 mb-16">
+              <h2 className="text-gold text-[10px] uppercase tracking-[0.5em] font-bold">Transparência Total</h2>
+              <h3 className="text-3xl md:text-5xl font-serif text-white">Programa de Arquitetos Casa Linda</h3>
+              <p className="text-zinc-500 text-sm font-light max-w-2xl mx-auto leading-relaxed">
+                Uma estrutura desenhada para refletir a realidade dos projetos, com metas acessíveis e evolução automática.
+              </p>
+            </div>
+
+            <div className="grid lg:grid-cols-12 gap-12">
+              {/* Tabela de Progressão */}
+              <div className="lg:col-span-7 glass p-8 md:p-12">
+                <h4 className="text-xl font-serif text-white mb-8 flex items-center gap-3">
+                  <span className="w-8 h-[1px] bg-gold"></span>
+                  Tabela de Progressão Mensal
+                </h4>
+
+                <div className="space-y-1">
+                  {[
+                    { range: "Até R$ 5.999", percent: "15%" },
+                    { range: "De R$ 6.000 a R$ 11.999", percent: "16%" },
+                    { range: "De R$ 12.000 a R$ 19.999", percent: "17%" },
+                    { range: "De R$ 20.000 a R$ 29.999", percent: "18%" },
+                    { range: "De R$ 30.000 a R$ 39.999", percent: "19%" },
+                    { range: "A partir de R$ 40.000", percent: "20%", highlight: true }
+                  ].map((row, i) => (
+                    <div
+                      key={i}
+                      className={`flex justify-between items-center p-4 rounded border border-white/5 transition-all hover:bg-white/5 ${row.highlight ? 'bg-gold/10 border-gold/30' : 'bg-zinc-900/50'}`}
+                    >
+                      <span className={`text-xs md:text-sm uppercase tracking-wider font-bold ${row.highlight ? 'text-white' : 'text-zinc-400'}`}>
+                        {row.range}
+                      </span>
+                      <span className={`text-xl font-bold font-serif ${row.highlight ? 'text-gold' : 'text-zinc-200'}`}>
+                        {row.percent}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Regras e Compromisso */}
+              <div className="lg:col-span-5 space-y-8">
+                <div className="glass p-8 md:p-10 border-t-4 border-gold">
+                  <h4 className="text-lg font-bold text-white uppercase tracking-widest mb-6">Regras Importantes</h4>
+                  <ul className="space-y-4">
+                    {[
+                      "Comissão sobre vendas confirmadas no mês.",
+                      "Progressão automática e reavaliada mensalmente.",
+                      "Sem penalidades se o volume diminuir.",
+                      "Sem metas mínimas obrigatórias.",
+                      "Condições especiais para projetos VIP."
+                    ].map((rule, i) => (
+                      <li key={i} className="flex gap-3 text-sm text-zinc-400 font-light leading-relaxed">
+                        <CheckCircle2 size={16} className="text-gold shrink-0 mt-0.5" />
+                        {rule}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div className="bg-gradient-to-br from-gold/20 to-gold/5 p-8 md:p-10 rounded-2xl border border-gold/20 relative overflow-hidden group">
+                  <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                    <Heart size={80} strokeWidth={1} />
+                  </div>
+                  <h4 className="text-gold text-xs font-bold uppercase tracking-widest mb-3">Compromisso Casa Linda</h4>
+                  <p className="text-zinc-200 text-sm leading-relaxed font-light">
+                    Acreditamos em parcerias de longo prazo. Criamos esta estrutura para incentivar seu crescimento constante e recompensar sua recorrência de forma justa e sustentável.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* Calculadora de Ganhos: Gatilho Massivo de Conversão */}
         <section id="comissao" className="py-24 bg-ebonite px-6 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-1/2 h-full bg-gold/5 blur-[120px] rounded-full -z-10"></div>

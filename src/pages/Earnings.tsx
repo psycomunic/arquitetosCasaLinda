@@ -64,9 +64,7 @@ export const Earnings: React.FC = () => {
                 <div className="text-center md:text-right space-y-6">
                     <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-[0.6em]">Saldo para Resgate</p>
                     <p className="text-6xl font-serif text-gold">R$ {stats.availableForWithdrawal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
-                    <button className="px-12 py-5 bg-white text-black text-[9px] font-bold uppercase tracking-[0.4em] hover:bg-gold transition-all">
-                        Transferir Valores
-                    </button>
+                    {/* Button Removed */}
                     {stats.pendingEarnings > 0 && (
                         <p className="text-[10px] text-zinc-500 uppercase tracking-widest">
                             Em processamento: R$ {stats.pendingEarnings.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
