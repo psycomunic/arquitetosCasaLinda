@@ -82,9 +82,8 @@ export const DashboardOverview: React.FC = () => {
         return <div className="text-white">Carregando...</div>;
     }
 
-    const firstName = profile?.name?.split(' ')[0] || 'Parceiro';
-    const totalDiscountValue = storeDiscount + 3;
-    const calculatedCoupon = `${firstName?.toUpperCase()}${totalDiscountValue}`;
+    const firstName = profile?.name?.split(' ')[0]?.toLowerCase() || 'parceiro';
+    const calculatedCoupon = `${firstName}${storeDiscount}`;
 
     return (
         <div className="space-y-10 animate-fade-in no-print pb-20">
@@ -125,7 +124,7 @@ export const DashboardOverview: React.FC = () => {
 
                         <div className="p-4 bg-black/50 rounded-xl border border-white/5 flex items-center justify-between group-hover:border-gold/30 transition-colors">
                             <div className="flex flex-col">
-                                <span className="text-[8px] uppercase tracking-widest text-zinc-600 font-bold mb-1">Seu Cupom ({totalDiscountValue}% OFF)</span>
+                                <span className="text-[8px] uppercase tracking-widest text-zinc-600 font-bold mb-1">Seu Cupom ({storeDiscount}% OFF)</span>
                                 <span className="text-[10px] text-zinc-400 font-mono">{calculatedCoupon}</span>
                             </div>
                             <button onClick={copyCoupon} className="text-gold hover:text-white transition-colors">
@@ -166,7 +165,7 @@ export const DashboardOverview: React.FC = () => {
                     </p>
 
                     <a
-                        href={`https://wa.me/5511999999999?text=Olá! Sou o arquiteto ${profile?.name} e gostaria de solicitar uma Venda Assistida para um projeto meu.`}
+                        href={`https://wa.me/55479996860431?text=Olá! Sou o arquiteto ${profile?.name} e gostaria de solicitar uma Venda Assistida para um projeto meu.`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="w-full py-4 bg-zinc-900 text-white text-[10px] uppercase tracking-[0.2em] font-bold hover:bg-[#25D366] hover:text-white transition-all flex items-center justify-center gap-2 mb-3"
@@ -203,7 +202,7 @@ export const DashboardOverview: React.FC = () => {
                     </p>
 
                     <a
-                        href={`https://wa.me/5511999999999?text=Olá! Sou o arquiteto ${profile?.name} e gostaria de solicitar um Projeto Especial (AAA).`}
+                        href={`https://wa.me/55479996860431?text=Olá! Sou o arquiteto ${profile?.name} e gostaria de solicitar um Projeto Especial (AAA).`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="w-full py-4 bg-zinc-900 text-white text-[10px] uppercase tracking-[0.2em] font-bold hover:bg-[#25D366] hover:text-white transition-all flex items-center justify-center gap-2 mb-3"

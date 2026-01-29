@@ -2,25 +2,31 @@ import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { Architect } from '../types/database';
-import { 
-    CheckCircle2, 
-    XCircle, 
-    Loader2, 
-    Shield, 
-    BarChart, 
-    Users, 
-    DollarSign, 
-    FileText, 
-    Package, 
-    LayoutGrid 
+import {
+    CheckCircle2,
+    XCircle,
+    Loader2,
+    Shield,
+    BarChart,
+    Users,
+    DollarSign,
+    FileText,
+    Package,
+    LayoutGrid
 } from 'lucide-react';
 import { Ranking } from '../components/Ranking';
 import { ProductionManager } from '../components/ProductionManager';
 
+import { AddSaleModal } from '../components/AddSaleModal';
+
 export const AdminDashboard: React.FC = () => {
     const [pendingArchitects, setPendingArchitects] = useState<Architect[]>([]);
+    const [approvedArchitects, setApprovedArchitects] = useState<Architect[]>([]);
     const [loading, setLoading] = useState(true);
     const [actionLoading, setActionLoading] = useState<string | null>(null);
+    const [selectedArchitect, setSelectedArchitect] = useState<Architect | null>(null);
+    const [isAddSaleModalOpen, setIsAddSaleModalOpen] = useState(false);
+
     const [stats, setStats] = useState({
         totalProposals: 0,
         totalProposalValue: 0,
@@ -29,13 +35,15 @@ export const AdminDashboard: React.FC = () => {
     });
     const [storeDiscount, setStoreDiscount] = useState('0');
     const [savingDiscount, setSavingDiscount] = useState(false);
-    const [activeTab, setActiveTab] = useState<'overview' | 'production'>('overview');
+    const [activeTab, setActiveTab] = useState<'overview' | 'production' | 'architects'>('overview');
     const [searchParams] = useSearchParams();
 
     useEffect(() => {
         const tab = searchParams.get('tab');
         if (tab === 'production') {
             setActiveTab('production');
+        } else if (tab === 'architects') {
+            setActiveTab('architects');
         } else {
             setActiveTab('overview');
         }
@@ -49,6 +57,7 @@ export const AdminDashboard: React.FC = () => {
         try {
             await Promise.all([
                 fetchPendingArchitects(),
+                fetchApprovedArchitects(),
                 fetchStats(),
                 fetchSettings()
             ]);
@@ -119,6 +128,21 @@ export const AdminDashboard: React.FC = () => {
         }
     };
 
+    const fetchApprovedArchitects = async () => {
+        try {
+            const { data, error } = await supabase
+                .from('architects')
+                .select('*')
+                .eq('approval_status', 'approved')
+                .order('name', { ascending: true });
+
+            if (error) throw error;
+            setApprovedArchitects(data || []);
+        } catch (error) {
+            console.error('Error fetching approved architects:', error);
+        }
+    };
+
     const handleAction = async (id: string, action: 'approved' | 'rejected') => {
         setActionLoading(id);
         try {
@@ -132,14 +156,20 @@ export const AdminDashboard: React.FC = () => {
 
             if (error) throw error;
 
-            // Remove from list
-            setPendingArchitects(prev => prev.filter(arch => arch.id !== id));
+            // Refresh lists
+            fetchPendingArchitects();
+            fetchApprovedArchitects();
         } catch (error) {
             console.error(`Error ${action} architect:`, error);
             alert(`Erro ao processar ação. Tente novamente.`);
         } finally {
             setActionLoading(null);
         }
+    };
+
+    const openAddSaleModal = (architect: Architect) => {
+        setSelectedArchitect(architect);
+        setIsAddSaleModalOpen(true);
     };
 
     if (loading) {
@@ -173,10 +203,16 @@ export const AdminDashboard: React.FC = () => {
                     >
                         <Package size={14} /> Produção & Expedição
                     </button>
+                    <button
+                        onClick={() => setActiveTab('architects')}
+                        className={`px-6 py-3 text-[10px] uppercase font-bold tracking-widest rounded-lg transition-all flex items-center gap-3 ${activeTab === 'architects' ? 'bg-white text-black' : 'text-zinc-500 hover:text-white'}`}
+                    >
+                        <Users size={14} /> Arquitetos
+                    </button>
                 </div>
             </header>
 
-            {activeTab === 'overview' ? (
+            {activeTab === 'overview' && (
                 <>
                     {/* Stats Grid */}
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
@@ -225,7 +261,7 @@ export const AdminDashboard: React.FC = () => {
                                         Desconto Base da Loja (%)
                                     </label>
                                     <p className="text-xs text-zinc-500 mb-6">
-                                        Este valor será usado como base para gerar os cupons dos arquitetos (Base + 3%).
+                                        Este valor será usado como base para gerar os cupons dos arquitetos.
                                     </p>
                                     <div className="flex gap-4">
                                         <input
@@ -312,8 +348,73 @@ export const AdminDashboard: React.FC = () => {
                         </div>
                     </div>
                 </>
-            ) : (
-                <ProductionManager />
+            )}
+
+            {activeTab === 'production' && <ProductionManager />}
+
+            {activeTab === 'architects' && (
+                <div className="space-y-6">
+                    <h3 className="text-xl font-bold text-white flex items-center gap-3">
+                        <Users className="text-gold" /> Arquitetos Parceiros
+                    </h3>
+
+                    <div className="glass p-8">
+                        <div className="overflow-x-auto">
+                            <table className="w-full">
+                                <thead>
+                                    <tr className="border-b border-white/10 text-left">
+                                        <th className="pb-4 text-[10px] uppercase tracking-widest text-zinc-500 font-bold">Arquiteto</th>
+                                        <th className="pb-4 text-[10px] uppercase tracking-widest text-zinc-500 font-bold text-right">Vendas Totais</th>
+                                        <th className="pb-4 text-[10px] uppercase tracking-widest text-zinc-500 font-bold text-right">Comissão Atual</th>
+                                        <th className="pb-4 text-[10px] uppercase tracking-widest text-zinc-500 font-bold text-center">Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-white/5">
+                                    {approvedArchitects.map((arch) => (
+                                        <tr key={arch.id} className="group hover:bg-white/5 transition-colors">
+                                            <td className="py-4">
+                                                <div className="flex flex-col">
+                                                    <span className="text-white font-bold text-sm">{arch.name}</span>
+                                                    <span className="text-zinc-500 text-xs">{arch.email}</span>
+                                                </div>
+                                            </td>
+                                            <td className="py-4 text-right">
+                                                <span className="text-white font-mono">
+                                                    {arch.total_earnings?.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+                                                </span>
+                                            </td>
+                                            <td className="py-4 text-right">
+                                                <span className="bg-gold/10 text-gold text-xs px-2 py-1 rounded border border-gold/20 font-bold">
+                                                    {arch.commission_rate}%
+                                                </span>
+                                            </td>
+                                            <td className="py-4 text-center">
+                                                <button
+                                                    onClick={() => openAddSaleModal(arch)}
+                                                    className="bg-zinc-800 text-gold hover:text-white hover:bg-gold hover:text-black border border-white/10 hover:border-gold px-4 py-2 rounded text-[10px] font-bold uppercase tracking-widest transition-all"
+                                                >
+                                                    + Adicionar Venda
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {selectedArchitect && (
+                <AddSaleModal
+                    isOpen={isAddSaleModalOpen}
+                    onClose={() => setIsAddSaleModalOpen(false)}
+                    architect={selectedArchitect}
+                    onSuccess={() => {
+                        fetchApprovedArchitects();
+                        fetchStats();
+                    }}
+                />
             )}
         </div>
     );

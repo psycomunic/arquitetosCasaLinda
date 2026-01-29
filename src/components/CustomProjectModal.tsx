@@ -60,17 +60,9 @@ export const CustomProjectModal: React.FC<CustomProjectModalProps> = ({ isOpen, 
 
                         <div className="space-y-4">
                             <a
-                                href="https://wa.me/5511999999999?text=Olá! Sou arquiteto(a) AAA e gostaria de iniciar um briefing para Criação Artística Exclusiva."
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="w-full bg-[#25D366] text-white py-5 rounded-xl font-bold uppercase tracking-widest hover:opacity-90 transition-all flex items-center justify-center gap-3 shadow-lg shadow-green-500/20"
-                            >
-                                <MessageSquare size={20} />
-                                Solicitar via WhatsApp
-                            </a>
 
-                            <button
-                                onClick={onClose}
+                                <button
+                            onClick={onClose}
                                 className="w-full bg-zinc-100 text-zinc-500 py-4 rounded-xl font-bold text-[10px] uppercase tracking-widest hover:bg-zinc-200 transition-colors"
                             >
                                 Voltar ao Painel
@@ -89,7 +81,7 @@ export const CustomProjectModal: React.FC<CustomProjectModalProps> = ({ isOpen, 
                     </div>
                 )}
             </div>
-        </div>,
+        </div >,
         document.body
     );
 };

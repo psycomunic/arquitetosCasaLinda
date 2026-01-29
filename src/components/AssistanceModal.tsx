@@ -49,7 +49,7 @@ export const AssistanceModal: React.FC<AssistanceModalProps> = ({ isOpen, onClos
 
                         <div className="space-y-4">
                             <a
-                                href="https://wa.me/5511999999999?text=Olá! Gostaria de iniciar uma Venda Assistida para um novo projeto."
+                                href="https://wa.me/55479996860431?text=Olá! Gostaria de solicitar uma Venda Assistida para um novo projeto."
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="w-full bg-[#25D366] text-white py-5 rounded-xl font-bold uppercase tracking-widest hover:opacity-90 transition-all flex items-center justify-center gap-3 shadow-lg shadow-green-500/20"
@@ -57,7 +57,7 @@ export const AssistanceModal: React.FC<AssistanceModalProps> = ({ isOpen, onClos
                                 <MessageSquare size={20} />
                                 Iniciar via WhatsApp agora
                             </a>
-                            
+
                             <button
                                 onClick={onClose}
                                 className="w-full bg-zinc-100 text-zinc-500 py-4 rounded-xl font-bold text-[10px] uppercase tracking-widest hover:bg-zinc-200 transition-colors"

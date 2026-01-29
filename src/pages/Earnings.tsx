@@ -6,6 +6,7 @@ import { Sale } from '../types/database';
 export const Earnings: React.FC = () => {
     const [sales, setSales] = useState<Sale[]>([]);
     const [loading, setLoading] = useState(true);
+    const [currentRate, setCurrentRate] = useState(15);
     const [stats, setStats] = useState({
         totalEarnings: 0,
         pendingEarnings: 0,
@@ -26,6 +27,17 @@ export const Earnings: React.FC = () => {
                 .select('*')
                 .eq('architect_id', user.id)
                 .order('created_at', { ascending: false });
+
+            // Fetch current rate
+            const { data: architectData } = await supabase
+                .from('architects')
+                .select('commission_rate')
+                .eq('id', user.id)
+                .single();
+
+            if (architectData) {
+                setCurrentRate(Number(architectData.commission_rate));
+            }
 
             if (error) throw error;
 
@@ -141,20 +153,23 @@ export const Earnings: React.FC = () => {
                                 { range: "De R$ 12.000 a R$ 19.999", percent: "17%" },
                                 { range: "De R$ 20.000 a R$ 29.999", percent: "18%" },
                                 { range: "De R$ 30.000 a R$ 39.999", percent: "19%" },
-                                { range: "A partir de R$ 40.000", percent: "20%", highlight: true }
-                            ].map((row, i) => (
-                                <div
-                                    key={i}
-                                    className={`flex justify-between items-center p-4 rounded border border-white/5 transition-all hover:bg-white/5 ${row.highlight ? 'bg-gold/10 border-gold/30' : 'bg-zinc-900/50'}`}
-                                >
-                                    <span className={`text-xs uppercase tracking-wider font-bold ${row.highlight ? 'text-white' : 'text-zinc-400'}`}>
-                                        {row.range}
-                                    </span>
-                                    <span className={`text-xl font-bold font-serif ${row.highlight ? 'text-gold' : 'text-zinc-200'}`}>
-                                        {row.percent}
-                                    </span>
-                                </div>
-                            ))}
+                                { range: "A partir de R$ 40.000", percent: "20%" }
+                            ].map((row, i) => {
+                                const isCurrent = row.percent.includes(String(currentRate));
+                                return (
+                                    <div
+                                        key={i}
+                                        className={`flex justify-between items-center p-4 rounded border border-white/5 transition-all hover:bg-white/5 ${isCurrent ? 'bg-gold/10 border-gold/30' : 'bg-zinc-900/50'}`}
+                                    >
+                                        <span className={`text-xs uppercase tracking-wider font-bold ${isCurrent ? 'text-white' : 'text-zinc-400'}`}>
+                                            {row.range}
+                                        </span>
+                                        <span className={`text-xl font-bold font-serif ${isCurrent ? 'text-gold' : 'text-zinc-200'}`}>
+                                            {row.percent}
+                                        </span>
+                                    </div>
+                                )
+                            })}
                         </div>
                     </div>
 
