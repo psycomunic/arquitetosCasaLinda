@@ -36,7 +36,7 @@ export const Earnings: React.FC = () => {
                 .single();
 
             if (architectData) {
-                setCurrentRate(Number(architectData.commission_rate));
+                setCurrentRate(Number((architectData as any).commission_rate));
             }
 
             if (error) throw error;
