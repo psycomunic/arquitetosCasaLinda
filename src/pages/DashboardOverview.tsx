@@ -64,7 +64,7 @@ export const DashboardOverview: React.FC = () => {
     }, []);
 
     const copyLink = () => {
-        const link = `https://casalinda.com.br/invite/${profile?.officeName?.replace(/\s+/g, '-').toLowerCase()}`;
+        const link = `https://www.casalindadecoracoes.com.br`;
         navigator.clipboard.writeText(link);
         setCopiedLink(true);
         setTimeout(() => setCopiedLink(false), 2000);
@@ -109,14 +109,14 @@ export const DashboardOverview: React.FC = () => {
                     <h3 className="text-2xl font-serif text-white mb-2">Indicação Direta</h3>
                     <p className="text-xs text-zinc-500 uppercase tracking-widest mb-6 font-bold">Ganhe na Escala</p>
                     <p className="text-zinc-400 text-sm mb-8 min-h-[60px]">
-                        Ideal para projetos simples e alto volume. O cliente compra sozinho pelo seu link.
+                        Ideal para projetos simples e alto volume. O cliente compra sozinho pelo seu cupom de desconto.
                     </p>
 
                     <div className="space-y-3">
                         <div className="p-4 bg-black/50 rounded-xl border border-white/5 flex items-center justify-between group-hover:border-gold/30 transition-colors">
                             <div className="flex flex-col">
-                                <span className="text-[8px] uppercase tracking-widest text-zinc-600 font-bold mb-1">Seu Link</span>
-                                <span className="text-[10px] text-zinc-400 font-mono">casalinda.com/{firstName.toLowerCase()}</span>
+                                <span className="text-[8px] uppercase tracking-widest text-zinc-600 font-bold mb-1">Link do Site</span>
+                                <span className="text-[10px] text-zinc-400 font-mono">www.casalindadecoracoes.com.br</span>
                             </div>
                             <button onClick={copyLink} className="text-gold hover:text-white transition-colors">
                                 {copiedLink ? <Check size={16} /> : <Copy size={16} />}
@@ -132,6 +132,16 @@ export const DashboardOverview: React.FC = () => {
                                 {copiedCoupon ? <Check size={16} /> : <Copy size={16} />}
                             </button>
                         </div>
+
+                        <a
+                            href={`https://wa.me/55479996860431?text=Olá! Sou o arquiteto ${profile?.name} e gostaria de ativar meu cupom de desconto: ${calculatedCoupon}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="w-full py-3 bg-zinc-900 border border-white/5 text-zinc-400 hover:text-gold text-[9px] uppercase tracking-[0.2em] font-bold hover:bg-white/5 transition-all flex items-center justify-center gap-2 rounded-lg"
+                        >
+                            <MessageSquare size={14} />
+                            Solicitar Ativação do Cupom
+                        </a>
                     </div>
                     <div className="mt-4 flex items-center gap-2">
                         <div className="h-1 flex-1 bg-zinc-800 rounded-full overflow-hidden">
