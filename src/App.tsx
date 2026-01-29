@@ -10,7 +10,6 @@ import { DashboardOverview } from './pages/DashboardOverview';
 import { ProposalGenerator } from './pages/ProposalGenerator';
 import { Earnings } from './pages/Earnings';
 import { Settings } from './pages/Settings';
-import { RoomSimulator } from './pages/RoomSimulator';
 import { PortalLayout } from './layouts/PortalLayout';
 import { CanvasPremium } from './pages/CanvasPremium';
 import { Sustentabilidade } from './pages/Sustentabilidade';
@@ -146,13 +145,6 @@ const App: React.FC = () => {
           <ProtectedRoute>
             <PortalLayout profile={profile}>
               <Earnings />
-            </PortalLayout>
-          </ProtectedRoute>
-        } />
-        <Route path="/simulator" element={
-          <ProtectedRoute>
-            <PortalLayout profile={profile}>
-              <RoomSimulator />
             </PortalLayout>
           </ProtectedRoute>
         } />
