@@ -59,10 +59,10 @@ export const CustomProjectModal: React.FC<CustomProjectModalProps> = ({ isOpen, 
                         </div>
 
                         <div className="space-y-4">
-                            <a
 
-                                <button
-                            onClick={onClose}
+
+                            <button
+                                onClick={onClose}
                                 className="w-full bg-zinc-100 text-zinc-500 py-4 rounded-xl font-bold text-[10px] uppercase tracking-widest hover:bg-zinc-200 transition-colors"
                             >
                                 Voltar ao Painel
