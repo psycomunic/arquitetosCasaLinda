@@ -30,8 +30,8 @@ export const Earnings: React.FC = () => {
 
             if (data) {
                 setSales(data);
-                const total = data.reduce((acc, curr) => acc + (curr.status === 'paid' ? Number(curr.commission_value) : 0), 0);
-                const pending = data.reduce((acc, curr) => acc + (curr.status === 'pending' ? Number(curr.commission_value) : 0), 0);
+                const total = data.reduce((acc: number, curr: Sale) => acc + (curr.status === 'paid' ? Number(curr.commission_value) : 0), 0);
+                const pending = data.reduce((acc: number, curr: Sale) => acc + (curr.status === 'pending' ? Number(curr.commission_value) : 0), 0);
                 // Assuming paid commissions are available for withdrawal unless marked otherwise
                 setStats({
                     totalEarnings: total,
