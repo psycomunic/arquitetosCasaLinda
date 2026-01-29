@@ -39,6 +39,10 @@ export const AdminDashboard: React.FC = () => {
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
 
+    const [approvalModalOpen, setApprovalModalOpen] = useState(false);
+    const [architectToApprove, setArchitectToApprove] = useState<Architect | null>(null);
+    const [couponCode, setCouponCode] = useState('');
+
     useEffect(() => {
         const tab = searchParams.get('tab');
         if (tab === 'production') {
@@ -94,6 +98,7 @@ export const AdminDashboard: React.FC = () => {
 
         if (data) {
             setStoreDiscount(data.value);
+            // Don't auto-set coupon code here as it depends on the architect
         }
     };
 
@@ -144,25 +149,68 @@ export const AdminDashboard: React.FC = () => {
         }
     };
 
-    const handleAction = async (id: string, action: 'approved' | 'rejected') => {
+    const handleReject = async (id: string) => {
+        if (!confirm('Tem certeza que deseja rejeitar este arquiteto?')) return;
+
         setActionLoading(id);
         try {
-            const { error } = await supabase
-                .from('architects')
+            const { error } = await (supabase
+                .from('architects') as any)
                 .update({
-                    approval_status: action,
-                    approved_at: action === 'approved' ? new Date().toISOString() : null,
-                } as any)
+                    approval_status: 'rejected',
+                    approved_at: null,
+                })
                 .eq('id', id);
 
             if (error) throw error;
 
-            // Refresh lists
             fetchPendingArchitects();
             fetchApprovedArchitects();
         } catch (error) {
-            console.error(`Error ${action} architect:`, error);
+            console.error(`Error rejecting architect:`, error);
             alert(`Erro ao processar ação. Tente novamente.`);
+        } finally {
+            setActionLoading(null);
+        }
+    };
+
+    const initiateApproval = (architect: Architect) => {
+        setArchitectToApprove(architect);
+        // Generate default coupon: firstName + storeDiscount
+        const firstName = architect.name.split(' ')[0].toLowerCase().trim();
+        const discount = storeDiscount || '15'; // Default to 15 if not set
+        setCouponCode(`${firstName}${discount}`);
+        setApprovalModalOpen(true);
+    };
+
+    const handleConfirmApproval = async () => {
+        if (!architectToApprove) return;
+
+        setActionLoading(architectToApprove.id);
+        try {
+            // Update architect with approval status AND coupon code
+            const { error } = await (supabase
+                .from('architects') as any)
+                .update({
+                    approval_status: 'approved',
+                    approved_at: new Date().toISOString(),
+                    coupon_code: couponCode,
+                    commission_rate: 15
+                })
+                .eq('id', architectToApprove.id);
+
+            if (error) throw error;
+
+            setApprovalModalOpen(false);
+            setArchitectToApprove(null);
+            setCouponCode('');
+
+            fetchPendingArchitects();
+            fetchApprovedArchitects();
+            alert('Arquiteto aprovado com sucesso! Cupom gerado.');
+        } catch (error) {
+            console.error(`Error approving architect:`, error);
+            alert(`Erro ao aprovar arquiteto. Tente novamente.`);
         } finally {
             setActionLoading(null);
         }
@@ -332,7 +380,7 @@ export const AdminDashboard: React.FC = () => {
 
                                                 <div className="flex items-center gap-4 w-full">
                                                     <button
-                                                        onClick={() => handleAction(arch.id, 'rejected')}
+                                                        onClick={() => handleReject(arch.id)}
                                                         disabled={!!actionLoading}
                                                         className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-red-500/10 text-red-400 hover:bg-red-500/20 border border-red-500/20 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-all disabled:opacity-50"
                                                     >
@@ -340,7 +388,7 @@ export const AdminDashboard: React.FC = () => {
                                                         Rejeitar
                                                     </button>
                                                     <button
-                                                        onClick={() => handleAction(arch.id, 'approved')}
+                                                        onClick={() => initiateApproval(arch)}
                                                         disabled={!!actionLoading}
                                                         className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-green-500/10 text-green-400 hover:bg-green-500/20 border border-green-500/20 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-all disabled:opacity-50"
                                                     >
@@ -423,6 +471,46 @@ export const AdminDashboard: React.FC = () => {
                         fetchStats();
                     }}
                 />
+            )}
+
+            {/* Approval Modal */}
+            {approvalModalOpen && architectToApprove && (
+                <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+                    <div className="bg-zinc-900 w-full max-w-md rounded-2xl p-8 border border-white/10 shadow-2xl space-y-6">
+                        <div className="flex items-center justify-between">
+                            <h3 className="text-xl font-serif text-white">Aprovar Arquiteto</h3>
+                            <button onClick={() => setApprovalModalOpen(false)} className="text-zinc-500 hover:text-white">
+                                <XCircle size={20} />
+                            </button>
+                        </div>
+
+                        <div>
+                            <p className="text-sm text-zinc-400 mb-1">Arquiteto</p>
+                            <p className="text-white font-bold">{architectToApprove.name}</p>
+                        </div>
+
+                        <div className="space-y-2">
+                            <label className="text-[10px] uppercase tracking-widest font-bold text-zinc-500">Cupom de Desconto</label>
+                            <input
+                                type="text"
+                                value={couponCode}
+                                onChange={(e) => setCouponCode(e.target.value)}
+                                className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white font-mono focus:border-gold outline-none"
+                                placeholder="Ex: nome15"
+                            />
+                            <p className="text-[10px] text-zinc-600">Este cupom será vinculado ao perfil do arquiteto.</p>
+                        </div>
+
+                        <button
+                            onClick={handleConfirmApproval}
+                            disabled={!couponCode || !!actionLoading}
+                            className="w-full py-4 bg-gold text-black font-bold uppercase tracking-widest rounded-lg hover:bg-white transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+                        >
+                            {actionLoading ? <Loader2 className="animate-spin" size={16} /> : <CheckCircle2 size={16} />}
+                            Confirmar Aprovação
+                        </button>
+                    </div>
+                </div>
             )}
         </div>
     );

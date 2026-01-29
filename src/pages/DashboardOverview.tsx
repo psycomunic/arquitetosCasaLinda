@@ -83,7 +83,7 @@ export const DashboardOverview: React.FC = () => {
     }
 
     const firstName = profile?.name?.split(' ')[0]?.toLowerCase() || 'parceiro';
-    const calculatedCoupon = `${firstName}${storeDiscount}`;
+    const calculatedCoupon = profile?.couponCode || `${firstName}${storeDiscount}`;
 
     return (
         <div className="space-y-10 animate-fade-in no-print pb-20">
@@ -124,7 +124,10 @@ export const DashboardOverview: React.FC = () => {
 
                         <div className="p-4 bg-black/50 rounded-xl border border-white/5 flex items-center justify-between group-hover:border-gold/30 transition-colors">
                             <div className="flex flex-col">
-                                <span className="text-[8px] uppercase tracking-widest text-zinc-600 font-bold mb-1">Seu Cupom ({storeDiscount}% OFF)</span>
+                                <span className="text-[8px] uppercase tracking-widest text-zinc-600 font-bold mb-1 flex items-center gap-2">
+                                    Seu Cupom ({storeDiscount}% OFF)
+                                    {profile?.couponCode && <span className="bg-green-500/20 text-green-500 px-1 py-0.5 rounded text-[8px]">ATIVO</span>}
+                                </span>
                                 <span className="text-[10px] text-zinc-400 font-mono">{calculatedCoupon}</span>
                             </div>
                             <button onClick={copyCoupon} className="text-gold hover:text-white transition-colors">
