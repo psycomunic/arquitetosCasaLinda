@@ -35,6 +35,7 @@ export const PortalLayout: React.FC<PortalLayoutProps> = ({ children, profile })
         ] : []),
         { id: 'proposals', icon: <FilePlus size={16} />, label: 'Nova Proposta', path: '/proposals' },
         { id: 'sales', icon: <History size={16} />, label: 'Comissões', path: '/earnings' },
+        { id: 'simulator', icon: <ImageIcon size={16} />, label: 'Simulador', path: '/simulator' },
         { id: 'settings', icon: <Settings size={16} />, label: 'Perfil', path: '/settings' }
     ];
 
