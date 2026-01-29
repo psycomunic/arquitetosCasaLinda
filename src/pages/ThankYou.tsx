@@ -13,6 +13,7 @@ export const ThankYou: React.FC = () => {
         trackEvent('CompleteRegistration');
         // Facebook Pixel Lead Event
         if ((window as any).fbq) {
+            console.log('[Pixel] Tracking Event: Lead');
             (window as any).fbq('track', 'Lead');
         }
         checkStatus();
@@ -48,6 +49,7 @@ export const ThankYou: React.FC = () => {
                     filter: `id=eq.${user.id}`
                 },
                 (payload) => {
+                    // @ts-ignore
                     const newStatus = (payload.new as any).approval_status;
                     if (newStatus === 'approved') {
                         setStatus('approved');

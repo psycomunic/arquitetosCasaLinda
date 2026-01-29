@@ -12,6 +12,7 @@ declare global {
 export const trackEvent = (eventName: string, params?: any) => {
     if (typeof window !== 'undefined') {
         if (window.fbq) {
+            console.log('[Pixel] Tracking Event:', eventName, params);
             window.fbq('track', eventName, params);
         }
         if (window.gtag) {
@@ -27,7 +28,10 @@ export const Analytics: React.FC = () => {
     useEffect(() => {
         // Track PageView on route change
         if (typeof window !== 'undefined') {
-            if (window.fbq) window.fbq('track', 'PageView');
+            if (window.fbq) {
+                console.log('[Pixel] Tracking PageView:', location.pathname);
+                window.fbq('track', 'PageView');
+            }
             // GA4 automatic page_view usually handles this, but custom logic can go here
         }
     }, [location]);
