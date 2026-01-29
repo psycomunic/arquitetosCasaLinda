@@ -11,6 +11,10 @@ export const ThankYou: React.FC = () => {
 
     useEffect(() => {
         trackEvent('CompleteRegistration');
+        // Facebook Pixel Lead Event
+        if ((window as any).fbq) {
+            (window as any).fbq('track', 'Lead');
+        }
         checkStatus();
     }, []);
 
