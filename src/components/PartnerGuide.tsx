@@ -10,7 +10,7 @@ export const PartnerGuide: React.FC = () => {
         const element = contentRef.current;
         const opt = {
             margin: 0,
-            filename: 'Programa_Arquitetos_Casa_Linda.pdf',
+            filename: 'Programa_Comissoes_Casa_Linda.pdf',
             image: { type: 'jpeg' as const, quality: 0.98 },
             html2canvas: { scale: 2, useCORS: true },
             jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' as const }
@@ -29,7 +29,7 @@ export const PartnerGuide: React.FC = () => {
                     <BookOpen size={20} />
                 </div>
                 <div className="flex-1">
-                    <h4 className="text-white text-sm font-bold uppercase tracking-wide">Programa de Arquitetos</h4>
+                    <h4 className="text-white text-sm font-bold uppercase tracking-wide">Programa de Comissões</h4>
                     <p className="text-zinc-500 text-xs mt-1">Baixar PDF Oficial</p>
                 </div>
                 <Download size={18} className="text-zinc-500 group-hover:text-gold transition-colors" />
@@ -44,7 +44,7 @@ export const PartnerGuide: React.FC = () => {
                         <div className="flex justify-between items-end border-b-2 border-[#C5A059] pb-4 mb-6">
                             <img src="/logo.png" alt="Casa Linda" className="h-10 object-contain filter brightness-0" />
                             <div className="text-right">
-                                <h1 className="text-xl font-serif text-[#1a1a1a] uppercase tracking-widest leading-none">Programa de<br />Arquitetos</h1>
+                                <h1 className="text-xl font-serif text-[#1a1a1a] uppercase tracking-widest leading-none">Programa de<br />Comissões</h1>
                                 <p className="text-[10px] text-[#666] uppercase tracking-[0.2em] mt-1">Casa Linda Decorações</p>
                             </div>
                         </div>
