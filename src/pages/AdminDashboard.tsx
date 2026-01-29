@@ -71,10 +71,10 @@ export const AdminDashboard: React.FC = () => {
 
     const fetchStats = async () => {
         // Fetch proposals stats
-        const { data: proposals } = await supabase.from('proposals').select('total_value');
+        const { data: proposals } = await supabase.from('proposals').select('total_value') as any;
         const { count: architectsCount } = await supabase.from('architects').select('*', { count: 'exact', head: true });
 
-        const totalValue = proposals?.reduce((acc, p) => acc + Number(p.total_value), 0) || 0;
+        const totalValue = proposals?.reduce((acc: any, p: any) => acc + Number(p.total_value), 0) || 0;
         const totalCount = proposals?.length || 0;
 
         setStats({
@@ -90,7 +90,7 @@ export const AdminDashboard: React.FC = () => {
             .from('app_settings')
             .select('value')
             .eq('key', 'store_discount_percentage')
-            .single();
+            .single() as any;
 
         if (data) {
             setStoreDiscount(data.value);
@@ -102,7 +102,7 @@ export const AdminDashboard: React.FC = () => {
         try {
             const { error } = await supabase
                 .from('app_settings')
-                .upsert({ key: 'store_discount_percentage', value: storeDiscount }, { onConflict: 'key' });
+                .upsert({ key: 'store_discount_percentage', value: storeDiscount } as any, { onConflict: 'key' });
 
             if (error) throw error;
             alert('Configuração de desconto atualizada!');
@@ -123,7 +123,7 @@ export const AdminDashboard: React.FC = () => {
                 .order('created_at', { ascending: false });
 
             if (error) throw error;
-            setPendingArchitects(data || []);
+            setPendingArchitects((data as any) || []);
         } catch (error) {
             console.error('Error fetching architects:', error);
         }
@@ -138,7 +138,7 @@ export const AdminDashboard: React.FC = () => {
                 .order('name', { ascending: true });
 
             if (error) throw error;
-            setApprovedArchitects(data || []);
+            setApprovedArchitects((data as any) || []);
         } catch (error) {
             console.error('Error fetching approved architects:', error);
         }
