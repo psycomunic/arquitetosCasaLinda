@@ -31,8 +31,7 @@ export const PortalLayout: React.FC<PortalLayoutProps> = ({ children, profile })
         { id: 'dashboard', icon: <LayoutDashboard size={16} />, label: 'Overview', path: '/dashboard' },
         ...(profile.isAdmin ? [
             { id: 'admin', icon: <Shield size={16} />, label: 'Painel Admin', path: '/adm' },
-            { id: 'production', icon: <Package size={16} />, label: 'Produção & Envios', path: '/adm?tab=production' },
-            { id: 'proposals', icon: <FilePlus size={16} />, label: 'Nova Proposta', path: '/proposals' }
+            { id: 'production', icon: <Package size={16} />, label: 'Produção & Envios', path: '/adm?tab=production' }
         ] : []),
         { id: 'sales', icon: <History size={16} />, label: 'Comissões', path: '/earnings' },
         { id: 'settings', icon: <Settings size={16} />, label: 'Perfil', path: '/settings' }

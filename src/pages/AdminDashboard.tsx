@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { Architect } from '../types/database';
 import {
@@ -37,6 +37,7 @@ export const AdminDashboard: React.FC = () => {
     const [savingDiscount, setSavingDiscount] = useState(false);
     const [activeTab, setActiveTab] = useState<'overview' | 'production' | 'architects'>('overview');
     const [searchParams] = useSearchParams();
+    const navigate = useNavigate();
 
     useEffect(() => {
         const tab = searchParams.get('tab');
@@ -208,6 +209,13 @@ export const AdminDashboard: React.FC = () => {
                         className={`px-6 py-3 text-[10px] uppercase font-bold tracking-widest rounded-lg transition-all flex items-center gap-3 ${activeTab === 'architects' ? 'bg-white text-black' : 'text-zinc-500 hover:text-white'}`}
                     >
                         <Users size={14} /> Arquitetos
+                    </button>
+                    <div className="w-[1px] h-6 bg-white/10 mx-2 self-center"></div>
+                    <button
+                        onClick={() => navigate('/proposals')}
+                        className="px-6 py-3 text-[10px] uppercase font-bold tracking-widest rounded-lg transition-all flex items-center gap-3 text-gold hover:bg-gold hover:text-black hover:shadow-[0_0_20px_rgba(197,160,89,0.3)]"
+                    >
+                        <FileText size={14} /> Nova Proposta
                     </button>
                 </div>
             </header>
