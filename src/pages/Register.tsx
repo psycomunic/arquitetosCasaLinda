@@ -80,7 +80,7 @@ export const Register: React.FC = () => {
     };
 
     return (
-        <PublicLayout bgClass="bg-black" lightMode={false}>
+        <PublicLayout bgClass="!bg-black" lightMode={false}>
             <div className="min-h-screen flex items-center justify-center px-4 md:px-6 py-20 relative">
                 <div className="w-full max-w-2xl animate-fade-in relative z-10">
 
