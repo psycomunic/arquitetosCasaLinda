@@ -1,0 +1,67 @@
+{
+    "tech_stack": [
+        "TypeScript",
+        "React",
+        "Vite",
+        "Supabase",
+        "Tailwind CSS"
+    ],
+    "features": [
+        {
+            "name": "Authentication",
+            "description": "User authentication flows including login, registration, password recovery and updates.",
+            "files": [
+                "src/pages/Login.tsx",
+                "src/pages/Register.tsx",
+                "src/pages/ForgotPassword.tsx",
+                "src/pages/UpdatePassword.tsx",
+                "src/components/ProtectedRoute.tsx"
+            ]
+        },
+        {
+            "name": "Dashboard",
+            "description": "User dashboard showing sales overview, earnings, and ranking.",
+            "files": [
+                "src/pages/DashboardOverview.tsx",
+                "src/pages/Earnings.tsx",
+                "src/components/Dashboard.tsx",
+                "src/components/Ranking.tsx"
+            ]
+        },
+        {
+            "name": "Proposal Generator",
+            "description": "Core feature for creating custom proposals with art selection, frame configuration, and dynamic pricing.",
+            "files": [
+                "src/pages/ProposalGenerator.tsx",
+                "src/components/ProposalPrintView.tsx",
+                "src/constants.tsx"
+            ]
+        },
+        {
+            "name": "Admin Dashboard",
+            "description": "Administrative interface for managing orders and production.",
+            "files": [
+                "src/pages/AdminDashboard.tsx",
+                "src/components/ProductionManager.tsx"
+            ]
+        },
+        {
+            "name": "Layouts & Navigation",
+            "description": "Main application layouts and routing structure.",
+            "files": [
+                "src/layouts/PortalLayout.tsx",
+                "src/App.tsx"
+            ]
+        },
+        {
+            "name": "Sales Support",
+            "description": "Educational materials and support tools for partners.",
+            "files": [
+                "src/components/ArchitectHandbook.tsx",
+                "src/components/ArchitectSalesManual.tsx",
+                "src/components/SalesMechanics.tsx",
+                "src/components/PartnerGuide.tsx"
+            ]
+        }
+    ]
+}
