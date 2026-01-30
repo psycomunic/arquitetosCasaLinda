@@ -50,103 +50,114 @@ export const Register: React.FC = () => {
     };
 
     return (
-        <PublicLayout>
-            <div className="min-h-screen flex items-center justify-center px-6 py-32 relative">
-                <div className="w-full max-w-4xl animate-fade-in">
-                    <div className="text-center mb-16 space-y-6">
-                        <p className="text-[10px] text-zinc-500 uppercase tracking-[0.5em] font-bold">Solicitação de Parceria Private</p>
+        <PublicLayout bgClass="bg-white" lightMode={true}>
+            <div className="min-h-screen flex items-center justify-center px-4 md:px-6 py-32 relative">
+                <div className="w-full max-w-5xl animate-fade-in relative z-10">
+                    <div className="text-center mb-10 md:mb-16 space-y-4 md:space-y-6">
+                        <p className="text-[10px] text-zinc-400 font-bold tracking-[0.3em] uppercase">Casa Linda Decorações</p>
+                        <h1 className="text-3xl md:text-5xl font-serif text-black leading-tight">
+                            Portal do Arquiteto
+                        </h1>
                     </div>
 
-                    <div className="glass p-6 md:p-16 space-y-10 md:space-y-16">
-                        <div className="grid md:grid-cols-2 gap-10 md:gap-16">
+                    <div className="bg-black rounded-3xl p-6 md:p-16 space-y-10 md:space-y-16 shadow-2xl overflow-hidden relative">
+                        {/* Abstract Gold Glow */}
+                        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gold/5 blur-[120px] rounded-full pointer-events-none translate-x-1/2 -translate-y-1/2"></div>
+
+                        <div className="grid md:grid-cols-2 gap-10 md:gap-20 relative z-10">
                             <div className="space-y-10">
-                                <div className="space-y-4">
-                                    <h2 className="text-3xl md:text-4xl font-serif text-white leading-tight">Junte-se ao <br /> Círculo de Elite.</h2>
-                                    <p className="text-zinc-400 md:text-zinc-500 text-sm font-light uppercase tracking-widest leading-relaxed">
-                                        Benefícios exclusivos para arquitetos credenciados.
+                                <div className="space-y-6">
+                                    <h2 className="text-3xl md:text-5xl font-serif text-white leading-tight">
+                                        Solicitação de <br /> <span className="text-gold">Acesso Private.</span>
+                                    </h2>
+                                    <p className="text-zinc-400 text-sm md:text-base font-light leading-relaxed max-w-sm">
+                                        Ambiente exclusivo para profissionais credenciados. Desbloqueie ferramentas e benefícios únicos.
                                     </p>
                                 </div>
 
-                                <div className="space-y-6">
+                                <div className="space-y-5">
                                     {[
-                                        "Até 20% de Comissão",
-                                        "Criação Artística Exclusiva",
-                                        "Venda Assistida",
-                                        "Links & Cupons Diretos"
+                                        "Comissão Progressiva (até 20%)",
+                                        "Atendimento VIP & Venda Assistida",
+                                        "Projetos Artísticos Exclusivos",
+                                        "Dashboard Financeiro Completo"
                                     ].map((item, i) => (
-                                        <div key={i} className="flex items-center gap-4">
-                                            <CheckCircle2 size={16} className="text-gold" />
-                                            <span className="text-xs md:text-[10px] text-zinc-200 md:text-zinc-300 uppercase tracking-widest font-medium">{item}</span>
+                                        <div key={i} className="flex items-center gap-4 group">
+                                            <div className="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center group-hover:border-gold/50 transition-colors">
+                                                <CheckCircle2 size={14} className="text-gold" />
+                                            </div>
+                                            <span className="text-xs md:text-sm text-zinc-300 group-hover:text-white transition-colors">{item}</span>
                                         </div>
                                     ))}
                                 </div>
 
-                                <div className="pt-10 border-t border-white/5 hidden md:block">
+                                <div className="pt-10 border-t border-white/10 hidden md:block">
                                     <div className="flex items-center gap-6">
-                                        <div className="w-12 h-12 glass flex items-center justify-center rounded-full text-gold">
-                                            <Award size={20} />
+                                        <div className="w-14 h-14 bg-white/5 border border-white/10 flex items-center justify-center rounded-full text-gold">
+                                            <Award size={24} />
                                         </div>
-                                        <p className="text-[9px] text-zinc-500 uppercase tracking-widest leading-loose">
-                                            Sujeito à aprovação de <br /> credenciais profissionais.
-                                        </p>
+                                        <div>
+                                            <p className="text-[10px] text-zinc-500 uppercase tracking-widest mb-1">Status</p>
+                                            <p className="text-xs text-zinc-300 font-medium">Sujeito à análise de credenciais</p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <form onSubmit={handleRegister} className="space-y-6 md:space-y-8">
+                            <form onSubmit={handleRegister} className="space-y-8">
                                 {error && (
                                     <div className="p-4 bg-red-500/10 border border-red-500/20 text-red-300 text-xs rounded-lg">
                                         {error}
                                     </div>
                                 )}
 
-                                <div className="space-y-5 md:space-y-6">
-                                    <div className="space-y-2 md:space-y-3">
-                                        <label className="block text-[10px] md:text-[9px] font-bold text-zinc-300 md:text-zinc-500 uppercase tracking-[0.2em] md:tracking-[0.4em]">Nome Completo</label>
+                                <div className="space-y-6">
+                                    <div className="space-y-2">
+                                        <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest pl-1">Nome Completo</label>
                                         <input
                                             type="text"
                                             required
                                             value={formData.name}
                                             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                            className="w-full px-5 py-4 text-base md:text-xs border border-white/20 md:border-white/5 focus:outline-none focus:border-gold transition-all bg-zinc-900/80 md:glass-dark text-white rounded-lg placeholder-zinc-600"
-                                            placeholder="Seu nome completo"
+                                            className="w-full px-6 py-4 text-sm md:text-base border border-white/10 focus:border-gold bg-zinc-900/50 text-white rounded-xl placeholder-zinc-700 transition-all outline-none"
+                                            placeholder="Ex: João Silva"
                                         />
                                     </div>
 
-                                    <div className="space-y-2 md:space-y-3">
-                                        <label className="block text-[10px] md:text-[9px] font-bold text-zinc-300 md:text-zinc-500 uppercase tracking-[0.2em] md:tracking-[0.4em]">
-                                            CAU / ABD <span className="text-[9px] md:text-[8px] text-zinc-400 md:text-zinc-600 ml-1 opacity-70 md:opacity-50">(Opcional)</span>
+                                    <div className="space-y-2">
+                                        <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest pl-1">
+                                            CAU / ABD <span className="text-zinc-700 ml-1 font-normal normal-case">(Opcional)</span>
                                         </label>
                                         <input
                                             type="text"
-                                            placeholder="Reg. Profissional"
+                                            placeholder="Ex: A12345-6"
                                             value={formData.cau}
                                             onChange={(e) => setFormData({ ...formData, cau: e.target.value })}
-                                            className="w-full px-5 py-4 text-base md:text-xs border border-white/20 md:border-white/5 focus:outline-none focus:border-gold transition-all bg-zinc-900/80 md:glass-dark text-white rounded-lg placeholder-zinc-600"
+                                            className="w-full px-6 py-4 text-sm md:text-base border border-white/10 focus:border-gold bg-zinc-900/50 text-white rounded-xl placeholder-zinc-700 transition-all outline-none"
                                         />
                                     </div>
 
-                                    <div className="space-y-2 md:space-y-3">
-                                        <label className="block text-[10px] md:text-[9px] font-bold text-zinc-300 md:text-zinc-500 uppercase tracking-[0.2em] md:tracking-[0.4em]">E-mail Corporativo</label>
+                                    <div className="space-y-2">
+                                        <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest pl-1">E-mail Corporativo</label>
                                         <input
                                             type="email"
                                             required
                                             value={formData.email}
                                             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                                            className="w-full px-5 py-4 text-base md:text-xs border border-white/20 md:border-white/5 focus:outline-none focus:border-gold transition-all bg-zinc-900/80 md:glass-dark text-white rounded-lg placeholder-zinc-600"
-                                            placeholder="seu@email.com"
+                                            className="w-full px-6 py-4 text-sm md:text-base border border-white/10 focus:border-gold bg-zinc-900/50 text-white rounded-xl placeholder-zinc-700 transition-all outline-none"
+                                            placeholder="Ex: contato@seuecretorio.com"
                                         />
                                     </div>
 
-                                    <div className="space-y-2 md:space-y-3">
-                                        <label className="block text-[10px] md:text-[9px] font-bold text-zinc-300 md:text-zinc-500 uppercase tracking-[0.2em] md:tracking-[0.4em]">Defina sua Senha</label>
+                                    <div className="space-y-2">
+                                        <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-widest pl-1">Senha de Acesso</label>
                                         <input
                                             type="password"
                                             required
                                             value={formData.password}
                                             onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                                            className="w-full px-5 py-4 text-base md:text-xs border border-white/20 md:border-white/5 focus:outline-none focus:border-gold transition-all bg-zinc-900/80 md:glass-dark text-white rounded-lg"
-                                            placeholder="******"
+                                            className="w-full px-6 py-4 text-sm md:text-base border border-white/10 focus:border-gold bg-zinc-900/50 text-white rounded-xl placeholder-zinc-700 transition-all outline-none"
+                                            placeholder="••••••••"
                                         />
                                     </div>
                                 </div>
@@ -154,24 +165,23 @@ export const Register: React.FC = () => {
                                 <button
                                     type="submit"
                                     disabled={isLoading}
-                                    className="w-full group relative overflow-hidden bg-white text-black py-5 md:py-6 text-[10px] md:text-[9px] uppercase tracking-[0.3em] md:tracking-[0.5em] font-bold transition-all hover:scale-[1.02] shadow-2xl disabled:opacity-70 disabled:cursor-not-allowed rounded-lg"
+                                    className="w-full group relative overflow-hidden bg-white text-black py-5 text-xs uppercase tracking-[0.3em] font-bold rounded-xl hover:shadow-[0_0_30px_rgba(255,255,255,0.3)] transition-all disabled:opacity-70"
                                 >
-                                    <span className="relative z-10 flex items-center justify-center gap-4">
-                                        {isLoading ? <Loader2 className="animate-spin" size={16} /> : <>Enviar Solicitação <ArrowRight size={16} /></>}
+                                    <span className="relative z-10 flex items-center justify-center gap-3">
+                                        {isLoading ? "Processando..." : <>Enviar Solicitação <ArrowRight size={14} /></>}
                                     </span>
-                                    <div className="absolute inset-0 bg-gold translate-y-full group-hover:translate-y-0 transition-transform duration-500"></div>
                                 </button>
                             </form>
                         </div>
                     </div>
 
                     <div className="mt-12 text-center">
-                        <p className="text-[10px] text-zinc-600 uppercase tracking-widest">Já possui acesso?</p>
+                        <p className="text-xs text-zinc-400 mb-4">Já possui credenciais de acesso?</p>
                         <button
                             onClick={() => navigate('/login')}
-                            className="mt-4 text-gold text-[10px] font-bold uppercase tracking-[0.4em] hover:text-white transition-colors"
+                            className="text-black text-xs font-bold uppercase tracking-[0.3em] hover:text-gold transition-colors pb-1 border-b border-black/20 hover:border-gold"
                         >
-                            Realizar Login Private
+                            Acessar Dashboard
                         </button>
                     </div>
                 </div>

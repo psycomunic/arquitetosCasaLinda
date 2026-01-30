@@ -5,9 +5,11 @@ import { FloatingWhatsApp } from '../components/FloatingWhatsApp';
 
 interface PublicLayoutProps {
     children: React.ReactNode;
+    bgClass?: string;
+    lightMode?: boolean;
 }
 
-export const PublicLayout: React.FC<PublicLayoutProps> = ({ children }) => {
+export const PublicLayout: React.FC<PublicLayoutProps> = ({ children, bgClass = "bg-canvas", lightMode = false }) => {
     const navigate = useNavigate();
     const [scrolled, setScrolled] = useState(false);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -38,8 +40,11 @@ export const PublicLayout: React.FC<PublicLayoutProps> = ({ children }) => {
         { label: 'Suporte', path: '/suporte-private' },
     ];
 
+    const textColorClass = lightMode && !scrolled ? "text-zinc-800" : "text-zinc-200";
+    const navLinkColorClass = lightMode && !scrolled ? "text-zinc-600 hover:text-black" : "text-zinc-500 hover:text-gold";
+
     return (
-        <div className="min-h-screen bg-canvas text-zinc-200 selection:bg-gold selection:text-black overflow-x-hidden">
+        <div className={`min-h-screen ${bgClass} ${textColorClass} selection:bg-gold selection:text-black overflow-x-hidden`}>
             <FloatingWhatsApp />
 
             {/* Glass Navigation */}
@@ -49,12 +54,12 @@ export const PublicLayout: React.FC<PublicLayoutProps> = ({ children }) => {
                     className="cursor-pointer relative z-[60]"
                     onClick={() => navigate('/')}
                 >
-                    <img src="/logo.png" alt="Casa Linda" className="h-8 md:h-12 object-contain" />
+                    <img src={lightMode && !scrolled ? "/logo.png" : "/logo.png"} alt="Casa Linda" className={`h-8 md:h-12 object-contain ${lightMode && !scrolled ? "brightness-0" : ""}`} />
                 </div>
 
-                <div className="hidden lg:flex gap-10 text-[9px] uppercase tracking-[0.3em] font-medium text-zinc-500">
+                <div className={`hidden lg:flex gap-10 text-[9px] uppercase tracking-[0.3em] font-medium ${navLinkColorClass}`}>
                     {navLinks.map((link) => (
-                        <button key={link.path} onClick={() => navigate(link.path)} className="hover:text-gold transition-colors uppercase">{link.label}</button>
+                        <button key={link.path} onClick={() => navigate(link.path)} className="transition-colors uppercase">{link.label}</button>
                     ))}
                 </div>
 
