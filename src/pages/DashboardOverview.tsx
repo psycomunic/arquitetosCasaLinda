@@ -98,39 +98,39 @@ export const DashboardOverview: React.FC = () => {
             {/* MECHANICS SELECTION - NEW SECTION */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {/* MECÂNICA 1: ESCALA */}
-                <div className="bg-zinc-900/30 border border-white/10 p-8 group hover:border-gold/50 transition-all duration-500 relative overflow-hidden rounded-xl">
-                    <div className="absolute top-0 right-0 p-4 bg-zinc-900 rounded-bl-2xl text-[9px] font-bold uppercase tracking-widest text-zinc-500 group-hover:text-gold transition-colors">
+                <div className="bg-zinc-900/30 border border-white/10 p-5 md:p-8 group hover:border-gold/50 transition-all duration-500 relative overflow-hidden rounded-xl">
+                    <div className="absolute top-0 right-0 p-3 md:p-4 bg-zinc-900 rounded-bl-2xl text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-zinc-500 group-hover:text-gold transition-colors">
                         Mecânica 01
                     </div>
                     <div className="mb-6 w-12 h-12 bg-zinc-900 rounded-full flex items-center justify-center text-zinc-500 group-hover:text-gold group-hover:scale-110 transition-all">
                         <Share2 size={20} />
                     </div>
-                    <h3 className="text-2xl font-serif text-white mb-2">Indicação Direta</h3>
-                    <p className="text-xs text-zinc-500 uppercase tracking-widest mb-6 font-bold">Ganhe na Escala</p>
-                    <p className="text-zinc-400 text-sm mb-8 min-h-[60px]">
+                    <h3 className="text-xl md:text-2xl font-serif text-white mb-2">Indicação Direta</h3>
+                    <p className="text-[10px] md:text-xs text-zinc-500 uppercase tracking-widest mb-6 font-bold">Ganhe na Escala</p>
+                    <p className="text-zinc-400 text-sm mb-8 min-h-[auto] md:min-h-[60px]">
                         Ideal para projetos simples e alto volume. O cliente compra sozinho pelo seu cupom de desconto.
                     </p>
 
                     <div className="space-y-3">
-                        <div className="p-4 bg-black/50 rounded-xl border border-white/5 flex items-center justify-between group-hover:border-gold/30 transition-colors">
-                            <div className="flex flex-col">
+                        <div className="p-3 md:p-4 bg-black/50 rounded-xl border border-white/5 flex items-center justify-between group-hover:border-gold/30 transition-colors">
+                            <div className="flex flex-col overflow-hidden mr-2">
                                 <span className="text-[8px] uppercase tracking-widest text-zinc-600 font-bold mb-1">Link do Site</span>
-                                <span className="text-[10px] text-zinc-400 font-mono">www.casalindadecoracoes.com.br</span>
+                                <span className="text-[9px] md:text-[10px] text-zinc-400 font-mono truncate">www.casalindadecoracoes.com.br</span>
                             </div>
-                            <button onClick={copyLink} className="text-gold hover:text-white transition-colors">
+                            <button onClick={copyLink} className="text-gold hover:text-white transition-colors shrink-0">
                                 {copiedLink ? <Check size={16} /> : <Copy size={16} />}
                             </button>
                         </div>
 
-                        <div className="p-4 bg-black/50 rounded-xl border border-white/5 flex items-center justify-between group-hover:border-gold/30 transition-colors">
-                            <div className="flex flex-col">
+                        <div className="p-3 md:p-4 bg-black/50 rounded-xl border border-white/5 flex items-center justify-between group-hover:border-gold/30 transition-colors">
+                            <div className="flex flex-col overflow-hidden mr-2">
                                 <span className="text-[8px] uppercase tracking-widest text-zinc-600 font-bold mb-1 flex items-center gap-2">
                                     Seu Cupom ({storeDiscount}% OFF)
                                     {profile?.couponCode && <span className="bg-green-500/20 text-green-500 px-1 py-0.5 rounded text-[8px]">ATIVO</span>}
                                 </span>
-                                <span className="text-[10px] text-zinc-400 font-mono">{calculatedCoupon}</span>
+                                <span className="text-[9px] md:text-[10px] text-zinc-400 font-mono truncate">{calculatedCoupon}</span>
                             </div>
-                            <button onClick={copyCoupon} className="text-gold hover:text-white transition-colors">
+                            <button onClick={copyCoupon} className="text-gold hover:text-white transition-colors shrink-0">
                                 {copiedCoupon ? <Check size={16} /> : <Copy size={16} />}
                             </button>
                         </div>
@@ -154,16 +154,16 @@ export const DashboardOverview: React.FC = () => {
                 </div>
 
                 {/* MECÂNICA 2: VALOR */}
-                <div className="bg-zinc-900/30 border border-white/10 p-8 group hover:border-gold/50 transition-all duration-500 relative overflow-hidden rounded-xl">
-                    <div className="absolute top-0 right-0 p-4 bg-zinc-900 rounded-bl-2xl text-[9px] font-bold uppercase tracking-widest text-zinc-500 group-hover:text-gold transition-colors">
+                <div className="bg-zinc-900/30 border border-white/10 p-5 md:p-8 group hover:border-gold/50 transition-all duration-500 relative overflow-hidden rounded-xl">
+                    <div className="absolute top-0 right-0 p-3 md:p-4 bg-zinc-900 rounded-bl-2xl text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-zinc-500 group-hover:text-gold transition-colors">
                         Mecânica 02
                     </div>
                     <div className="mb-6 w-12 h-12 bg-zinc-900 rounded-full flex items-center justify-center text-zinc-500 group-hover:text-gold group-hover:scale-110 transition-all">
                         <MessageSquare size={20} />
                     </div>
-                    <h3 className="text-2xl font-serif text-white mb-2">Venda Assistida</h3>
-                    <p className="text-xs text-zinc-500 uppercase tracking-widest mb-6 font-bold">Valor & Suporte</p>
-                    <p className="text-zinc-400 text-xs mb-8 min-h-[60px] leading-relaxed">
+                    <h3 className="text-xl md:text-2xl font-serif text-white mb-2">Venda Assistida</h3>
+                    <p className="text-[10px] md:text-xs text-zinc-500 uppercase tracking-widest mb-6 font-bold">Valor & Suporte</p>
+                    <p className="text-zinc-400 text-xs mb-8 min-h-[auto] md:min-h-[60px] leading-relaxed">
                         Envie seu projeto e nosso time sugere composições, ajusta medidas e simula no ambiente de forma real.
                     </p>
 
@@ -191,16 +191,16 @@ export const DashboardOverview: React.FC = () => {
                 </div>
 
                 {/* MECÂNICA 3: AAA */}
-                <div className="bg-zinc-900/30 border border-white/10 p-8 group hover:border-gold/50 transition-all duration-500 relative overflow-hidden rounded-xl">
-                    <div className="absolute top-0 right-0 p-4 bg-zinc-900 rounded-bl-2xl text-[9px] font-bold uppercase tracking-widest text-zinc-500 group-hover:text-gold transition-colors">
+                <div className="bg-zinc-900/30 border border-white/10 p-5 md:p-8 group hover:border-gold/50 transition-all duration-500 relative overflow-hidden rounded-xl">
+                    <div className="absolute top-0 right-0 p-3 md:p-4 bg-zinc-900 rounded-bl-2xl text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-zinc-500 group-hover:text-gold transition-colors">
                         Mecânica 03
                     </div>
                     <div className="mb-6 w-12 h-12 bg-zinc-900 rounded-full flex items-center justify-center text-zinc-500 group-hover:text-gold group-hover:scale-110 transition-all">
                         <Star size={20} />
                     </div>
-                    <h3 className="text-2xl font-serif text-white mb-2">Criação Artística Exclusiva</h3>
-                    <p className="text-xs text-zinc-500 uppercase tracking-widest mb-6 font-bold">Luxo & Atendimento AAA</p>
-                    <p className="text-zinc-400 text-xs mb-8 min-h-[60px] leading-relaxed">
+                    <h3 className="text-xl md:text-2xl font-serif text-white mb-2">Criação Artística Exclusiva</h3>
+                    <p className="text-[10px] md:text-xs text-zinc-500 uppercase tracking-widest mb-6 font-bold">Luxo & Atendimento AAA</p>
+                    <p className="text-zinc-400 text-xs mb-8 min-h-[auto] md:min-h-[60px] leading-relaxed">
                         Criação artística sob medida pelo nosso artista residente para obras autorais exclusivas.
                     </p>
 
