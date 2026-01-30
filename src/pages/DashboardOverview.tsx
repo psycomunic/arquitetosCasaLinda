@@ -92,7 +92,7 @@ export const DashboardOverview: React.FC = () => {
                     <div className="w-2 h-2 rounded-full bg-gold shadow-[0_0_15px_rgba(197,160,89,0.8)]" />
                     <p className="text-gold text-[10px] font-bold uppercase tracking-[0.5em]">Sistema Private Ativo</p>
                 </div>
-                <h2 className="text-7xl font-serif text-white">Bem-vindo(a), {firstName}</h2>
+                <h2 className="text-4xl md:text-7xl font-serif text-white">Bem-vindo(a), {firstName}</h2>
             </header>
 
             {/* MECHANICS SELECTION - NEW SECTION */}
@@ -235,7 +235,7 @@ export const DashboardOverview: React.FC = () => {
                         <DollarSign size={100} strokeWidth={1} />
                     </div>
                     <p className="text-[10px] uppercase tracking-[0.4em] font-bold text-zinc-500 mb-6">Total Faturado</p>
-                    <h3 className="text-4xl font-serif text-white">
+                    <h3 className="text-2xl md:text-4xl font-serif text-white">
                         R$ {profile?.totalEarnings?.toLocaleString('pt-BR', { minimumFractionDigits: 2 }) || '0,00'}
                     </h3>
                 </div>
@@ -255,7 +255,7 @@ export const DashboardOverview: React.FC = () => {
                         <Award size={100} strokeWidth={1} className="text-white" />
                     </div>
                     <p className="text-[10px] uppercase tracking-[0.4em] font-bold text-zinc-600 mb-6">Status do Escritório</p>
-                    <h3 className="text-4xl font-serif text-white uppercase tracking-wider">Standard</h3>
+                    <h3 className="text-2xl md:text-4xl font-serif text-white uppercase tracking-wider">Standard</h3>
                     <p className="mt-4 text-[10px] text-gold font-bold uppercase tracking-widest">
                         Em desenvolvimento
                     </p>

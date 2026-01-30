@@ -273,7 +273,7 @@ export const ProposalGenerator: React.FC = () => {
     return (
         <div className="animate-fade-in no-print space-y-12">
             <header className="mb-12">
-                <h2 className="text-7xl font-serif text-white">Configurador de Proposta</h2>
+                <h2 className="text-4xl md:text-7xl font-serif text-white">Configurador de Proposta</h2>
             </header>
 
             <div className="flex flex-col lg:flex-row gap-12">
@@ -281,7 +281,7 @@ export const ProposalGenerator: React.FC = () => {
                 <div className="w-full lg:w-2/3 space-y-10">
 
                     {/* 1. Format Selection */}
-                    <div className="glass p-10 space-y-8">
+                    <div className="glass p-6 md:p-10 space-y-8">
                         <div className="flex items-center gap-3 text-gold">
                             <Layout size={18} />
                             <h4 className="text-[10px] uppercase tracking-[0.4em] font-bold">Escolha o Formato</h4>
@@ -301,7 +301,7 @@ export const ProposalGenerator: React.FC = () => {
                     </div>
 
                     {/* 2. Size Selection */}
-                    <div className="glass p-10 space-y-8 animate-fade-in">
+                    <div className="glass p-6 md:p-10 space-y-8 animate-fade-in">
                         <div className="flex items-center gap-3 text-gold">
                             <Maximize size={18} />
                             <h4 className="text-[10px] uppercase tracking-[0.4em] font-bold">Escolha o Tamanho</h4>
@@ -322,7 +322,7 @@ export const ProposalGenerator: React.FC = () => {
 
 
                     {/* 3. Item Configuration (Frame/Finish) */}
-                    <div className="glass p-10 space-y-12">
+                    <div className="glass p-6 md:p-10 space-y-12">
                         <div className="space-y-8">
                             <div className="flex items-center gap-3 text-gold">
                                 <Box size={18} />
@@ -410,7 +410,7 @@ export const ProposalGenerator: React.FC = () => {
                     </div>
 
                     {/* Upload / Paste Area */}
-                    <div className="glass p-10 space-y-12">
+                    <div className="glass p-6 md:p-10 space-y-12">
                         <div className="flex flex-col md:flex-row justify-between items-center gap-8">
                             <div className="space-y-2">
                                 <h3 className="font-serif text-3xl text-white">Adicionar Imagem</h3>
@@ -459,7 +459,7 @@ export const ProposalGenerator: React.FC = () => {
                         ) : (
                             <div
                                 onClick={() => fileInputRef.current?.click()}
-                                className="border-2 border-dashed border-white/5 rounded-2xl p-20 text-center hover:border-gold/30 hover:bg-white/5 transition-all cursor-pointer group"
+                                className="border-2 border-dashed border-white/5 rounded-2xl p-10 md:p-20 text-center hover:border-gold/30 hover:bg-white/5 transition-all cursor-pointer group"
                             >
                                 <div className="w-20 h-20 bg-zinc-900 rounded-full flex items-center justify-center mx-auto mb-8 group-hover:scale-110 transition-transform">
                                     <Upload className="text-zinc-600 group-hover:text-gold" size={30} />
@@ -473,7 +473,7 @@ export const ProposalGenerator: React.FC = () => {
 
                 {/* Sidebar Generator */}
                 <div className="w-full lg:w-1/3">
-                    <div className="glass p-12 sticky top-28 space-y-10">
+                    <div className="glass p-6 md:p-12 sticky top-28 space-y-10">
                         <div className="space-y-4">
                             <h3 className="font-serif text-3xl text-white">Suas Escolhas</h3>
                             <div className="w-12 h-1 bg-gold"></div>
