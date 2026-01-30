@@ -171,7 +171,7 @@ export const DashboardOverview: React.FC = () => {
                         href={`https://wa.me/5547996860431?text=Olá! Sou o arquiteto ${profile?.name} e gostaria de solicitar uma Venda Assistida para um projeto meu.`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="w-full py-4 bg-zinc-900 text-white text-[10px] uppercase tracking-[0.2em] font-bold hover:bg-[#25D366] hover:text-white transition-all flex items-center justify-center gap-2 mb-3 rounded-lg"
+                        className="w-full py-4 bg-[#25D366] text-white text-[10px] uppercase tracking-[0.2em] font-bold hover:bg-[#20bd5a] transition-all flex items-center justify-center gap-2 mb-3 rounded-lg shadow-[0_0_20px_rgba(37,211,102,0.2)]"
                     >
                         Solicitar via WhatsApp
                     </a>
@@ -208,7 +208,7 @@ export const DashboardOverview: React.FC = () => {
                         href={`https://wa.me/5547996860431?text=Olá! Sou o arquiteto ${profile?.name} e gostaria de solicitar um Projeto Especial (AAA).`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="w-full py-4 bg-zinc-900 text-white text-[10px] uppercase tracking-[0.2em] font-bold hover:bg-[#25D366] hover:text-white transition-all flex items-center justify-center gap-2 mb-3 rounded-lg"
+                        className="w-full py-4 bg-[#25D366] text-white text-[10px] uppercase tracking-[0.2em] font-bold hover:bg-[#20bd5a] transition-all flex items-center justify-center gap-2 mb-3 rounded-lg shadow-[0_0_20px_rgba(37,211,102,0.2)]"
                     >
                         Solicitar via WhatsApp
                     </a>
