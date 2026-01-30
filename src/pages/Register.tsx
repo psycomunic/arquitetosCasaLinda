@@ -57,12 +57,12 @@ export const Register: React.FC = () => {
                         <p className="text-[10px] text-zinc-500 uppercase tracking-[0.5em] font-bold">Solicitação de Parceria Private</p>
                     </div>
 
-                    <div className="glass p-12 md:p-16 space-y-16">
-                        <div className="grid md:grid-cols-2 gap-16">
+                    <div className="glass p-6 md:p-16 space-y-10 md:space-y-16">
+                        <div className="grid md:grid-cols-2 gap-10 md:gap-16">
                             <div className="space-y-10">
                                 <div className="space-y-4">
-                                    <h2 className="text-4xl font-serif text-white leading-tight">Junte-se ao <br /> Círculo de Elite.</h2>
-                                    <p className="text-zinc-500 text-sm font-light uppercase tracking-widest leading-relaxed">
+                                    <h2 className="text-3xl md:text-4xl font-serif text-white leading-tight">Junte-se ao <br /> Círculo de Elite.</h2>
+                                    <p className="text-zinc-400 md:text-zinc-500 text-sm font-light uppercase tracking-widest leading-relaxed">
                                         Benefícios exclusivos para arquitetos credenciados.
                                     </p>
                                 </div>
@@ -76,12 +76,12 @@ export const Register: React.FC = () => {
                                     ].map((item, i) => (
                                         <div key={i} className="flex items-center gap-4">
                                             <CheckCircle2 size={16} className="text-gold" />
-                                            <span className="text-[10px] text-zinc-300 uppercase tracking-widest font-medium">{item}</span>
+                                            <span className="text-xs md:text-[10px] text-zinc-200 md:text-zinc-300 uppercase tracking-widest font-medium">{item}</span>
                                         </div>
                                     ))}
                                 </div>
 
-                                <div className="pt-10 border-t border-white/5">
+                                <div className="pt-10 border-t border-white/5 hidden md:block">
                                     <div className="flex items-center gap-6">
                                         <div className="w-12 h-12 glass flex items-center justify-center rounded-full text-gold">
                                             <Award size={20} />
@@ -93,57 +93,60 @@ export const Register: React.FC = () => {
                                 </div>
                             </div>
 
-                            <form onSubmit={handleRegister} className="space-y-8">
+                            <form onSubmit={handleRegister} className="space-y-6 md:space-y-8">
                                 {error && (
                                     <div className="p-4 bg-red-500/10 border border-red-500/20 text-red-300 text-xs rounded-lg">
                                         {error}
                                     </div>
                                 )}
 
-                                <div className="space-y-6">
-                                    <div className="space-y-3">
-                                        <label className="block text-[9px] font-bold text-zinc-500 uppercase tracking-[0.4em]">Nome Completo</label>
+                                <div className="space-y-5 md:space-y-6">
+                                    <div className="space-y-2 md:space-y-3">
+                                        <label className="block text-[10px] md:text-[9px] font-bold text-zinc-300 md:text-zinc-500 uppercase tracking-[0.2em] md:tracking-[0.4em]">Nome Completo</label>
                                         <input
                                             type="text"
                                             required
                                             value={formData.name}
                                             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                            className="w-full px-5 py-4 text-xs border border-white/5 focus:outline-none focus:border-gold transition-all glass-dark text-white rounded-lg"
+                                            className="w-full px-5 py-4 text-base md:text-xs border border-white/20 md:border-white/5 focus:outline-none focus:border-gold transition-all bg-zinc-900/80 md:glass-dark text-white rounded-lg placeholder-zinc-600"
+                                            placeholder="Seu nome completo"
                                         />
                                     </div>
 
-                                    <div className="space-y-3">
-                                        <label className="block text-[9px] font-bold text-zinc-500 uppercase tracking-[0.4em]">
-                                            CAU / ABD <span className="text-[8px] text-zinc-600 ml-1 opacity-50">(Opcional)</span>
+                                    <div className="space-y-2 md:space-y-3">
+                                        <label className="block text-[10px] md:text-[9px] font-bold text-zinc-300 md:text-zinc-500 uppercase tracking-[0.2em] md:tracking-[0.4em]">
+                                            CAU / ABD <span className="text-[9px] md:text-[8px] text-zinc-400 md:text-zinc-600 ml-1 opacity-70 md:opacity-50">(Opcional)</span>
                                         </label>
                                         <input
                                             type="text"
                                             placeholder="Reg. Profissional"
                                             value={formData.cau}
                                             onChange={(e) => setFormData({ ...formData, cau: e.target.value })}
-                                            className="w-full px-5 py-4 text-xs border border-white/5 focus:outline-none focus:border-gold transition-all glass-dark text-white rounded-lg"
+                                            className="w-full px-5 py-4 text-base md:text-xs border border-white/20 md:border-white/5 focus:outline-none focus:border-gold transition-all bg-zinc-900/80 md:glass-dark text-white rounded-lg placeholder-zinc-600"
                                         />
                                     </div>
 
-                                    <div className="space-y-3">
-                                        <label className="block text-[9px] font-bold text-zinc-500 uppercase tracking-[0.4em]">E-mail Corporativo</label>
+                                    <div className="space-y-2 md:space-y-3">
+                                        <label className="block text-[10px] md:text-[9px] font-bold text-zinc-300 md:text-zinc-500 uppercase tracking-[0.2em] md:tracking-[0.4em]">E-mail Corporativo</label>
                                         <input
                                             type="email"
                                             required
                                             value={formData.email}
                                             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                                            className="w-full px-5 py-4 text-xs border border-white/5 focus:outline-none focus:border-gold transition-all glass-dark text-white rounded-lg"
+                                            className="w-full px-5 py-4 text-base md:text-xs border border-white/20 md:border-white/5 focus:outline-none focus:border-gold transition-all bg-zinc-900/80 md:glass-dark text-white rounded-lg placeholder-zinc-600"
+                                            placeholder="seu@email.com"
                                         />
                                     </div>
 
-                                    <div className="space-y-3">
-                                        <label className="block text-[9px] font-bold text-zinc-500 uppercase tracking-[0.4em]">Defina sua Senha</label>
+                                    <div className="space-y-2 md:space-y-3">
+                                        <label className="block text-[10px] md:text-[9px] font-bold text-zinc-300 md:text-zinc-500 uppercase tracking-[0.2em] md:tracking-[0.4em]">Defina sua Senha</label>
                                         <input
                                             type="password"
                                             required
                                             value={formData.password}
                                             onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                                            className="w-full px-5 py-4 text-xs border border-white/5 focus:outline-none focus:border-gold transition-all glass-dark text-white rounded-lg"
+                                            className="w-full px-5 py-4 text-base md:text-xs border border-white/20 md:border-white/5 focus:outline-none focus:border-gold transition-all bg-zinc-900/80 md:glass-dark text-white rounded-lg"
+                                            placeholder="******"
                                         />
                                     </div>
                                 </div>
@@ -151,10 +154,10 @@ export const Register: React.FC = () => {
                                 <button
                                     type="submit"
                                     disabled={isLoading}
-                                    className="w-full group relative overflow-hidden bg-white text-black py-6 text-[9px] uppercase tracking-[0.5em] font-bold transition-all hover:scale-[1.02] shadow-2xl disabled:opacity-70 disabled:cursor-not-allowed"
+                                    className="w-full group relative overflow-hidden bg-white text-black py-5 md:py-6 text-[10px] md:text-[9px] uppercase tracking-[0.3em] md:tracking-[0.5em] font-bold transition-all hover:scale-[1.02] shadow-2xl disabled:opacity-70 disabled:cursor-not-allowed rounded-lg"
                                 >
                                     <span className="relative z-10 flex items-center justify-center gap-4">
-                                        {isLoading ? <Loader2 className="animate-spin" size={14} /> : <>Enviar Solicitação <ArrowRight size={14} /></>}
+                                        {isLoading ? <Loader2 className="animate-spin" size={16} /> : <>Enviar Solicitação <ArrowRight size={16} /></>}
                                     </span>
                                     <div className="absolute inset-0 bg-gold translate-y-full group-hover:translate-y-0 transition-transform duration-500"></div>
                                 </button>
