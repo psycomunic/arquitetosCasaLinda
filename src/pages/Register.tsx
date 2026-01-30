@@ -80,18 +80,18 @@ export const Register: React.FC = () => {
     };
 
     return (
-        <PublicLayout bgClass="bg-white" lightMode={true}>
+        <PublicLayout bgClass="bg-black" lightMode={false}>
             <div className="min-h-screen flex items-center justify-center px-4 md:px-6 py-20 relative">
                 <div className="w-full max-w-2xl animate-fade-in relative z-10">
 
                     <div className="text-center mb-8 space-y-3">
                         <p className="text-[10px] text-zinc-400 font-bold tracking-[0.3em] uppercase">Casa Linda Decorações</p>
-                        <h1 className="text-2xl md:text-4xl font-serif text-black leading-tight">
+                        <h1 className="text-2xl md:text-4xl font-serif text-white leading-tight">
                             Portal do Arquiteto
                         </h1>
                     </div>
 
-                    <div className="bg-black rounded-3xl p-8 md:p-16 shadow-2xl overflow-hidden relative min-h-[400px] flex flex-col justify-center">
+                    <div className="bg-transparent md:bg-black/50 md:backdrop-blur-sm md:border md:border-white/5 rounded-3xl p-0 md:p-16 relative min-h-[400px] flex flex-col justify-center">
                         {/* Abstract Gold Glow */}
                         <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-gold/5 blur-[100px] rounded-full pointer-events-none translate-x-1/2 -translate-y-1/2"></div>
 
