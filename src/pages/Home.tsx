@@ -82,7 +82,7 @@ export const Home: React.FC = () => {
             <div className="flex flex-col md:flex-row gap-4 md:gap-6 justify-center pt-4 md:pt-8">
               <button
                 onClick={() => navigate('/register')}
-                className="group relative overflow-hidden bg-gold-leaf text-black px-12 py-7 text-[10px] uppercase tracking-[0.5em] font-bold shadow-[0_20px_60px_rgba(197,160,89,0.2)] hover:shadow-[0_20px_80px_rgba(197,160,89,0.3)] transition-all hover:-translate-y-1 transform active:scale-95"
+                className="group relative overflow-hidden bg-gold text-black px-12 py-7 text-[10px] uppercase tracking-[0.5em] font-bold shadow-[0_0_40px_rgba(197,160,89,0.5)] hover:shadow-[0_0_80px_rgba(197,160,89,0.8)] transition-all hover:-translate-y-1 transform active:scale-95"
               >
                 <span className="relative z-10">SOLICITAR ACESSO DE PARCEIRO</span>
                 <div className="absolute inset-0 bg-white translate-y-full group-hover:translate-y-0 transition-transform duration-500"></div>
@@ -123,6 +123,22 @@ export const Home: React.FC = () => {
           </div>
         </section>
 
+        {/* New Mid-Page CTA */}
+        <section className="py-10 bg-gold/5 border-y border-gold/10">
+          <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-center gap-6 text-center md:text-left">
+             <div>
+                <h4 className="text-xl md:text-2xl font-serif text-white">Junte-se a mais de 750 arquitetos parceiros</h4>
+                <p className="text-[10px] text-zinc-400 uppercase tracking-widest mt-1">Faça parte da elite da arquitetura brasileira</p>
+             </div>
+             <button
+                onClick={() => navigate('/register')}
+                className="px-8 py-3 bg-gold text-black text-[10px] uppercase tracking-[0.2em] font-bold hover:bg-white transition-colors shadow-[0_0_20px_rgba(197,160,89,0.2)]"
+              >
+                Cadastre-se Agora
+              </button>
+          </div>
+        </section>
+
         {/* Seção Como Funciona (Três Caminhos de Venda) */}
         <section id="como-funciona" className="py-16 md:py-24 bg-black px-6 border-b border-white/5 relative overflow-hidden">
           {/* Ambient Background Glow */}
@@ -149,7 +165,7 @@ export const Home: React.FC = () => {
                 </p>
                 <button
                   onClick={() => navigate('/register')}
-                  className="w-full mb-8 py-3 border border-white/10 text-[8px] uppercase tracking-[0.3em] font-bold text-white hover:bg-white hover:text-black transition-all duration-300"
+                  className="w-full mb-8 py-3 bg-white/5 border border-gold/30 text-[8px] uppercase tracking-[0.3em] font-bold text-gold hover:bg-gold hover:text-black transition-all duration-300"
                 >
                   Gerar meu Link Exclusivo
                 </button>
@@ -662,6 +678,17 @@ export const Home: React.FC = () => {
         section { scroll-margin-top: 100px; }
       `}</style>
       </div >
+
+      {/* Sticky Mobile CTA */}
+      <div className="fixed bottom-0 left-0 right-0 p-4 bg-black/90 backdrop-blur-md border-t border-white/10 z-50 md:hidden animate-slide-up">
+        <button
+          onClick={() => navigate('/register')}
+          className="w-full py-4 bg-gold text-black text-xs uppercase tracking-[0.2em] font-bold shadow-[0_0_20px_rgba(197,160,89,0.3)] rounded-sm"
+        >
+          Solicitar Acesso de Parceiro
+        </button>
+      </div>
+
     </PublicLayout >
   );
 };

@@ -98,7 +98,7 @@ export const DashboardOverview: React.FC = () => {
             {/* MECHANICS SELECTION - NEW SECTION */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {/* MECÂNICA 1: ESCALA */}
-                <div className="bg-canvas border border-white/5 p-8 group hover:border-gold/50 transition-all duration-500 relative overflow-hidden">
+                <div className="bg-zinc-900/30 border border-white/10 p-8 group hover:border-gold/50 transition-all duration-500 relative overflow-hidden rounded-xl">
                     <div className="absolute top-0 right-0 p-4 bg-zinc-900 rounded-bl-2xl text-[9px] font-bold uppercase tracking-widest text-zinc-500 group-hover:text-gold transition-colors">
                         Mecânica 01
                     </div>
@@ -154,7 +154,7 @@ export const DashboardOverview: React.FC = () => {
                 </div>
 
                 {/* MECÂNICA 2: VALOR */}
-                <div className="bg-canvas border border-white/5 p-8 group hover:border-gold/50 transition-all duration-500 relative overflow-hidden">
+                <div className="bg-zinc-900/30 border border-white/10 p-8 group hover:border-gold/50 transition-all duration-500 relative overflow-hidden rounded-xl">
                     <div className="absolute top-0 right-0 p-4 bg-zinc-900 rounded-bl-2xl text-[9px] font-bold uppercase tracking-widest text-zinc-500 group-hover:text-gold transition-colors">
                         Mecânica 02
                     </div>
@@ -171,14 +171,14 @@ export const DashboardOverview: React.FC = () => {
                         href={`https://wa.me/5547996860431?text=Olá! Sou o arquiteto ${profile?.name} e gostaria de solicitar uma Venda Assistida para um projeto meu.`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="w-full py-4 bg-zinc-900 text-white text-[10px] uppercase tracking-[0.2em] font-bold hover:bg-[#25D366] hover:text-white transition-all flex items-center justify-center gap-2 mb-3"
+                        className="w-full py-4 bg-zinc-900 text-white text-[10px] uppercase tracking-[0.2em] font-bold hover:bg-[#25D366] hover:text-white transition-all flex items-center justify-center gap-2 mb-3 rounded-lg"
                     >
                         Solicitar via WhatsApp
                     </a>
 
                     <button
                         onClick={() => setAssistanceModalOpen(true)}
-                        className="w-full py-4 border border-white/5 text-zinc-500 text-[10px] uppercase tracking-[0.2em] font-bold hover:bg-white/5 transition-all"
+                        className="w-full py-4 border border-white/5 text-zinc-500 text-[10px] uppercase tracking-[0.2em] font-bold hover:bg-white/5 transition-all rounded-lg"
                     >
                         Ver Detalhes do Fluxo
                     </button>
@@ -191,7 +191,7 @@ export const DashboardOverview: React.FC = () => {
                 </div>
 
                 {/* MECÂNICA 3: AAA */}
-                <div className="bg-canvas border border-white/5 p-8 group hover:border-gold/50 transition-all duration-500 relative overflow-hidden">
+                <div className="bg-zinc-900/30 border border-white/10 p-8 group hover:border-gold/50 transition-all duration-500 relative overflow-hidden rounded-xl">
                     <div className="absolute top-0 right-0 p-4 bg-zinc-900 rounded-bl-2xl text-[9px] font-bold uppercase tracking-widest text-zinc-500 group-hover:text-gold transition-colors">
                         Mecânica 03
                     </div>
@@ -208,14 +208,14 @@ export const DashboardOverview: React.FC = () => {
                         href={`https://wa.me/5547996860431?text=Olá! Sou o arquiteto ${profile?.name} e gostaria de solicitar um Projeto Especial (AAA).`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="w-full py-4 bg-zinc-900 text-white text-[10px] uppercase tracking-[0.2em] font-bold hover:bg-[#25D366] hover:text-white transition-all flex items-center justify-center gap-2 mb-3"
+                        className="w-full py-4 bg-zinc-900 text-white text-[10px] uppercase tracking-[0.2em] font-bold hover:bg-[#25D366] hover:text-white transition-all flex items-center justify-center gap-2 mb-3 rounded-lg"
                     >
                         Solicitar via WhatsApp
                     </a>
 
                     <button
                         onClick={() => setCustomProjectModalOpen(true)}
-                        className="w-full py-4 border border-white/5 text-zinc-500 text-[10px] uppercase tracking-[0.2em] font-bold hover:bg-white/5 transition-all"
+                        className="w-full py-4 border border-white/5 text-zinc-500 text-[10px] uppercase tracking-[0.2em] font-bold hover:bg-white/5 transition-all rounded-lg"
                     >
                         Ver Detalhes do Fluxo
                     </button>
