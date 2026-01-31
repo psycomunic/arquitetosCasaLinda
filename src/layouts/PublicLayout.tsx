@@ -48,10 +48,10 @@ export const PublicLayout: React.FC<PublicLayoutProps> = ({ children, bgClass = 
             <FloatingWhatsApp />
 
             {/* Glass Navigation */}
-            <nav className={`fixed top-0 w-full z-50 px-6 md:px-12 py-5 flex justify-between items-center transition-all duration-700 ${scrolled ? 'glass-dark py-4' : 'bg-transparent'
+            <nav className={`fixed top-0 w-full z-[100] px-6 md:px-12 py-5 flex justify-between items-center transition-all duration-700 ${scrolled ? 'glass-dark py-4' : 'bg-transparent'
                 }`}>
                 <div
-                    className="cursor-pointer relative z-[60]"
+                    className="cursor-pointer relative z-[120]"
                     onClick={() => navigate('/')}
                 >
                     <img src={lightMode && !scrolled ? "/logo.png" : "/logo.png"} alt="Casa Linda" className={`h-8 md:h-12 object-contain ${lightMode && !scrolled ? "brightness-0" : ""}`} />
@@ -75,14 +75,14 @@ export const PublicLayout: React.FC<PublicLayoutProps> = ({ children, bgClass = 
                     {/* Mobile Menu Toggle */}
                     <button
                         onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                        className="lg:hidden relative z-[60] p-2 text-white"
+                        className="lg:hidden relative z-[120] p-2 text-white"
                     >
                         {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
                     </button>
                 </div>
 
                 {/* Mobile Menu Overlay */}
-                <div className={`fixed inset-0 bg-black z-[55] transition-all duration-500 lg:hidden overflow-y-auto h-screen ${mobileMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`}>
+                <div className={`fixed inset-0 bg-black z-[110] transition-all duration-500 lg:hidden overflow-y-auto h-screen ${mobileMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`}>
                     <div className="flex flex-col items-center justify-center h-full space-y-12 text-center p-6">
                         {navLinks.map((link) => (
                             <button
