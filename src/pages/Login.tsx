@@ -114,12 +114,12 @@ export const Login: React.FC = () => {
                         </form>
 
                         <div className="pt-8 border-t border-white/5 text-center space-y-6">
-                            <p className="text-[10px] text-zinc-600 uppercase tracking-widest">Ainda não é parceiro?</p>
+                            <p className="text-[10px] text-zinc-600 uppercase tracking-widest">Ainda não tem cadastro?</p>
                             <button
                                 onClick={() => navigate('/register')}
-                                className="text-gold text-[10px] font-bold uppercase tracking-[0.4em] hover:text-white transition-colors"
+                                className="w-full py-4 border border-gold/30 hover:border-gold text-gold hover:bg-gold hover:text-black transition-all duration-300 text-[10px] font-bold uppercase tracking-[0.3em]"
                             >
-                                Solicitar Credenciamento Private
+                                Solicitar Cadastro de Parceiro
                             </button>
                         </div>
                     </div>
