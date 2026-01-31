@@ -273,29 +273,29 @@ export const AdminDashboard: React.FC = () => {
                     </p>
                 </div>
 
-                <div className="flex gap-1 bg-white/5 p-1 rounded-xl">
+                <div className="flex gap-1 bg-white/5 p-1 rounded-xl overflow-x-auto scrollbar-hide w-full md:w-auto">
                     <button
                         onClick={() => setActiveTab('overview')}
-                        className={`px-6 py-3 text-[10px] uppercase font-bold tracking-widest rounded-lg transition-all flex items-center gap-3 ${activeTab === 'overview' ? 'bg-white text-black' : 'text-zinc-500 hover:text-white'}`}
+                        className={`px-6 py-3 text-[10px] uppercase font-bold tracking-widest rounded-lg transition-all flex items-center gap-3 whitespace-nowrap ${activeTab === 'overview' ? 'bg-white text-black' : 'text-zinc-500 hover:text-white'}`}
                     >
                         <LayoutGrid size={14} /> Overview
                     </button>
                     <button
                         onClick={() => setActiveTab('production')}
-                        className={`px-6 py-3 text-[10px] uppercase font-bold tracking-widest rounded-lg transition-all flex items-center gap-3 ${activeTab === 'production' ? 'bg-white text-black' : 'text-zinc-500 hover:text-white'}`}
+                        className={`px-6 py-3 text-[10px] uppercase font-bold tracking-widest rounded-lg transition-all flex items-center gap-3 whitespace-nowrap ${activeTab === 'production' ? 'bg-white text-black' : 'text-zinc-500 hover:text-white'}`}
                     >
                         <Package size={14} /> Produção & Expedição
                     </button>
                     <button
                         onClick={() => setActiveTab('architects')}
-                        className={`px-6 py-3 text-[10px] uppercase font-bold tracking-widest rounded-lg transition-all flex items-center gap-3 ${activeTab === 'architects' ? 'bg-white text-black' : 'text-zinc-500 hover:text-white'}`}
+                        className={`px-6 py-3 text-[10px] uppercase font-bold tracking-widest rounded-lg transition-all flex items-center gap-3 whitespace-nowrap ${activeTab === 'architects' ? 'bg-white text-black' : 'text-zinc-500 hover:text-white'}`}
                     >
                         <Users size={14} /> Arquitetos
                     </button>
-                    <div className="w-[1px] h-6 bg-white/10 mx-2 self-center"></div>
+                    <div className="w-[1px] h-6 bg-white/10 mx-2 self-center hidden md:block"></div>
                     <button
                         onClick={() => navigate('/proposals')}
-                        className="px-6 py-3 text-[10px] uppercase font-bold tracking-widest rounded-lg transition-all flex items-center gap-3 text-gold hover:bg-gold hover:text-black hover:shadow-[0_0_20px_rgba(197,160,89,0.3)]"
+                        className="px-6 py-3 text-[10px] uppercase font-bold tracking-widest rounded-lg transition-all flex items-center gap-3 text-gold hover:bg-gold hover:text-black hover:shadow-[0_0_20px_rgba(197,160,89,0.3)] whitespace-nowrap"
                     >
                         <FileText size={14} /> Nova Proposta
                     </button>
