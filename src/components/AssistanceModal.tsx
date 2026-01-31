@@ -49,7 +49,7 @@ export const AssistanceModal: React.FC<AssistanceModalProps> = ({ isOpen, onClos
 
                         <div className="space-y-4">
                             <a
-                                href="https://wa.me/5547996860431?text=Olá! Gostaria de solicitar uma Venda Assistida para um novo projeto."
+                                href="https://wa.me/5547997060582?text=Olá! Gostaria de solicitar uma Venda Assistida para um novo projeto."
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="w-full bg-[#25D366] text-white py-5 rounded-xl font-bold uppercase tracking-widest hover:opacity-90 transition-all flex items-center justify-center gap-3 shadow-lg shadow-green-500/20"

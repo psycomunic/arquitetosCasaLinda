@@ -136,7 +136,7 @@ export const DashboardOverview: React.FC = () => {
                         </div>
 
                         <a
-                            href={`https://wa.me/5547996860431?text=Olá! Sou o arquiteto ${profile?.name} e gostaria de ativar meu cupom de desconto: ${calculatedCoupon}`}
+                            href={`https://wa.me/5547997060582?text=Olá! Sou o arquiteto ${profile?.name} e gostaria de ativar meu cupom de desconto: ${calculatedCoupon}`}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="w-full py-3 bg-zinc-900 border border-white/5 text-zinc-400 hover:text-gold text-[9px] uppercase tracking-[0.2em] font-bold hover:bg-white/5 transition-all flex items-center justify-center gap-2 rounded-lg"
@@ -168,7 +168,7 @@ export const DashboardOverview: React.FC = () => {
                     </p>
 
                     <a
-                        href={`https://wa.me/5547996860431?text=Olá! Sou o arquiteto ${profile?.name} e gostaria de solicitar uma Venda Assistida para um projeto meu.`}
+                        href={`https://wa.me/5547997060582?text=Olá! Sou o arquiteto ${profile?.name} e gostaria de solicitar uma Venda Assistida para um projeto meu.`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="w-full py-4 bg-[#25D366] text-white text-[10px] uppercase tracking-[0.2em] font-bold hover:bg-[#20bd5a] transition-all flex items-center justify-center gap-2 mb-3 rounded-lg shadow-[0_0_20px_rgba(37,211,102,0.2)]"
@@ -205,7 +205,7 @@ export const DashboardOverview: React.FC = () => {
                     </p>
 
                     <a
-                        href={`https://wa.me/5547996860431?text=Olá! Sou o arquiteto ${profile?.name} e gostaria de solicitar um Projeto Especial (AAA).`}
+                        href={`https://wa.me/5547997060582?text=Olá! Sou o arquiteto ${profile?.name} e gostaria de solicitar um Projeto Especial (AAA).`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="w-full py-4 bg-[#25D366] text-white text-[10px] uppercase tracking-[0.2em] font-bold hover:bg-[#20bd5a] transition-all flex items-center justify-center gap-2 mb-3 rounded-lg shadow-[0_0_20px_rgba(37,211,102,0.2)]"
