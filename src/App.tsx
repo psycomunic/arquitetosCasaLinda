@@ -40,39 +40,40 @@ const App: React.FC = () => {
     officeName: '',
     logoUrl: '',
     profilePhotoUrl: '',
-    isAdmin: false
+    isAdmin: false,
+    phone: ''
   });
   const [authLoading, setAuthLoading] = React.useState(true);
 
-  useEffect(() => {
-    // Check active session and fetch profile
-    const fetchProfile = async () => {
-      try {
-        const { data: { user } } = await supabase.auth.getUser();
-        if (user) {
-          const { data } = await supabase
-            .from('architects')
-            .select('*')
-            .eq('id', user.id)
-            .single() as any;
+  const fetchProfile = React.useCallback(async () => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const { data } = await supabase
+          .from('architects')
+          .select('*')
+          .eq('id', user.id)
+          .single() as any;
 
-          if (data) {
-            setProfile({
-              name: data.name,
-              officeName: data.office_name,
-              logoUrl: data.logo_url || '',
-              profilePhotoUrl: data.profile_photo_url || '', // Fetch profile photo
-              isAdmin: data.is_admin || false
-            });
-          }
+        if (data) {
+          setProfile({
+            name: data.name,
+            officeName: data.office_name,
+            logoUrl: data.logo_url || '',
+            profilePhotoUrl: data.profile_photo_url || '', // Fetch profile photo
+            isAdmin: data.is_admin || false,
+            phone: data.phone || ''
+          });
         }
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setAuthLoading(false);
       }
-    };
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setAuthLoading(false);
+    }
+  }, []);
 
+  useEffect(() => {
     fetchProfile();
 
     // Listen to changes
@@ -81,7 +82,7 @@ const App: React.FC = () => {
     });
 
     return () => subscription.unsubscribe();
-  }, []);
+  }, [fetchProfile]);
 
   if (authLoading) {
     return (
@@ -117,7 +118,7 @@ const App: React.FC = () => {
         {/* Portal Routes */}
         <Route path="/dashboard" element={
           <ProtectedRoute>
-            <PortalLayout profile={profile}>
+            <PortalLayout profile={profile} onProfileUpdate={fetchProfile}>
               <DashboardOverview />
             </PortalLayout>
           </ProtectedRoute>
@@ -127,7 +128,7 @@ const App: React.FC = () => {
         {profile.isAdmin && (
           <Route path="/adm" element={
             <ProtectedRoute>
-              <PortalLayout profile={profile}>
+              <PortalLayout profile={profile} onProfileUpdate={fetchProfile}>
                 <AdminDashboard />
               </PortalLayout>
             </ProtectedRoute>
@@ -136,21 +137,21 @@ const App: React.FC = () => {
 
         <Route path="/proposals" element={
           <ProtectedRoute>
-            <PortalLayout profile={profile}>
+            <PortalLayout profile={profile} onProfileUpdate={fetchProfile}>
               <ProposalGenerator />
             </PortalLayout>
           </ProtectedRoute>
         } />
         <Route path="/earnings" element={
           <ProtectedRoute>
-            <PortalLayout profile={profile}>
+            <PortalLayout profile={profile} onProfileUpdate={fetchProfile}>
               <Earnings />
             </PortalLayout>
           </ProtectedRoute>
         } />
         <Route path="/settings" element={
           <ProtectedRoute>
-            <PortalLayout profile={profile}>
+            <PortalLayout profile={profile} onProfileUpdate={fetchProfile}>
               <Settings />
             </PortalLayout>
           </ProtectedRoute>

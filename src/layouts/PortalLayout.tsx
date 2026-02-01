@@ -14,6 +14,8 @@ import {
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
+import { CompleteProfileModal } from '../components/CompleteProfileModal';
+
 interface PortalLayoutProps {
     children: React.ReactNode;
     profile: {
@@ -22,10 +24,12 @@ interface PortalLayoutProps {
         logoUrl: string;
         profilePhotoUrl?: string;
         isAdmin?: boolean;
+        phone?: string;
     };
+    onProfileUpdate?: () => void;
 }
 
-export const PortalLayout: React.FC<PortalLayoutProps> = ({ children, profile }) => {
+export const PortalLayout: React.FC<PortalLayoutProps> = ({ children, profile, onProfileUpdate }) => {
     const navigate = useNavigate();
     const location = useLocation();
     const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
@@ -75,7 +79,7 @@ export const PortalLayout: React.FC<PortalLayoutProps> = ({ children, profile })
                 ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
             `}>
                 <div className="p-12 h-full flex flex-col overflow-y-auto">
-                     {/* Close button for mobile inside sidebar (optional, but header button handles it) */}
+                    {/* Close button for mobile inside sidebar (optional, but header button handles it) */}
                     <div
                         className="mb-12 cursor-pointer hidden lg:block"
                         onClick={() => navigate('/')}
@@ -85,7 +89,7 @@ export const PortalLayout: React.FC<PortalLayoutProps> = ({ children, profile })
 
                     {/* Mobile: Extra padding top if needed or relying on header z-index */}
                     <div className="lg:hidden mb-8 flex justify-end">
-                         {/* Placeholder if we wanted a close button inside, but the header toggle is fine */}
+                        {/* Placeholder if we wanted a close button inside, but the header toggle is fine */}
                     </div>
 
                     <div className="space-y-10 lg:space-y-16 flex-1">
@@ -136,7 +140,7 @@ export const PortalLayout: React.FC<PortalLayoutProps> = ({ children, profile })
             {/* Main Content Area */}
             {/* Overlay for mobile when menu is open */}
             {mobileMenuOpen && (
-                <div 
+                <div
                     className="fixed inset-0 bg-black/80 z-30 lg:hidden backdrop-blur-sm"
                     onClick={() => setMobileMenuOpen(false)}
                 />
@@ -145,6 +149,13 @@ export const PortalLayout: React.FC<PortalLayoutProps> = ({ children, profile })
             <main className="flex-1 w-full lg:ml-80 p-6 pt-24 lg:p-16 lg:pt-16 transition-all">
                 {children}
             </main>
+
+            {!profile.isAdmin && onProfileUpdate && (
+                <CompleteProfileModal
+                    isOpen={!profile.phone}
+                    onProfileUpdate={onProfileUpdate}
+                />
+            )}
         </div>
     );
 };
