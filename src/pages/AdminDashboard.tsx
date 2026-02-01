@@ -487,7 +487,7 @@ export const AdminDashboard: React.FC = () => {
                                                     {arch.phone && (
                                                         <a
                                                             href={`https://wa.me/55${arch.phone.replace(/\D/g, '')}?text=${encodeURIComponent(
-                                                                `Olá ${arch.name}! Seja muito bem-vindo(a) ao Time Casa Linda! 🚀\n\nÉ um prazer ter você conosco. Para facilitar o seu dia a dia, confira abaixo nossos canais oficiais de suporte:\n\n📱 Atendimento ao Arquiteto: (47) 99706-0582\n\n👤 Atendimento ao Cliente Final: (47) 99722-0810\n\n🏛️ Portal do Arquiteto\nPara consultar tabelas de preços, políticas de comissão e materiais exclusivos, acesse nossa plataforma oficial: 🔗 www.arquitetoscasalinda.com.br\n\nEstamos à disposição para o que precisar. Boas vendas! ✨`
+                                                                `Olá ${arch.name}! Seja muito bem-vindo(a) ao Time Casa Linda! \u{1F680}\n\nÉ um prazer ter você conosco. Para facilitar o seu dia a dia, confira abaixo nossos canais oficiais de suporte:\n\n\u{1F4F1} Atendimento ao Arquiteto: (47) 99706-0582\n\n\u{1F464} Atendimento ao Cliente Final: (47) 99722-0810\n\n\u{1F3DB} Portal do Arquiteto\nPara consultar tabelas de preços, políticas de comissão e materiais exclusivos, acesse nossa plataforma oficial: \u{1F517} www.arquitetoscasalinda.com.br\n\nEstamos à disposição para o que precisar. Boas vendas! \u{2728}`
                                                             )}`}
                                                             target="_blank"
                                                             rel="noopener noreferrer"
