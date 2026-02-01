@@ -12,7 +12,8 @@ import {
     DollarSign,
     FileText,
     Package,
-    LayoutGrid
+    LayoutGrid,
+    MessageCircle
 } from 'lucide-react';
 import { Ranking } from '../components/Ranking';
 import { ProductionManager } from '../components/ProductionManager';
@@ -475,13 +476,28 @@ export const AdminDashboard: React.FC = () => {
                                                 </span>
                                             </td>
                                             <td className="py-4 text-center">
-                                                {arch.coupon_code ? (
-                                                    <span className="text-zinc-400 font-mono text-xs border border-white/10 px-2 py-1 rounded bg-white/5">
-                                                        {arch.coupon_code}
-                                                    </span>
-                                                ) : (
-                                                    <span className="text-zinc-600 text-[10px] italic">Sem cupom</span>
-                                                )}
+                                                <div className="flex flex-col items-center gap-2">
+                                                    {arch.coupon_code ? (
+                                                        <span className="text-zinc-400 font-mono text-xs border border-white/10 px-2 py-1 rounded bg-white/5">
+                                                            {arch.coupon_code}
+                                                        </span>
+                                                    ) : (
+                                                        <span className="text-zinc-600 text-[10px] italic">Sem cupom</span>
+                                                    )}
+                                                    {arch.phone && (
+                                                        <a
+                                                            href={`https://wa.me/55${arch.phone.replace(/\D/g, '')}?text=${encodeURIComponent(
+                                                                "Olá! Segue os contatos do site. Se precisar de qualquer auxilio, pode estar chamando no whatsapp 47997060582 para atendimento do arquiteto e para clientes finais o número é 47997220810. Para informações como comissões, pode estar acessando os aquivos disponibilizados no portal do arquiteto. Qualquer duvida estaremos a disposição, e Boas vendas!"
+                                                            )}`}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            className="flex items-center gap-1 text-[9px] text-green-500 hover:text-green-400 uppercase tracking-widest font-bold bg-green-500/10 hover:bg-green-500/20 px-2 py-1.5 rounded transition-all"
+                                                        >
+                                                            <MessageCircle size={10} />
+                                                            Boas Vindas
+                                                        </a>
+                                                    )}
+                                                </div>
                                             </td>
                                             <td className="py-4 text-right">
                                                 <span className="bg-gold/10 text-gold text-xs px-2 py-1 rounded border border-gold/20 font-bold">
