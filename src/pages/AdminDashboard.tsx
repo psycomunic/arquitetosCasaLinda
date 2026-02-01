@@ -484,19 +484,17 @@ export const AdminDashboard: React.FC = () => {
                                                     ) : (
                                                         <span className="text-zinc-600 text-[10px] italic">Sem cupom</span>
                                                     )}
-                                                    {arch.phone && (
-                                                        <a
-                                                            href={`https://wa.me/55${arch.phone.replace(/\D/g, '')}?text=${encodeURIComponent(
-                                                                `Olá ${arch.name}! Seja muito bem-vindo(a) ao Time Casa Linda! \u{1F680}\n\nÉ um prazer ter você conosco. Para facilitar o seu dia a dia, confira abaixo nossos canais oficiais de suporte:\n\n\u{1F4F1} Atendimento ao Arquiteto: (47) 99706-0582\n\n\u{1F464} Atendimento ao Cliente Final: (47) 99722-0810\n\n\u{1F3DB} Portal do Arquiteto\nPara consultar tabelas de preços, políticas de comissão e materiais exclusivos, acesse nossa plataforma oficial: \u{1F517} www.arquitetoscasalinda.com.br\n\nEstamos à disposição para o que precisar. Boas vendas! \u{2728}`
-                                                            )}`}
-                                                            target="_blank"
-                                                            rel="noopener noreferrer"
-                                                            className="flex items-center gap-1 text-[9px] text-green-500 hover:text-green-400 uppercase tracking-widest font-bold bg-green-500/10 hover:bg-green-500/20 px-2 py-1.5 rounded transition-all"
-                                                        >
-                                                            <MessageCircle size={10} />
-                                                            Boas Vindas
-                                                        </a>
-                                                    )}
+                                                    <a
+                                                        href={`https://wa.me/55${(arch.phone || '').replace(/\D/g, '')}?text=${encodeURIComponent(
+                                                            `Olá ${arch.name}! Seja muito bem-vindo(a) ao Time Casa Linda! ${String.fromCodePoint(0x1F680)}\n\nÉ um prazer ter você conosco. Para facilitar o seu dia a dia, confira abaixo nossos canais oficiais de suporte:\n\n${String.fromCodePoint(0x1F4F1)} Atendimento ao Arquiteto: (47) 99706-0582\n\n${String.fromCodePoint(0x1F464)} Atendimento ao Cliente Final: (47) 99722-0810\n\n${String.fromCodePoint(0x1F3DB, 0xFE0F)} Portal do Arquiteto\nPara consultar tabelas de preços, políticas de comissão e materiais exclusivos, acesse nossa plataforma oficial: ${String.fromCodePoint(0x1F517)} www.arquitetoscasalinda.com.br\n\nEstamos à disposição para o que precisar. Boas vendas! ${String.fromCodePoint(0x2728)}`
+                                                        )}`}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="flex items-center gap-1 text-[9px] text-green-500 hover:text-green-400 uppercase tracking-widest font-bold bg-green-500/10 hover:bg-green-500/20 px-2 py-1.5 rounded transition-all"
+                                                    >
+                                                        <MessageCircle size={10} />
+                                                        Boas Vindas
+                                                    </a>
                                                 </div>
                                             </td>
                                             <td className="py-4 text-right">
