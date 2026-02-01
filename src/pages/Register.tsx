@@ -11,12 +11,13 @@ export const Register: React.FC = () => {
         name: '',
         cau: '',
         email: '',
-        password: ''
+        password: '',
+        phone: ''
     });
     const [error, setError] = useState<string | null>(null);
 
     const [step, setStep] = useState(1);
-    const totalSteps = 4;
+    const totalSteps = 5;
     const [direction, setDirection] = useState<'next' | 'prev'>('next');
 
     const handleNext = (e: React.FormEvent) => {
@@ -27,7 +28,11 @@ export const Register: React.FC = () => {
             setError('Por favor, insira seu nome completo.');
             return;
         }
-        if (step === 3 && !formData.email.includes('@')) {
+        if (step === 3 && !formData.phone.trim()) {
+            setError('Por favor, insira seu WhatsApp.');
+            return;
+        }
+        if (step === 4 && !formData.email.includes('@')) {
             setError('Por favor, insira um e-mail válido.');
             return;
         }
@@ -62,7 +67,8 @@ export const Register: React.FC = () => {
                     emailRedirectTo: `${window.location.origin}/login`,
                     data: {
                         full_name: formData.name,
-                        cau: formData.cau
+                        cau: formData.cau,
+                        phone: formData.phone
                     }
                 }
             });
@@ -153,6 +159,21 @@ export const Register: React.FC = () => {
 
                                     {step === 3 && (
                                         <div className="space-y-4 animate-slide-in">
+                                            <label className="block text-sm md:text-base font-medium text-white">Qual seu WhatsApp?</label>
+                                            <input
+                                                type="text"
+                                                autoFocus
+                                                required
+                                                value={formData.phone}
+                                                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                                                className="w-full bg-transparent border-b-2 border-zinc-700 focus:border-gold text-2xl md:text-3xl text-white placeholder-zinc-800 py-2 outline-none transition-colors"
+                                                placeholder="(00) 00000-0000"
+                                            />
+                                        </div>
+                                    )}
+
+                                    {step === 4 && (
+                                        <div className="space-y-4 animate-slide-in">
                                             <label className="block text-sm md:text-base font-medium text-white">Qual seu melhor e-mail corporativo?</label>
                                             <input
                                                 type="email"
@@ -166,7 +187,7 @@ export const Register: React.FC = () => {
                                         </div>
                                     )}
 
-                                    {step === 4 && (
+                                    {step === 5 && (
                                         <div className="space-y-4 animate-slide-in">
                                             <label className="block text-sm md:text-base font-medium text-white">Crie uma senha segura</label>
                                             <input
