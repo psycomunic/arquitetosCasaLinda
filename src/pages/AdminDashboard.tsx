@@ -487,7 +487,7 @@ export const AdminDashboard: React.FC = () => {
                                                     {arch.phone && (
                                                         <a
                                                             href={`https://wa.me/55${arch.phone.replace(/\D/g, '')}?text=${encodeURIComponent(
-                                                                "Olá! Segue os contatos do site. Se precisar de qualquer auxilio, pode estar chamando no whatsapp 47997060582 para atendimento do arquiteto e para clientes finais o número é 47997220810. Para informações como comissões, pode estar acessando os aquivos disponibilizados no portal do arquiteto. Qualquer duvida estaremos a disposição, e Boas vendas!"
+                                                                `Olá! Seja muito bem-vindo(a) ao time Casa Linda! 🏠✨\n\nAbaixo estão nossos contatos para suporte:\n\n👷 *Atendimento ao Arquiteto:* (47) 99706-0582\n👥 *Atendimento ao Cliente Final:* (47) 99722-0810\n\n📄 Para dúvidas sobre comissões e tabelas, você pode acessar os arquivos disponíveis no *Portal do Arquiteto*.\n\nQualquer dúvida, estamos à disposição.\n\nBoas vendas! 🚀`
                                                             )}`}
                                                             target="_blank"
                                                             rel="noopener noreferrer"
