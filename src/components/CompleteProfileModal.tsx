@@ -18,8 +18,9 @@ export const CompleteProfileModal: React.FC<CompleteProfileModalProps> = ({ isOp
         e.preventDefault();
         setError('');
 
-        if (!phone.replace(/\D/g, '')) {
-            setError('Por favor, informe seu WhatsApp.');
+        const digits = phone.replace(/\D/g, '');
+        if (digits.length < 10) {
+            setError('Por favor, informe seu WhatsApp completo com DDD.');
             return;
         }
 
@@ -72,9 +73,15 @@ export const CompleteProfileModal: React.FC<CompleteProfileModalProps> = ({ isOp
                         </label>
                         <div className="relative group">
                             <input
-                                type="text"
+                                type="tel"
                                 value={phone}
-                                onChange={(e) => setPhone(e.target.value)}
+                                onChange={(e) => {
+                                    const value = e.target.value.replace(/\D/g, '');
+                                    const formatted = value
+                                        .replace(/^(\d{2})(\d)/g, '($1) $2')
+                                        .replace(/(\d)(\d{4})$/, '$1-$2');
+                                    setPhone(formatted.slice(0, 15));
+                                }}
                                 placeholder="(00) 00000-0000"
                                 className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-zinc-600 focus:outline-none focus:border-gold/50 transition-all font-mono"
                                 required
