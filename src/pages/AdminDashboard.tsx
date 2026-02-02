@@ -19,6 +19,7 @@ import { Ranking } from '../components/Ranking';
 import { ProductionManager } from '../components/ProductionManager';
 
 import { AddSaleModal } from '../components/AddSaleModal';
+import { ArchitectDetailsModal } from '../components/ArchitectDetailsModal';
 
 export const AdminDashboard: React.FC = () => {
     const [pendingArchitects, setPendingArchitects] = useState<Architect[]>([]);
@@ -27,6 +28,10 @@ export const AdminDashboard: React.FC = () => {
     const [actionLoading, setActionLoading] = useState<string | null>(null);
     const [selectedArchitect, setSelectedArchitect] = useState<Architect | null>(null);
     const [isAddSaleModalOpen, setIsAddSaleModalOpen] = useState(false);
+
+    // Details Modal State
+    const [detailsModalOpen, setDetailsModalOpen] = useState(false);
+    const [selectedDetailArchitect, setSelectedDetailArchitect] = useState<Architect | null>(null);
 
     const [stats, setStats] = useState({
         totalProposals: 0,
@@ -256,6 +261,11 @@ export const AdminDashboard: React.FC = () => {
         setIsAddSaleModalOpen(true);
     };
 
+    const openDetailsModal = (architect: Architect) => {
+        setSelectedDetailArchitect(architect);
+        setDetailsModalOpen(true);
+    };
+
     if (loading) {
         return (
             <div className="flex items-center justify-center min-h-[50vh]">
@@ -463,10 +473,10 @@ export const AdminDashboard: React.FC = () => {
                                 </thead>
                                 <tbody className="divide-y divide-white/5">
                                     {approvedArchitects.map((arch) => (
-                                        <tr key={arch.id} className="group hover:bg-white/5 transition-colors">
+                                        <tr key={arch.id} className="group hover:bg-white/5 transition-colors cursor-pointer" onClick={() => openDetailsModal(arch)}>
                                             <td className="py-4">
                                                 <div className="flex flex-col">
-                                                    <span className="text-white font-bold text-sm">{arch.name}</span>
+                                                    <span className="text-white font-bold text-sm group-hover:text-gold transition-colors">{arch.name}</span>
                                                     <span className="text-zinc-500 text-xs">{arch.email}</span>
                                                 </div>
                                             </td>
@@ -484,17 +494,26 @@ export const AdminDashboard: React.FC = () => {
                                                     ) : (
                                                         <span className="text-zinc-600 text-[10px] italic">Sem cupom</span>
                                                     )}
-                                                    <a
-                                                        href={`https://wa.me/55${(arch.phone || '').replace(/\D/g, '')}?text=${encodeURIComponent(
-                                                            `Olá ${arch.name}! Seja muito bem-vindo(a) ao Time Casa Linda! ${String.fromCodePoint(0x1F680)}\n\nÉ um prazer ter você conosco. Para facilitar o seu dia a dia, confira abaixo nossos canais oficiais de suporte:\n\n${String.fromCodePoint(0x1F4F1)} Atendimento ao Arquiteto: (47) 99706-0582\n\n${String.fromCodePoint(0x1F464)} Atendimento ao Cliente Final: (47) 99722-0810\n\n${String.fromCodePoint(0x1F3DB, 0xFE0F)} Portal do Arquiteto\nPara consultar tabelas de preços, políticas de comissão e materiais exclusivos, acesse nossa plataforma oficial: ${String.fromCodePoint(0x1F517)} www.arquitetoscasalinda.com.br\n\nEstamos à disposição para o que precisar. Boas vendas! ${String.fromCodePoint(0x2728)}`
-                                                        )}`}
-                                                        target="_blank"
-                                                        rel="noopener noreferrer"
-                                                        className="flex items-center gap-1 text-[9px] text-green-500 hover:text-green-400 uppercase tracking-widest font-bold bg-green-500/10 hover:bg-green-500/20 px-2 py-1.5 rounded transition-all"
-                                                    >
-                                                        <MessageCircle size={10} />
-                                                        Boas Vindas
-                                                    </a>
+
+                                                    {arch.phone && arch.phone.replace(/\D/g, '').length >= 10 ? (
+                                                        <a
+                                                            href={`https://wa.me/55${arch.phone.replace(/\D/g, '')}?text=${encodeURIComponent(
+                                                                `Olá ${arch.name}! Seja muito bem-vindo(a) ao Time Casa Linda! ${String.fromCodePoint(0x1F680)}\n\nÉ um prazer ter você conosco. Para facilitar o seu dia a dia, confira abaixo nossos canais oficiais de suporte:\n\n${String.fromCodePoint(0x1F4F1)} Atendimento ao Arquiteto: (47) 99706-0582\n\n${String.fromCodePoint(0x1F464)} Atendimento ao Cliente Final: (47) 99722-0810\n\n${String.fromCodePoint(0x1F3DB, 0xFE0F)} Portal do Arquiteto\nPara consultar tabelas de preços, políticas de comissão e materiais exclusivos, acesse nossa plataforma oficial: ${String.fromCodePoint(0x1F517)} www.arquitetoscasalinda.com.br\n\nEstamos à disposição para o que precisar. Boas vendas! ${String.fromCodePoint(0x2728)}`
+                                                            )}`}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            onClick={(e) => e.stopPropagation()} // Prevent row click
+                                                            className="flex items-center gap-1 text-[9px] text-green-500 hover:text-green-400 uppercase tracking-widest font-bold bg-green-500/10 hover:bg-green-500/20 px-2 py-1.5 rounded transition-all"
+                                                        >
+                                                            <MessageCircle size={10} />
+                                                            Boas Vindas
+                                                        </a>
+                                                    ) : (
+                                                        <span className="flex items-center gap-1 text-[9px] text-zinc-600 uppercase tracking-widest font-bold bg-zinc-800/50 px-2 py-1.5 rounded cursor-not-allowed">
+                                                            <XCircle size={10} />
+                                                            Sem WhatsApp
+                                                        </span>
+                                                    )}
                                                 </div>
                                             </td>
                                             <td className="py-4 text-right">
@@ -504,7 +523,10 @@ export const AdminDashboard: React.FC = () => {
                                             </td>
                                             <td className="py-4 text-center">
                                                 <button
-                                                    onClick={() => openAddSaleModal(arch)}
+                                                    onClick={(e) => {
+                                                        e.stopPropagation(); // Prevent row click
+                                                        openAddSaleModal(arch);
+                                                    }}
                                                     className="bg-zinc-800 text-gold hover:text-white hover:bg-gold hover:text-black border border-white/10 hover:border-gold px-4 py-2 rounded text-[10px] font-bold uppercase tracking-widest transition-all"
                                                 >
                                                     + Adicionar Venda
@@ -569,6 +591,17 @@ export const AdminDashboard: React.FC = () => {
                         </button>
                     </div>
                 </div>
+            )}
+            {/* Architect Details Modal */}
+            {selectedDetailArchitect && (
+                <ArchitectDetailsModal
+                    isOpen={detailsModalOpen}
+                    onClose={() => {
+                        setDetailsModalOpen(false);
+                        setSelectedDetailArchitect(null);
+                    }}
+                    architect={selectedDetailArchitect}
+                />
             )}
         </div>
     );
