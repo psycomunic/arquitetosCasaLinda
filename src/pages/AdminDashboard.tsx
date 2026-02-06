@@ -39,8 +39,9 @@ export const AdminDashboard: React.FC = () => {
         averageTicket: 0,
         totalArchitects: 0
     });
-    const [storeDiscount, setStoreDiscount] = useState('0');
+    const [storeDiscount, setStoreDiscount] = useState('20');
     const [savingDiscount, setSavingDiscount] = useState(false);
+    const [migrating, setMigrating] = useState(false);
     const [activeTab, setActiveTab] = useState<'overview' | 'production' | 'architects'>('overview');
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
@@ -125,6 +126,54 @@ export const AdminDashboard: React.FC = () => {
         }
     };
 
+    const handleMigrateCoupons = async () => {
+        if (!confirm('ATENÇÃO: Isso atualizará TODOS os cupons que terminam em "15" para "20" e definirá a comissão para 20%. Deseja continuar?')) return;
+
+        setMigrating(true);
+        try {
+            // Fetch all architects
+            const { data: architects, error: fetchError } = await supabase
+                .from('architects')
+                .select('*');
+
+            if (fetchError) throw fetchError;
+
+            let updatedCount = 0;
+
+            for (const arch of (architects as any[])) {
+                if (arch.coupon_code && arch.coupon_code.endsWith('15')) {
+                    const newCode = arch.coupon_code.replace(/15$/, '20');
+
+                    // Update architect
+                    const { error: updateError } = await (supabase.from('architects') as any)
+                        .update({
+                            coupon_code: newCode,
+                            commission_rate: 20
+                        })
+                        .eq('id', arch.id);
+
+                    if (!updateError) updatedCount++;
+                } else if (arch.approval_status === 'approved' && Number(arch.commission_rate) < 20) {
+                    // Update just the commission rate if coupon doesn't match pattern but they are approved
+                    const { error: updateError } = await (supabase.from('architects') as any)
+                        .update({
+                            commission_rate: 20
+                        })
+                        .eq('id', arch.id);
+                    if (!updateError) updatedCount++;
+                }
+            }
+
+            alert(`Migração concluída! ${updatedCount} arquitetos atualizados.`);
+            fetchApprovedArchitects();
+        } catch (err) {
+            console.error('Migration error:', err);
+            alert('Erro ao migrar cupons.');
+        } finally {
+            setMigrating(false);
+        }
+    };
+
     const fetchPendingArchitects = async () => {
         try {
             const { data, error } = await supabase
@@ -184,7 +233,7 @@ export const AdminDashboard: React.FC = () => {
         setArchitectToApprove(architect);
 
         const firstName = architect.name.split(' ')[0].toLowerCase().trim();
-        const discount = storeDiscount || '15';
+        const discount = storeDiscount || '20';
         let baseCode = `${firstName}${discount}`;
         let finalCode = baseCode;
         let isUnique = false;
@@ -235,7 +284,7 @@ export const AdminDashboard: React.FC = () => {
                     approval_status: 'approved',
                     approved_at: new Date().toISOString(),
                     coupon_code: couponCode,
-                    commission_rate: 15
+                    commission_rate: 20
                 })
                 .eq('id', architectToApprove.id);
 
@@ -379,6 +428,14 @@ export const AdminDashboard: React.FC = () => {
                                         >
                                             {savingDiscount ? <Loader2 size={14} className="animate-spin" /> : <FileText size={14} />}
                                             Salvar Promoção
+                                        </button>
+                                        <button
+                                            onClick={handleMigrateCoupons}
+                                            disabled={migrating}
+                                            className="px-8 py-4 bg-red-500/10 border border-red-500/30 text-red-500 text-[9px] font-bold uppercase tracking-widest rounded-lg hover:bg-red-500/20 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+                                        >
+                                            {migrating ? <Loader2 size={10} className="animate-spin" /> : null}
+                                            Migrar p/ 20%
                                         </button>
                                     </div>
                                 </div>
@@ -576,7 +633,7 @@ export const AdminDashboard: React.FC = () => {
                                 value={couponCode}
                                 onChange={(e) => setCouponCode(e.target.value)}
                                 className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white font-mono focus:border-gold outline-none"
-                                placeholder="Ex: nome15"
+                                placeholder="Ex: nome20"
                             />
                             <p className="text-[10px] text-zinc-600">Este cupom será vinculado ao perfil do arquiteto.</p>
                         </div>

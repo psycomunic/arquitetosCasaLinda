@@ -26,7 +26,7 @@ export const TermosComissao: React.FC = () => {
                                 Ideal para volume e projetos rápidos. Use seu link ou cupom exclusivo. O cliente compra e você recebe até 20%.
                             </p>
                             <div className="pt-4 border-t border-white/5">
-                                <span className="text-gold font-bold text-[10px] uppercase tracking-[0.2em]">15% a 20%</span>
+                                <span className="text-gold font-bold text-[10px] uppercase tracking-[0.2em]">20%</span>
                             </div>
                         </div>
 
@@ -40,7 +40,7 @@ export const TermosComissao: React.FC = () => {
                                 Suporte técnico total. Simulações no seu projeto e curadoria humanizada para elevar o ticket médio.
                             </p>
                             <div className="pt-4 border-t border-white/5">
-                                <span className="text-gold font-bold text-[10px] uppercase tracking-[0.2em]">15% a 20% + Bônus</span>
+                                <span className="text-gold font-bold text-[10px] uppercase tracking-[0.2em]">20% + Bônus</span>
                             </div>
                         </div>
 
