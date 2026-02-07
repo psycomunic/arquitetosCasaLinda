@@ -35,7 +35,7 @@ export const MaterialsSection: React.FC = () => {
                         <div className="w-16 h-16 mx-auto rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center text-gold mb-8 group-hover:bg-gold group-hover:text-black transition-all shadow-[0_0_20px_rgba(197,160,89,0.2)]">
                             <Layers size={32} />
                         </div>
-                        <h4 className="text-xl font-serif text-white mb-4">Vinil Fotográfico</h4>
+                        <h4 className="text-xl font-serif text-white mb-4">Vinil Fotográfico Texturizado</h4>
                         <p className="text-zinc-400 text-sm leading-relaxed font-light tracking-wide">
                             Versatilidade e resistência com excelente acabamento.
                         </p>
