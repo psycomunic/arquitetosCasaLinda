@@ -22,6 +22,8 @@ import {
   Award
 } from 'lucide-react';
 import { MovingCarousel } from '../components/MovingCarousel';
+import { MaterialsSection } from '../components/MaterialsSection';
+import { CustomizationSection } from '../components/CustomizationSection';
 import { PublicLayout } from '../layouts/PublicLayout';
 
 export const Home: React.FC = () => {
@@ -101,6 +103,10 @@ export const Home: React.FC = () => {
 
         <MovingCarousel />
 
+
+        {/* Premium Materials Section */}
+        <MaterialsSection />
+
         {/* Benefits Bar - "Segunda Dobra" Feature List */}
         <section className="py-12 bg-ebonite border-y border-white/5 relative z-20">
           <div className="max-w-7xl mx-auto px-6">
@@ -123,19 +129,22 @@ export const Home: React.FC = () => {
           </div>
         </section>
 
+        {/* Customization Section */}
+        <CustomizationSection />
+
         {/* New Mid-Page CTA */}
         <section className="py-10 bg-gold/5 border-y border-gold/10">
           <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-center gap-6 text-center md:text-left">
-             <div>
-                <h4 className="text-xl md:text-2xl font-serif text-white">Junte-se a mais de 750 arquitetos parceiros</h4>
-                <p className="text-[10px] text-zinc-400 uppercase tracking-widest mt-1">Faça parte da elite da arquitetura brasileira</p>
-             </div>
-             <button
-                onClick={() => navigate('/register')}
-                className="px-8 py-3 bg-gold text-black text-[10px] uppercase tracking-[0.2em] font-bold hover:bg-white transition-colors shadow-[0_0_20px_rgba(197,160,89,0.2)]"
-              >
-                Cadastre-se Agora
-              </button>
+            <div>
+              <h4 className="text-xl md:text-2xl font-serif text-white">Junte-se a mais de 750 arquitetos parceiros</h4>
+              <p className="text-[10px] text-zinc-400 uppercase tracking-widest mt-1">Faça parte da elite da arquitetura brasileira</p>
+            </div>
+            <button
+              onClick={() => navigate('/register')}
+              className="px-8 py-3 bg-gold text-black text-[10px] uppercase tracking-[0.2em] font-bold hover:bg-white transition-colors shadow-[0_0_20px_rgba(197,160,89,0.2)]"
+            >
+              Cadastre-se Agora
+            </button>
           </div>
         </section>
 
