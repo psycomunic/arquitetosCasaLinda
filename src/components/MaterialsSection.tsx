@@ -21,8 +21,12 @@ export const MaterialsSection: React.FC = () => {
                 <div className="grid md:grid-cols-3 gap-8">
                     {/* Papel Fotográfico */}
                     <div className="group relative glass-3d p-8 md:p-12 rounded-2xl text-center hover:-translate-y-2 transition-all duration-500">
-                        <div className="w-16 h-16 mx-auto rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center text-gold mb-8 group-hover:bg-gold group-hover:text-black transition-all shadow-[0_0_20px_rgba(197,160,89,0.2)]">
-                            <Image size={32} />
+                        <div className="w-24 h-24 mx-auto rounded-full border-2 border-gold/20 mb-6 overflow-hidden shadow-[0_0_20px_rgba(197,160,89,0.2)] group-hover:border-gold transition-all">
+                            <img
+                                src="/images/papel-fotografico.jpg"
+                                alt="Papel Fotográfico"
+                                className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
+                            />
                         </div>
                         <h4 className="text-xl font-serif text-white mb-4">Papel Fotográfico</h4>
                         <p className="text-zinc-400 text-sm leading-relaxed font-light tracking-wide">
@@ -32,8 +36,12 @@ export const MaterialsSection: React.FC = () => {
 
                     {/* Vinil Fotográfico */}
                     <div className="group relative glass-3d p-8 md:p-12 rounded-2xl text-center hover:-translate-y-2 transition-all duration-500">
-                        <div className="w-16 h-16 mx-auto rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center text-gold mb-8 group-hover:bg-gold group-hover:text-black transition-all shadow-[0_0_20px_rgba(197,160,89,0.2)]">
-                            <Layers size={32} />
+                        <div className="w-24 h-24 mx-auto rounded-full border-2 border-gold/20 mb-6 overflow-hidden shadow-[0_0_20px_rgba(197,160,89,0.2)] group-hover:border-gold transition-all">
+                            <img
+                                src="/images/vinil-fotografico.jpg"
+                                alt="Vinil Fotográfico Texturizado"
+                                className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
+                            />
                         </div>
                         <h4 className="text-xl font-serif text-white mb-4">Vinil Fotográfico Texturizado</h4>
                         <p className="text-zinc-400 text-sm leading-relaxed font-light tracking-wide">
@@ -43,8 +51,12 @@ export const MaterialsSection: React.FC = () => {
 
                     {/* Canvas Museológico */}
                     <div className="group relative glass-3d p-8 md:p-12 rounded-2xl text-center hover:-translate-y-2 transition-all duration-500">
-                        <div className="w-16 h-16 mx-auto rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center text-gold mb-8 group-hover:bg-gold group-hover:text-black transition-all shadow-[0_0_20px_rgba(197,160,89,0.2)]">
-                            <Frame size={32} />
+                        <div className="w-24 h-24 mx-auto rounded-full border-2 border-gold/20 mb-6 overflow-hidden shadow-[0_0_20px_rgba(197,160,89,0.2)] group-hover:border-gold transition-all">
+                            <img
+                                src="/images/canvas-museologico.jpg"
+                                alt="Canvas Museológico 100% Algodão"
+                                className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
+                            />
                         </div>
                         <h4 className="text-xl font-serif text-white mb-4">Canvas Museológico 100% Algodão</h4>
                         <p className="text-zinc-400 text-sm leading-relaxed font-light tracking-wide">
