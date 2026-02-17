@@ -153,25 +153,7 @@ export const ProposalGenerator: React.FC = () => {
         setProposalItems([...proposalItems, newItem]);
     };
 
-    const handleAddCustomToProposal = () => {
-        if (!customImage) return;
-        const basePrice = 500; // Base price for custom upload
-        const price = calculateItemPrice(basePrice, selectedFrame, selectedFinish);
-        const newItem: ProposalItem = {
-            id: Math.random().toString(36).substr(2, 9),
-            customImageUrl: customImage,
-            title: customTitle || 'Imagem do Cliente',
-            frame: selectedFrame,
-            finish: selectedFinish,
-            format: selectedFormat,
-            size: selectedSize,
-            quantity: 1,
-            price: price
-        };
-        setProposalItems([...proposalItems, newItem]);
-        setCustomImage(null);
-        setCustomTitle('');
-    };
+
 
     const handleRemoveArtFromProposal = (id: string) => {
         setProposalItems(proposalItems.filter(item => item.id !== id));
@@ -213,6 +195,31 @@ export const ProposalGenerator: React.FC = () => {
         window.addEventListener('paste', handlePaste);
         return () => window.removeEventListener('paste', handlePaste);
     }, []);
+
+    const [customPrice, setCustomPrice] = useState<string>('');
+
+    const handleAddCustomToProposal = () => {
+        if (!customImage) return;
+
+        // Use manual price, fallback to 0 if invalid
+        const price = parseFloat(customPrice.replace('R$', '').replace('.', '').replace(',', '.')) || 0;
+
+        const newItem: ProposalItem = {
+            id: Math.random().toString(36).substr(2, 9),
+            customImageUrl: customImage,
+            title: customTitle || 'Imagem do Cliente',
+            frame: selectedFrame,
+            finish: selectedFinish,
+            format: selectedFormat,
+            size: selectedSize,
+            quantity: 1,
+            price: price
+        };
+        setProposalItems([...proposalItems, newItem]);
+        setCustomImage(null);
+        setCustomTitle('');
+        setCustomPrice('');
+    };
 
     const totalProposalValue = proposalItems.reduce((acc, item) => acc + item.price, 0);
 
@@ -445,6 +452,22 @@ export const ProposalGenerator: React.FC = () => {
                                             value={customTitle}
                                             onChange={(e) => setCustomTitle(e.target.value)}
                                             placeholder="Ex: Abstração Minimalista I"
+                                            className="w-full px-6 py-4 text-xs glass-dark border border-white/5 rounded-lg focus:border-gold outline-none text-white font-serif"
+                                        />
+                                    </div>
+                                    <div className="space-y-3">
+                                        <label className="text-[9px] uppercase font-bold text-zinc-500 tracking-widest">Preço do Quadro (R$)</label>
+                                        <input
+                                            type="text"
+                                            value={customPrice}
+                                            onChange={(e) => {
+                                                const value = e.target.value;
+                                                // Allow only numbers and comma/dot
+                                                if (/^[\d,.]*$/.test(value)) {
+                                                    setCustomPrice(value);
+                                                }
+                                            }}
+                                            placeholder="0,00"
                                             className="w-full px-6 py-4 text-xs glass-dark border border-white/5 rounded-lg focus:border-gold outline-none text-white font-serif"
                                         />
                                     </div>
