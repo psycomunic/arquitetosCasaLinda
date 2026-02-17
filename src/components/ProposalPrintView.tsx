@@ -191,12 +191,12 @@ export const ProposalPrintView: React.FC<ProposalPrintViewProps> = ({
                                             {/* Finish Detail */}
                                             <div className="space-y-3 pt-4">
                                                 <p className="text-[9px] font-sans uppercase tracking-[0.2em] text-zinc-400 font-bold border-b border-zinc-100 pb-2">Acabamento</p>
-                                                <div className="flex flex-col gap-3">
+                                                <div className="flex flex-row gap-4 items-center">
                                                     {item.finish?.thumbnailUrl ? (
-                                                        <div className="w-full aspect-video bg-zinc-100 overflow-hidden border border-zinc-200">
+                                                        <div className="w-20 h-14 bg-zinc-100 border border-zinc-200 flex-shrink-0 flex items-center justify-center">
                                                             <img
                                                                 src={item.finish.thumbnailUrl}
-                                                                className="w-full h-full object-cover"
+                                                                className="max-w-full max-h-full object-contain"
                                                                 alt={item.finish.name}
                                                             />
                                                         </div>
