@@ -7,6 +7,8 @@ interface ProposalPrintViewProps {
     clientName: string;
     architectProfile: ArchitectProfile | null;
     totalValue: number;
+    discount?: number;
+    finalValue?: number;
     onClose: () => void;
 }
 
@@ -15,6 +17,8 @@ export const ProposalPrintView: React.FC<ProposalPrintViewProps> = ({
     clientName,
     architectProfile,
     totalValue,
+    discount = 0,
+    finalValue = totalValue,
     onClose
 }) => {
     const [isReady, setIsReady] = useState(false);
@@ -187,11 +191,22 @@ export const ProposalPrintView: React.FC<ProposalPrintViewProps> = ({
                                             {/* Finish Detail */}
                                             <div className="space-y-3 pt-4">
                                                 <p className="text-[9px] font-sans uppercase tracking-[0.2em] text-zinc-400 font-bold border-b border-zinc-100 pb-2">Acabamento</p>
-                                                <div>
-                                                    <p className="font-serif text-lg">{item.finish?.name}</p>
-                                                    <p className="text-[10px] text-zinc-500 mt-1 uppercase tracking-wide">
-                                                        {item.finish?.isGlass ? 'Proteção com Vidro' : 'Sem Vidro'}
-                                                    </p>
+                                                <div className="flex flex-col gap-3">
+                                                    {item.finish?.thumbnailUrl ? (
+                                                        <div className="w-full aspect-video bg-zinc-100 overflow-hidden border border-zinc-200">
+                                                            <img
+                                                                src={item.finish.thumbnailUrl}
+                                                                className="w-full h-full object-cover"
+                                                                alt={item.finish.name}
+                                                            />
+                                                        </div>
+                                                    ) : null}
+                                                    <div>
+                                                        <p className="font-serif text-lg">{item.finish?.name}</p>
+                                                        <p className="text-[10px] text-zinc-500 mt-1 uppercase tracking-wide">
+                                                            {item.finish?.isGlass ? 'Proteção com Vidro' : 'Sem Vidro'}
+                                                        </p>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -226,29 +241,45 @@ export const ProposalPrintView: React.FC<ProposalPrintViewProps> = ({
                             </div>
 
                             {/* Total */}
+                            <div className="flex justify-between items-end py-4 border-t border-gold/30">
+                                <span className="text-xs font-sans uppercase tracking-[0.4em] text-zinc-500">Subtotal</span>
+                                <span className="text-xl font-serif text-zinc-400">R$ {totalValue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+                            </div>
+
+                            {discount > 0 && (
+                                <div className="flex justify-between items-end py-2">
+                                    <span className="text-xs font-sans uppercase tracking-[0.4em] text-zinc-500">Desconto ({discount}%)</span>
+                                    <span className="text-xl font-serif text-white">- R$ {(totalValue * discount / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+                                </div>
+                            )}
+
                             <div className="flex justify-between items-end py-8 border-y border-gold/30">
                                 <span className="text-sm font-sans uppercase tracking-[0.4em] text-gold">Valor Total</span>
-                                <span className="text-6xl font-serif italic">R$ {totalValue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+                                <span className="text-6xl font-serif italic">R$ {finalValue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
                             </div>
-                            <div className="text-center space-y-2 opacity-60">
-                                <p className="text-xs font-sans uppercase tracking-[0.2em] text-zinc-400">
-                                    5% de desconto no <span className="text-white font-bold">PIX</span>
-                                </p>
-                                <p className="text-xs font-sans uppercase tracking-[0.2em] text-zinc-400">
-                                    ou em até <span className="text-white font-bold">12x sem juros</span>
-                                </p>
+
+                            <div className="grid grid-cols-2 gap-8 text-center pt-8">
+                                <div className="space-y-2 bg-white/5 p-6 rounded-lg border border-white/5">
+                                    <p className="text-[10px] font-sans uppercase tracking-[0.2em] text-zinc-400">À Vista no PIX</p>
+                                    <p className="text-3xl font-serif text-gold">R$ {(finalValue * 0.95).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
+                                    <p className="text-[8px] uppercase tracking-widest text-zinc-500">5% de Desconto</p>
+                                </div>
+                                <div className="space-y-2 bg-white/5 p-6 rounded-lg border border-white/5">
+                                    <p className="text-[10px] font-sans uppercase tracking-[0.2em] text-zinc-400">Cartão de Crédito</p>
+                                    <p className="text-3xl font-serif text-white">12x R$ {(finalValue / 12).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
+                                    <p className="text-[8px] uppercase tracking-widest text-zinc-500">Sem Juros</p>
+                                </div>
                             </div>
                         </div>
 
-                        <div className="mt-20 grid grid-cols-2 gap-20 max-w-4xl mx-auto">
-                            <div className="space-y-4 text-center">
-                                <div className="border-b border-white/20 pb-4"></div>
-                                <p className="text-[10px] font-sans uppercase tracking-[0.2em] text-zinc-500">Assinatura do Cliente</p>
-                            </div>
-                            <div className="space-y-4 text-center">
-                                <div className="border-b border-white/20 pb-4"></div>
-                                <p className="text-[10px] font-sans uppercase tracking-[0.2em] text-zinc-500">Data</p>
-                            </div>
+                        <div className="mt-20 flex justify-center items-center">
+                            {architectProfile?.logoUrl ? (
+                                <img src={architectProfile.logoUrl} className="h-32 object-contain opacity-80 filter grayscale hover:grayscale-0 transition-all" alt={architectProfile.officeName || 'Logo'} />
+                            ) : (
+                                <div className="text-center space-y-2">
+                                    <h2 className="text-3xl font-serif italic text-white/40">{architectProfile?.officeName}</h2>
+                                </div>
+                            )}
                         </div>
                     </div>
 

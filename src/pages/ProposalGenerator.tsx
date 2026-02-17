@@ -221,7 +221,12 @@ export const ProposalGenerator: React.FC = () => {
         setCustomPrice('');
     };
 
+    const [discount, setDiscount] = useState<number>(0);
+
     const totalProposalValue = proposalItems.reduce((acc, item) => acc + item.price, 0);
+    const finalValue = totalProposalValue * (1 - discount / 100);
+    const pixValue = finalValue * 0.95;
+    const installmentValue = finalValue / 12;
 
     if (showPrintPreview) {
         return (
@@ -230,6 +235,8 @@ export const ProposalGenerator: React.FC = () => {
                 clientName={clientName}
                 architectProfile={architectProfile}
                 totalValue={totalProposalValue}
+                discount={discount}
+                finalValue={finalValue}
                 onClose={() => setShowPrintPreview(false)}
             />
         );
@@ -524,6 +531,16 @@ export const ProposalGenerator: React.FC = () => {
                                     className="w-full bg-white/5 border border-white/10 rounded-lg px-6 py-4 text-xs text-white outline-none focus:border-gold transition-all"
                                 />
                             </div>
+                            <div className="space-y-2">
+                                <label className="text-[9px] uppercase tracking-[0.4em] text-zinc-500 font-bold">Desconto de Cupom (%)</label>
+                                <input
+                                    type="number"
+                                    value={discount}
+                                    onChange={(e) => setDiscount(Math.max(0, Math.min(100, Number(e.target.value))))}
+                                    placeholder="0"
+                                    className="w-full bg-white/5 border border-white/10 rounded-lg px-6 py-4 text-xs text-white outline-none focus:border-gold transition-all"
+                                />
+                            </div>
                         </div>
 
                         <div className="space-y-6 max-h-[300px] overflow-y-auto custom-scrollbar pr-2">
@@ -559,27 +576,47 @@ export const ProposalGenerator: React.FC = () => {
                             )}
                         </div>
 
-                        <div className="pt-10 border-t border-white/5 space-y-8">
+                        <div className="pt-10 border-t border-white/5 space-y-4">
                             <div className="flex justify-between items-baseline">
                                 <span className="text-zinc-500 text-[10px] font-bold uppercase tracking-[0.4em]">Subtotal</span>
-                                <span className="text-3xl font-serif text-white">R$ {totalProposalValue.toLocaleString('pt-BR')}</span>
+                                <span className="text-xl font-serif text-zinc-400">R$ {totalProposalValue.toLocaleString('pt-BR')}</span>
                             </div>
 
-                            <div className="bg-white/5 p-6 rounded-lg border border-white/5">
+                            {discount > 0 && (
+                                <div className="flex justify-between items-baseline">
+                                    <span className="text-zinc-500 text-[10px] font-bold uppercase tracking-[0.4em]">Desconto ({discount}%)</span>
+                                    <span className="text-xl font-serif text-white">- R$ {(totalProposalValue * discount / 100).toLocaleString('pt-BR')}</span>
+                                </div>
+                            )}
+
+                            <div className="flex justify-between items-baseline border-t border-white/5 pt-4">
+                                <span className="text-gold text-[10px] font-bold uppercase tracking-[0.4em]">Total Venda</span>
+                                <span className="text-3xl font-serif text-white">R$ {finalValue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+                            </div>
+
+                            <div className="bg-white/5 p-6 rounded-lg border border-white/5 mt-4">
                                 <div className="flex justify-between items-center mb-2">
                                     <span className="text-zinc-500 text-[9px] font-bold uppercase tracking-[0.4em]">Seu Repasse (15% a 20%)</span>
                                     <Zap size={14} className="text-gold" />
                                 </div>
-                                <span className="font-serif text-gold text-2xl">R$ {(totalProposalValue * 0.2).toLocaleString('pt-BR')}</span>
+                                <span className="font-serif text-gold text-2xl">R$ {(finalValue * 0.2).toLocaleString('pt-BR')}</span>
                             </div>
 
-                            <div className="text-center space-y-1">
-                                <p className="text-[10px] text-zinc-400 uppercase tracking-wider">
-                                    5% de desconto no <span className="text-white font-bold">PIX</span>
-                                </p>
-                                <p className="text-[10px] text-zinc-400 uppercase tracking-wider">
-                                    ou em até <span className="text-white font-bold">12x sem juros</span>
-                                </p>
+                            <div className="text-center space-y-2 mt-4">
+                                <div className="flex items-center justify-center gap-2">
+                                    <span className="bg-white/5 px-2 py-1 rounded text-[10px] font-bold text-white">PIX</span>
+                                    <span className="text-[12px] text-zinc-300">
+                                        <span className="text-gold font-bold text-lg">R$ {pixValue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+                                        <span className="block text-[8px] uppercase tracking-wider text-zinc-500">5% OFF</span>
+                                    </span>
+                                </div>
+                                <div className="flex items-center justify-center gap-2 border-t border-white/5 pt-2">
+                                    <span className="bg-white/5 px-2 py-1 rounded text-[10px] font-bold text-white">Cartão</span>
+                                    <span className="text-[12px] text-zinc-300">
+                                        <span className="text-white font-bold text-lg">12x R$ {installmentValue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+                                        <span className="block text-[8px] uppercase tracking-wider text-zinc-500">Sem Juros</span>
+                                    </span>
+                                </div>
                             </div>
 
                             <button
@@ -596,8 +633,8 @@ export const ProposalGenerator: React.FC = () => {
                                                 architect_id: userId,
                                                 client_name: clientName,
                                                 project_name: (projectName && projectName.trim() !== '') ? projectName : clientName,
-                                                total_value: totalProposalValue,
-                                                commission_value: totalProposalValue * (architectProfile.commissionRate / 100),
+                                                total_value: finalValue, // Use final value with discount
+                                                commission_value: finalValue * (architectProfile.commissionRate / 100),
                                                 status: 'sent'
                                             } as any)
                                             .select()
@@ -633,7 +670,6 @@ export const ProposalGenerator: React.FC = () => {
                                 disabled={proposalItems.length === 0 || !clientName || isSaving}
                                 className="w-full bg-white text-black py-6 font-bold flex items-center justify-center gap-4 hover:bg-gold transition-all disabled:opacity-10 disabled:grayscale disabled:cursor-not-allowed uppercase tracking-[0.4em] text-[10px] shadow-[0_0_30px_rgba(255,255,255,0.05)]"
                             >
-                                {isSaving ? <Loader2 className="animate-spin" size={18} /> : <Printer size={18} />}
                                 {isSaving ? 'Salvando...' : 'Exportar Curadoria'}
                             </button>
                         </div>
