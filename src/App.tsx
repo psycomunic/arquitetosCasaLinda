@@ -45,6 +45,12 @@ const App: React.FC = () => {
   });
   const [authLoading, setAuthLoading] = React.useState(true);
 
+  const ADMIN_EMAILS = [
+    'renan.macedos@hotmail.com',
+    'giselekf2@gmail.com',
+    'kelly.cordeirodasilva.5@gmail.com'
+  ];
+
   const fetchProfile = React.useCallback(async () => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
@@ -56,12 +62,13 @@ const App: React.FC = () => {
           .single() as any;
 
         if (data) {
+          const isHardcodedAdmin = ADMIN_EMAILS.includes(user.email || '');
           setProfile({
             name: data.name,
             officeName: data.office_name,
             logoUrl: data.logo_url || '',
             profilePhotoUrl: data.profile_photo_url || '', // Fetch profile photo
-            isAdmin: data.is_admin || false,
+            isAdmin: data.is_admin || isHardcodedAdmin || false,
             phone: data.phone || ''
           });
         }
