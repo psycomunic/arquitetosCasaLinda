@@ -1,14 +1,16 @@
 import React from 'react';
 import { X, User, Phone, Mail, MapPin, Building, Calendar, Globe, CreditCard } from 'lucide-react';
 import { Architect } from '../types/database';
+import { supabase } from '../lib/supabase';
 
 interface ArchitectDetailsModalProps {
     isOpen: boolean;
     onClose: () => void;
     architect: Architect;
+    onUpdate?: () => void;
 }
 
-export const ArchitectDetailsModal: React.FC<ArchitectDetailsModalProps> = ({ isOpen, onClose, architect }) => {
+export const ArchitectDetailsModal: React.FC<ArchitectDetailsModalProps> = ({ isOpen, onClose, architect, onUpdate }) => {
     if (!isOpen) return null;
 
     const formatDate = (dateString: string) => {

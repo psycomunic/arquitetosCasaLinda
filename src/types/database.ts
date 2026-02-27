@@ -25,6 +25,19 @@ export interface Architect {
     approved_at: string | null;
     approved_by: string | null;
     coupon_code: string | null;
+    magazord_seller_code?: string | null;
+    created_at: string;
+    updated_at: string;
+}
+
+export interface MagazordCommission {
+    id: string;
+    architect_id: string;
+    magazord_order_id: string;
+    magazord_seller_code: string;
+    order_value: number;
+    commission_amount: number;
+    status: 'PENDING' | 'PAID' | 'CANCELED';
     created_at: string;
     updated_at: string;
 }
@@ -76,6 +89,11 @@ export interface Database {
                 Row: Architect;
                 Insert: Omit<Architect, 'created_at' | 'updated_at' | 'total_earnings'>;
                 Update: Partial<Omit<Architect, 'id' | 'created_at'>>;
+            };
+            magazord_commissions: {
+                Row: MagazordCommission;
+                Insert: Omit<MagazordCommission, 'id' | 'created_at' | 'updated_at'>;
+                Update: Partial<Omit<MagazordCommission, 'id' | 'created_at' | 'architect_id' | 'magazord_order_id'>>;
             };
             proposals: {
                 Row: Proposal;

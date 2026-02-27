@@ -671,6 +671,7 @@ export const AdminDashboard: React.FC = () => {
                         setSelectedDetailArchitect(null);
                     }}
                     architect={selectedDetailArchitect}
+                    onUpdate={fetchApprovedArchitects}
                 />
             )}
         </div>

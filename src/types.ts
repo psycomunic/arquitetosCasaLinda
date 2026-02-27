@@ -74,6 +74,7 @@ export interface ArchitectProfile {
   commissionRate: number;
   totalEarnings: number;
   couponCode?: string | null;
+  magazordSellerCode?: string | null;
   isAdmin?: boolean;
 }
 

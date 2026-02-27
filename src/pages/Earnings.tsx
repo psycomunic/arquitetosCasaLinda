@@ -1,10 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import { CheckCircle2, Heart } from 'lucide-react';
 import { supabase } from '../lib/supabase';
-import { Sale } from '../types/database';
+import { Sale, MagazordCommission } from '../types/database';
+
+interface CombinedSale {
+    id: string;
+    date: string;
+    reference: string;
+    clientName: string;
+    type: 'PROPOSAL' | 'MAGAZORD';
+    saleValue: number;
+    commissionValue: number;
+    status: 'pending' | 'paid' | 'cancelled';
+}
 
 export const Earnings: React.FC = () => {
-    const [sales, setSales] = useState<Sale[]>([]);
+    const [sales, setSales] = useState<CombinedSale[]>([]);
     const [loading, setLoading] = useState(true);
     const [currentRate, setCurrentRate] = useState(15);
     const [stats, setStats] = useState({
@@ -22,11 +33,15 @@ export const Earnings: React.FC = () => {
             const { data: { user } } = await supabase.auth.getUser();
             if (!user) return;
 
-            const { data, error } = await supabase
+            const { data: salesData, error: salesError } = await supabase
                 .from('sales')
                 .select('*')
-                .eq('architect_id', user.id)
-                .order('created_at', { ascending: false });
+                .eq('architect_id', user.id);
+
+            const { data: magazordData, error: magazordError } = await supabase
+                .from('magazord_commissions')
+                .select('*')
+                .eq('architect_id', user.id);
 
             // Fetch current rate
             const { data: architectData } = await supabase
@@ -39,19 +54,49 @@ export const Earnings: React.FC = () => {
                 setCurrentRate(Number((architectData as any).commission_rate));
             }
 
-            if (error) throw error;
+            if (salesError) throw salesError;
+            if (magazordError) throw magazordError;
 
-            if (data) {
-                setSales(data);
-                const total = data.reduce((acc: number, curr: Sale) => acc + (curr.status === 'paid' ? Number(curr.commission_value) : 0), 0);
-                const pending = data.reduce((acc: number, curr: Sale) => acc + (curr.status === 'pending' ? Number(curr.commission_value) : 0), 0);
-                // Assuming paid commissions are available for withdrawal unless marked otherwise
-                setStats({
-                    totalEarnings: total,
-                    pendingEarnings: pending,
-                    availableForWithdrawal: total
-                });
+            let combined: CombinedSale[] = [];
+
+            if (salesData) {
+                combined = [...combined, ...salesData.map((s: Sale) => ({
+                    id: s.id,
+                    date: s.created_at,
+                    reference: s.proposal_id ? s.proposal_id.slice(0, 8) : 'MANUAL',
+                    clientName: (s as any).client_name || 'Venda Assistida',
+                    type: 'PROPOSAL' as const,
+                    saleValue: Number(s.sale_value),
+                    commissionValue: Number(s.commission_value),
+                    status: s.status as 'pending' | 'paid' | 'cancelled'
+                }))];
             }
+
+            if (magazordData) {
+                combined = [...combined, ...magazordData.map((m: MagazordCommission) => ({
+                    id: m.id,
+                    date: m.created_at,
+                    reference: `ORD-${m.magazord_order_id}`,
+                    clientName: 'E-commerce (MagaZord)',
+                    type: 'MAGAZORD' as const,
+                    saleValue: Number(m.order_value),
+                    commissionValue: Number(m.commission_amount),
+                    status: (m.status === 'PAID' ? 'paid' : m.status === 'CANCELED' ? 'cancelled' : 'pending') as 'pending' | 'paid' | 'cancelled'
+                }))];
+            }
+
+            combined.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+            setSales(combined);
+            const total = combined.reduce((acc, curr) => acc + (curr.status === 'paid' ? curr.commissionValue : 0), 0);
+            const pending = combined.reduce((acc, curr) => acc + (curr.status === 'pending' ? curr.commissionValue : 0), 0);
+
+            // Assuming paid commissions are available for withdrawal unless marked otherwise
+            setStats({
+                totalEarnings: total,
+                pendingEarnings: pending,
+                availableForWithdrawal: total
+            });
         } catch (error) {
             console.error('Error fetching sales:', error);
         } finally {
@@ -109,12 +154,13 @@ export const Earnings: React.FC = () => {
                             sales.map((sale) => (
                                 <tr key={sale.id} className="hover:bg-white/5 transition-colors">
                                     <td className="px-12 py-8 text-[11px] font-mono text-zinc-600">
-                                        {sale.proposal_id ? sale.proposal_id.slice(0, 8) : 'MANUAL'}
+                                        {sale.reference}
+                                        {sale.type === 'MAGAZORD' && <span className="ml-2 text-[8px] bg-gold/20 text-gold px-1.5 py-0.5 rounded border border-gold/30">ONLINE</span>}
                                     </td>
-                                    <td className="px-12 py-8 text-xs text-zinc-400">{new Date(sale.created_at).toLocaleDateString('pt-BR')}</td>
-                                    <td className="px-12 py-8 text-sm font-medium text-white">{sale.client_name}</td>
-                                    <td className="px-12 py-8 text-sm text-zinc-400">R$ {Number(sale.sale_value).toLocaleString('pt-BR')}</td>
-                                    <td className="px-12 py-8 text-sm font-bold text-gold">R$ {Number(sale.commission_value).toLocaleString('pt-BR')}</td>
+                                    <td className="px-12 py-8 text-xs text-zinc-400">{new Date(sale.date).toLocaleDateString('pt-BR')}</td>
+                                    <td className="px-12 py-8 text-sm font-medium text-white">{sale.clientName}</td>
+                                    <td className="px-12 py-8 text-sm text-zinc-400">R$ {sale.saleValue.toLocaleString('pt-BR')}</td>
+                                    <td className="px-12 py-8 text-sm font-bold text-gold">R$ {sale.commissionValue.toLocaleString('pt-BR')}</td>
                                     <td className="px-12 py-8">
                                         <div className="flex items-center gap-3">
                                             <div className={`w-2 h-2 rounded-full ${sale.status === 'paid' ? 'bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.5)]' : sale.status === 'cancelled' ? 'bg-red-500' : 'bg-gold shadow-[0_0_10px_rgba(197,160,89,0.5)]'}`} />

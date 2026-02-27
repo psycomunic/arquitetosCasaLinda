@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { DollarSign, Award, ArrowRight, Inbox, Share2, UploadCloud, Crown, Copy, Check, MessageSquare, Star } from 'lucide-react';
+import { Copy, MapPin, Building, Activity, Wallet, Calendar, PlusCircle, Check, Play, BookOpen, Clock, Heart, Award, ArrowRight, MessageCircle, FileDown, ShieldCheck, Globe, CheckCircle2, DollarSign, Inbox, Share2, UploadCloud, Crown, MessageSquare, Star } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { ArchitectProfile } from '../types';
@@ -63,8 +63,10 @@ export const DashboardOverview: React.FC = () => {
         fetchProfile();
     }, []);
 
+    const computedLink = "https://www.casalindadecoracoes.com.br/";
+
     const copyLink = () => {
-        const link = `https://www.casalindadecoracoes.com.br`;
+        const link = "https://www.casalindadecoracoes.com.br/";
         navigator.clipboard.writeText(link);
         setCopiedLink(true);
         setTimeout(() => setCopiedLink(false), 2000);
@@ -112,16 +114,22 @@ export const DashboardOverview: React.FC = () => {
                     </p>
 
                     <div className="space-y-3">
-                        <div className="p-3 md:p-4 bg-black/50 rounded-xl border border-white/5 flex items-center justify-between group-hover:border-gold/30 transition-colors">
-                            <div className="flex flex-col overflow-hidden mr-2">
-                                <span className="text-[8px] uppercase tracking-widest text-zinc-600 font-bold mb-1">Link do Site</span>
-                                <span className="text-[9px] md:text-[10px] text-zinc-400 font-mono truncate">www.casalindadecoracoes.com.br</span>
+                        <div className="flex flex-col md:flex-row gap-4">
+                            <div className="flex-1 bg-black/50 border border-white/10 rounded-lg px-4 py-3 flex items-center justify-between group relative overflow-hidden">
+                                <div className="absolute inset-0 bg-gradient-to-r from-gold/0 via-gold/5 to-gold/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
+                                <span className="text-white font-mono text-sm relative z-10 flex items-center gap-2">
+                                    <Globe size={14} className="text-zinc-500" />
+                                    {computedLink}
+                                </span>
+                                <button
+                                    onClick={copyLink}
+                                    className="text-zinc-400 hover:text-gold transition-colors relative z-10 p-2 hover:bg-white/5 rounded-full"
+                                    title="Copiar Link"
+                                >
+                                    {copiedLink ? <CheckCircle2 size={16} className="text-green-500" /> : <Copy size={16} />}
+                                </button>
                             </div>
-                            <button onClick={copyLink} className="text-gold hover:text-white transition-colors shrink-0">
-                                {copiedLink ? <Check size={16} /> : <Copy size={16} />}
-                            </button>
                         </div>
-
                         <div className="p-3 md:p-4 bg-black/50 rounded-xl border border-white/5 flex items-center justify-between group-hover:border-gold/30 transition-colors">
                             <div className="flex flex-col overflow-hidden mr-2">
                                 <span className="text-[8px] uppercase tracking-widest text-zinc-600 font-bold mb-1 flex items-center gap-2">
