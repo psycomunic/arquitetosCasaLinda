@@ -18,10 +18,21 @@ serve(async (req) => {
 
         const supabase = createClient(supabaseUrl, supabaseKey);
 
-        const payload = await req.json();
+        const reqText = await req.text();
+        console.log('Recebido payload bruto (raw):', reqText);
 
-        // Log the received payload for debugging
-        console.log('Recebido webhook MagaZord:', JSON.stringify(payload));
+        if (!reqText || reqText.trim() === '') {
+            console.log('Recebido payload vazio, ignorando.');
+            return new Response(JSON.stringify({ success: true, message: 'Empty payload' }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 });
+        }
+
+        let payload;
+        try {
+            payload = JSON.parse(reqText);
+        } catch (e) {
+            console.error('Falha ao fazer parse do JSON:', e);
+            return new Response(JSON.stringify({ error: 'Invalid JSON or format', raw: reqText }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 400 });
+        }
 
         // Extracting order details from MagaZord payload.
         const orderId = payload.id || payload.numero;
