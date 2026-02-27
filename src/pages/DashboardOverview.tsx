@@ -63,11 +63,18 @@ export const DashboardOverview: React.FC = () => {
         fetchProfile();
     }, []);
 
-    const computedLink = "https://www.casalindadecoracoes.com.br/";
+    if (loading) {
+        return <div className="text-white">Carregando...</div>;
+    }
+
+    const firstName = profile?.name?.split(' ')[0]?.toLowerCase() || 'parceiro';
+    const calculatedCoupon = profile?.couponCode || `${firstName}${storeDiscount}`;
+
+    // Affiliate Link with Coupon Parameter
+    const computedLink = `https://www.casalindadecoracoes.com.br/?cupom=${calculatedCoupon}`;
 
     const copyLink = () => {
-        const link = "https://www.casalindadecoracoes.com.br/";
-        navigator.clipboard.writeText(link);
+        navigator.clipboard.writeText(computedLink);
         setCopiedLink(true);
         setTimeout(() => setCopiedLink(false), 2000);
     };
@@ -79,13 +86,6 @@ export const DashboardOverview: React.FC = () => {
             setTimeout(() => setCopiedCoupon(false), 2000);
         }
     };
-
-    if (loading) {
-        return <div className="text-white">Carregando...</div>;
-    }
-
-    const firstName = profile?.name?.split(' ')[0]?.toLowerCase() || 'parceiro';
-    const calculatedCoupon = profile?.couponCode || `${firstName}${storeDiscount}`;
 
     return (
         <div className="space-y-10 animate-fade-in no-print pb-20">
