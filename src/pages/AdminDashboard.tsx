@@ -20,6 +20,7 @@ import { ProductionManager } from '../components/ProductionManager';
 
 import { AddSaleModal } from '../components/AddSaleModal';
 import { ArchitectDetailsModal } from '../components/ArchitectDetailsModal';
+import { AdminCommissions } from '../components/AdminCommissions';
 
 export const AdminDashboard: React.FC = () => {
     const [pendingArchitects, setPendingArchitects] = useState<Architect[]>([]);
@@ -42,7 +43,7 @@ export const AdminDashboard: React.FC = () => {
     const [storeDiscount, setStoreDiscount] = useState('20');
     const [savingDiscount, setSavingDiscount] = useState(false);
     const [migrating, setMigrating] = useState(false);
-    const [activeTab, setActiveTab] = useState<'overview' | 'production' | 'architects'>('overview');
+    const [activeTab, setActiveTab] = useState<'overview' | 'production' | 'architects' | 'commissions'>('overview');
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
 
@@ -56,6 +57,8 @@ export const AdminDashboard: React.FC = () => {
             setActiveTab('production');
         } else if (tab === 'architects') {
             setActiveTab('architects');
+        } else if (tab === 'commissions') {
+            setActiveTab('commissions');
         } else {
             setActiveTab('overview');
         }
@@ -352,6 +355,12 @@ export const AdminDashboard: React.FC = () => {
                     >
                         <Users size={14} /> Arquitetos
                     </button>
+                    <button
+                        onClick={() => setActiveTab('commissions')}
+                        className={`px-6 py-3 text-[10px] uppercase font-bold tracking-widest rounded-lg transition-all flex items-center gap-3 whitespace-nowrap ${activeTab === 'commissions' ? 'bg-gold text-black shadow-[0_0_20px_rgba(197,160,89,0.3)]' : 'text-gold hover:text-black hover:bg-gold'}`}
+                    >
+                        <DollarSign size={14} /> Gestão de Repasses
+                    </button>
                     <div className="w-[1px] h-6 bg-white/10 mx-2 self-center hidden md:block"></div>
                     <button
                         onClick={() => navigate('/proposals')}
@@ -595,6 +604,12 @@ export const AdminDashboard: React.FC = () => {
                             </table>
                         </div>
                     </div>
+                </div>
+            )}
+
+            {activeTab === 'commissions' && (
+                <div className="glass p-8">
+                    <AdminCommissions />
                 </div>
             )}
 

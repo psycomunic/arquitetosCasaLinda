@@ -3,7 +3,7 @@ import { Copy, MapPin, Building, Activity, Wallet, Calendar, PlusCircle, Check, 
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { ArchitectProfile } from '../types';
-import { Architect } from '../types/database';
+import { Architect, Sale, MagazordCommission } from '../types/database';
 import { Ranking } from '../components/Ranking';
 import { AssistanceModal } from '../components/AssistanceModal';
 import { CustomProjectModal } from '../components/CustomProjectModal';
@@ -22,6 +22,7 @@ export const DashboardOverview: React.FC = () => {
     const [copiedLink, setCopiedLink] = useState(false);
     const [copiedCoupon, setCopiedCoupon] = useState(false);
     const [storeDiscount, setStoreDiscount] = useState(0);
+    const [recentSales, setRecentSales] = useState<any[]>([]);
 
     useEffect(() => {
         const fetchProfile = async () => {
@@ -35,12 +36,57 @@ export const DashboardOverview: React.FC = () => {
 
                 const architect = data as unknown as Architect;
 
+                let dynamicTotalEarnings = 0;
+                let allSales: any[] = [];
+
+                // Fetch recent sales and magazord commissions dynamically
+                const { data: salesData } = await supabase
+                    .from('sales')
+                    .select('*')
+                    .eq('architect_id', user.id);
+
+                const { data: magazordData } = await supabase
+                    .from('magazord_commissions')
+                    .select('*')
+                    .eq('architect_id', user.id);
+
+                if (salesData) {
+                    allSales = [...allSales, ...salesData.map((s: Sale) => ({
+                        id: s.id,
+                        date: s.created_at,
+                        reference: s.proposal_id ? s.proposal_id.slice(0, 8) : 'MANUAL',
+                        clientName: (s as any).client_name || 'Venda Assistida',
+                        type: 'PROPOSAL',
+                        saleValue: Number(s.sale_value),
+                        commissionValue: Number(s.commission_value),
+                        status: s.status,
+                    }))];
+                }
+
+                if (magazordData) {
+                    allSales = [...allSales, ...magazordData.map((m: MagazordCommission) => ({
+                        id: m.id,
+                        date: m.created_at,
+                        reference: `ORD-${m.magazord_order_id}`,
+                        clientName: 'E-commerce (MagaZord)',
+                        type: 'MAGAZORD',
+                        saleValue: Number(m.order_value),
+                        commissionValue: Number(m.commission_amount),
+                        status: m.status === 'PAID' ? 'paid' : m.status === 'CANCELED' ? 'cancelled' : 'pending',
+                    }))];
+                }
+
+                dynamicTotalEarnings = allSales.reduce((acc, curr) => acc + (curr.status === 'paid' ? curr.commissionValue : 0), 0);
+
+                allSales.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+                setRecentSales(allSales.slice(0, 5));
+
                 if (architect) {
                     setProfile({
                         name: architect.name,
                         officeName: architect.office_name,
                         commissionRate: Number(architect.commission_rate),
-                        totalEarnings: Number(architect.total_earnings),
+                        totalEarnings: dynamicTotalEarnings > 0 ? dynamicTotalEarnings : Number(architect.total_earnings), // Fallback to DB value if historical
                         logoUrl: architect.logo_url,
                         couponCode: architect.coupon_code,
                         isAdmin: architect.is_admin
@@ -274,7 +320,7 @@ export const DashboardOverview: React.FC = () => {
                 {/* Ranking Section */}
                 <Ranking />
 
-                {/* Vendas Recentes / Placeholder */}
+                {/* Vendas Recentes */}
                 <div className="glass overflow-hidden min-h-[300px] flex flex-col">
                     <div className="p-8 border-b border-white/5 flex justify-between items-center bg-white/5">
                         <h3 className="font-serif text-2xl text-white">Vendas Recentes</h3>
@@ -285,10 +331,29 @@ export const DashboardOverview: React.FC = () => {
                             Relatório Completo <ArrowRight size={14} />
                         </button>
                     </div>
-                    <div className="flex-1 flex flex-col items-center justify-center p-12 text-zinc-600">
-                        <Inbox size={48} strokeWidth={1} className="mb-4 opacity-20" />
-                        <p className="text-[10px] uppercase tracking-[0.3em]">Nenhuma venda registrada ainda</p>
-                    </div>
+                    {recentSales.length === 0 ? (
+                        <div className="flex-1 flex flex-col items-center justify-center p-12 text-zinc-600">
+                            <Inbox size={48} strokeWidth={1} className="mb-4 opacity-20" />
+                            <p className="text-[10px] uppercase tracking-[0.3em]">Nenhuma venda registrada ainda</p>
+                        </div>
+                    ) : (
+                        <div className="flex-1 overflow-auto">
+                            <table className="w-full text-left">
+                                <tbody className="divide-y divide-white/5">
+                                    {recentSales.map((sale) => (
+                                        <tr key={sale.id} className="hover:bg-white/5 transition-colors">
+                                            <td className="px-6 py-4 text-[10px] font-mono text-zinc-600">
+                                                {sale.reference}
+                                                {sale.type === 'MAGAZORD' && <span className="ml-2 text-[8px] bg-gold/20 text-gold px-1.5 py-0.5 rounded border border-gold/30">ONLINE</span>}
+                                            </td>
+                                            <td className="px-6 py-4 text-xs text-white truncate max-w-[120px]">{sale.clientName}</td>
+                                            <td className="px-6 py-4 text-xs font-bold text-gold text-right">R$ {sale.commissionValue.toLocaleString('pt-BR')}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    )}
                 </div>
             </div>
 

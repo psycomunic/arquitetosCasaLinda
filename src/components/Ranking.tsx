@@ -20,13 +20,19 @@ export const Ranking: React.FC = () => {
 
     const fetchRanking = async () => {
         try {
-            // First get all sales
-            const { data: sales, error } = await supabase
+            // Fetch manual sales
+            const { data: sales, error: salesError } = await supabase
                 .from('sales')
                 .select('architect_id, sale_value, architects(name, office_name)')
                 .eq('status', 'paid');
 
-            if (error) throw error;
+            // Fetch MagaZord sales
+            const { data: magazordSales, error: magazordError } = await (supabase.from('magazord_commissions') as any)
+                .select('architect_id, order_value, architects(name, office_name)')
+                .eq('status', 'PAID');
+
+            if (salesError) throw salesError;
+            if (magazordError) throw magazordError;
 
             // Group by architect
             const grouped: Record<string, RankingItem> = {};
@@ -43,6 +49,21 @@ export const Ranking: React.FC = () => {
                     };
                 }
                 grouped[id].total_sales += Number(sale.sale_value);
+                grouped[id].sales_count += 1;
+            });
+
+            magazordSales?.forEach((sale: any) => {
+                const id = sale.architect_id;
+                if (!grouped[id]) {
+                    grouped[id] = {
+                        architect_id: id,
+                        name: sale.architects?.name || 'Desconhecido',
+                        office_name: sale.architects?.office_name || '',
+                        total_sales: 0,
+                        sales_count: 0
+                    };
+                }
+                grouped[id].total_sales += Number(sale.order_value);
                 grouped[id].sales_count += 1;
             });
 
