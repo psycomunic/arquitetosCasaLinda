@@ -45,8 +45,11 @@ serve(async (req) => {
         // Basic Auth combination
         const authHeader = `Basic ${btoa(`${apiUser}:${apiPass}`)}`;
 
-        // Fetch paginated or latest orders from MagaZord (depending on API structure, usually /api/v1/pedidos)
-        const response = await fetch(`${baseUrl}/v1/pedidos?dataModificacao=${encodeURIComponent(dataModificacao)}`, {
+        // Fetch orders from MagaZord using the correct v2 endpoint
+        const url = `${baseUrl}/v2/site/pedido?dataModificacaoInicio=${encodeURIComponent(dataModificacao)}&limit=100`;
+        console.log('Chamando URL:', url);
+
+        const response = await fetch(url, {
             method: 'GET',
             headers: {
                 'Authorization': authHeader,
@@ -55,28 +58,37 @@ serve(async (req) => {
             }
         });
 
+        const responseText = await response.text();
+        console.log('MagaZord API response status:', response.status);
+        console.log('MagaZord API response:', responseText.substring(0, 500));
+
         if (!response.ok) {
-            const errText = await response.text();
-            console.error('Falha ao comunicar com API MagaZord:', response.status, errText);
-            return new Response(JSON.stringify({ error: 'MagaZord API communication failed' }), { headers: corsHeaders, status: 500 });
+            console.error('Falha ao comunicar com API MagaZord:', response.status, responseText);
+            return new Response(JSON.stringify({ error: 'MagaZord API communication failed', details: responseText }), { headers: corsHeaders, status: 500 });
         }
 
-        const responseData = await response.json();
-        // Assuming the orders are listed in `responseData.registros` or root array based on standard ERP apis.
-        const orders = responseData.itens || responseData.registros || responseData;
+        const responseData = JSON.parse(responseText);
+        // MagaZord v2 returns { data: [...] } or { itens: [...] } or direct array
+        const orders = responseData.data || responseData.itens || responseData.registros || (Array.isArray(responseData) ? responseData : []);
 
-        if (!Array.isArray(orders)) {
-            console.log('Nenhum array de pedidos encontrado na resposta.');
-            return new Response(JSON.stringify({ success: true, message: 'No orders found or invalid structure.' }), { headers: corsHeaders, status: 200 });
+        if (!Array.isArray(orders) || orders.length === 0) {
+            console.log('Nenhum pedido encontrado na resposta. Total:', orders?.length);
+            return new Response(JSON.stringify({ success: true, message: 'No orders found.' }), { headers: corsHeaders, status: 200 });
         }
+
+        console.log(`Encontrados ${orders.length} pedidos para processar.`);
 
         let processedCount = 0;
 
         for (const order of orders) {
-            const status = order.situacao?.id || order.situacao;
-            // Aprovado ou Faturado etc (geralmente status >= 4 e < 9)
-            if (status === 4 || status === 5 || status === 6 || status === 8) {
-                const orderId = order.numero || order.id;
+            // MagaZord v2 uses string status codes like "APROVADO", "FATURADO" etc
+            const situacaoStr = (order.situacao?.nome || order.situacao?.codigo || order.situacao || '').toString().toUpperCase();
+            const situacaoId = order.situacao?.id || 0;
+            const isApproved = ['APROVADO', 'FATURADO', 'FATURAMENTO_INICIADO', 'APROVADO_PARCIAL'].includes(situacaoStr)
+                || situacaoId === 4 || situacaoId === 5 || situacaoId === 6 || situacaoId === 8;
+
+            if (isApproved) {
+                const orderId = order.codigo || order.numero || order.id;
                 const orderValue = parseFloat(order.valorTotal || order.total || '0');
 
                 let couponCode = order.codigoCupom || order.cupom;
