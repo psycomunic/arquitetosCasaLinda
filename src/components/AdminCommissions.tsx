@@ -1,6 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { supabase } from '../lib/supabase';
-import { CheckCircle2, Search, Filter, Loader2, DollarSign, RefreshCw, AlertCircle } from 'lucide-react';
+import {
+    CheckCircle2, Search, Loader2, DollarSign, RefreshCw,
+    AlertCircle, Calendar, Users, Clock, History, TrendingUp
+} from 'lucide-react';
 
 interface CombinedCommission {
     id: string;
@@ -13,31 +16,40 @@ interface CombinedCommission {
     saleValue: number;
     commissionValue: number;
     status: 'pending' | 'paid' | 'cancelled';
-    originalId: string; // ID from the original table
+    originalId: string;
+}
+
+interface ArchitectSummary {
+    architectId: string;
+    architectName: string;
+    pendingCount: number;
+    pendingTotal: number;
+    commissions: CombinedCommission[];
 }
 
 export const AdminCommissions: React.FC = () => {
     const [commissions, setCommissions] = useState<CombinedCommission[]>([]);
     const [loading, setLoading] = useState(true);
     const [actionLoading, setActionLoading] = useState<string | null>(null);
+    const [activeTab, setActiveTab] = useState<'summary' | 'history'>('summary');
     const [searchTerm, setSearchTerm] = useState('');
     const [statusFilter, setStatusFilter] = useState<'all' | 'pending' | 'paid' | 'cancelled'>('all');
+
+    // Month selector: default to current month
+    const now = new Date();
+    const [selectedMonth, setSelectedMonth] = useState(now.getMonth());
+    const [selectedYear, setSelectedYear] = useState(now.getFullYear());
 
     const fetchCommissions = async () => {
         setLoading(true);
         try {
-            // Fetch manual sales
-            const { data: salesData, error: salesError } = await supabase
+            const { data: salesData } = await supabase
                 .from('sales')
                 .select('*, architects(name)');
 
-            // Fetch MagaZord sales
-            const { data: magazordData, error: magazordError } = await supabase
+            const { data: magazordData } = await supabase
                 .from('magazord_commissions')
                 .select('*, architects(name)');
-
-            if (salesError) throw salesError;
-            if (magazordError) throw magazordError;
 
             let combined: CombinedCommission[] = [];
 
@@ -62,10 +74,10 @@ export const AdminCommissions: React.FC = () => {
                     id: `MAGZ-${m.id}`,
                     originalId: m.id,
                     date: m.created_at,
-                    reference: `ORD-${m.magazord_order_id}`,
+                    reference: m.magazord_order_id || m.id,
                     architectId: m.architect_id,
                     architectName: m.architects?.name || 'Desconhecido',
-                    clientName: 'E-commerce (MagaZord)',
+                    clientName: 'MagaZord (Online)',
                     type: 'MAGAZORD' as const,
                     saleValue: Number(m.order_value),
                     commissionValue: Number(m.commission_amount),
@@ -73,101 +85,134 @@ export const AdminCommissions: React.FC = () => {
                 }))];
             }
 
-            // Sort newest first
             combined.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-
             setCommissions(combined);
         } catch (error) {
             console.error('Error fetching commissions:', error);
-            alert('Erro ao carregar comissões.');
         } finally {
             setLoading(false);
         }
     };
 
-    useEffect(() => {
-        fetchCommissions();
-    }, []);
+    useEffect(() => { fetchCommissions(); }, []);
 
-    const handleMarkAsPaid = async (commission: CombinedCommission) => {
-        if (!confirm(`Tem certeza que deseja marcar esta comissão de R$ ${commission.commissionValue.toLocaleString('pt-BR')} para ${commission.architectName} como PAGA?`)) {
-            return;
-        }
+    // ─── Month filtering ───────────────────────────────────────────────
+    const monthCommissions = useMemo(() =>
+        commissions.filter(c => {
+            const d = new Date(c.date);
+            return d.getMonth() === selectedMonth && d.getFullYear() === selectedYear;
+        }), [commissions, selectedMonth, selectedYear]);
 
-        setActionLoading(commission.id);
+    // ─── Per-architect summary for selected month ──────────────────────
+    const architectSummaries = useMemo((): ArchitectSummary[] => {
+        const map = new Map<string, ArchitectSummary>();
+        monthCommissions.forEach(c => {
+            if (!map.has(c.architectId)) {
+                map.set(c.architectId, {
+                    architectId: c.architectId,
+                    architectName: c.architectName,
+                    pendingCount: 0,
+                    pendingTotal: 0,
+                    commissions: []
+                });
+            }
+            const entry = map.get(c.architectId)!;
+            entry.commissions.push(c);
+            if (c.status === 'pending') {
+                entry.pendingCount++;
+                entry.pendingTotal += c.commissionValue;
+            }
+        });
+        return Array.from(map.values()).sort((a, b) => b.pendingTotal - a.pendingTotal);
+    }, [monthCommissions]);
+
+    const monthGrandTotal = useMemo(() =>
+        architectSummaries.reduce((s, a) => s + a.pendingTotal, 0),
+        [architectSummaries]);
+
+    // ─── Payment day info ──────────────────────────────────────────────
+    const paymentDay = 10;
+    const today = new Date();
+    const nextPayment = new Date(today.getFullYear(), today.getMonth(), paymentDay);
+    if (nextPayment < today) nextPayment.setMonth(nextPayment.getMonth() + 1);
+    const daysUntilPayment = Math.ceil((nextPayment.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+    const isPaymentDay = today.getDate() === paymentDay;
+
+    const monthNames = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+        'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+
+    // ─── Pay all pending for one architect ────────────────────────────
+    const handlePayArchitect = async (summary: ArchitectSummary) => {
+        if (summary.pendingTotal === 0) return;
+        if (!confirm(`Pagar R$ ${summary.pendingTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })} para ${summary.architectName}?\n\nIsso marca ${summary.pendingCount} comissões como PAGAS e atualiza o saldo do arquiteto.`)) return;
+
+        setActionLoading(summary.architectId);
         try {
-            // 1. Update the specific table status
-            if (commission.type === 'PROPOSAL') {
-                const { error } = await (supabase.from('sales') as any)
-                    .update({ status: 'paid' })
-                    .eq('id', commission.originalId);
-                if (error) throw error;
-            } else if (commission.type === 'MAGAZORD') {
-                const { error } = await (supabase.from('magazord_commissions') as any)
-                    .update({ status: 'PAID' })
-                    .eq('id', commission.originalId);
-                if (error) throw error;
+            const pending = summary.commissions.filter(c => c.status === 'pending');
+
+            // Update each commission
+            for (const c of pending) {
+                if (c.type === 'PROPOSAL') {
+                    await (supabase.from('sales') as any).update({ status: 'paid' }).eq('id', c.originalId);
+                } else {
+                    await (supabase.from('magazord_commissions') as any).update({ status: 'PAID' }).eq('id', c.originalId);
+                }
             }
 
-            // 2. Fetch current architect total earnings
-            const { data: archData, error: archError } = await supabase
-                .from('architects')
-                .select('total_earnings')
-                .eq('id', commission.architectId)
-                .single();
+            // Update architect total_earnings
+            const { data: archData } = await supabase
+                .from('architects').select('total_earnings').eq('id', summary.architectId).single();
+            const newEarnings = (Number((archData as any)?.total_earnings) || 0) + summary.pendingTotal;
+            await (supabase.from('architects') as any).update({ total_earnings: newEarnings }).eq('id', summary.architectId);
 
-            if (archError) throw archError;
-            if (!archData) throw new Error('Architect not found');
-
-            // 3. Increment the earnings
-            const currentEarnings = Number((archData as any).total_earnings) || 0;
-            const newEarnings = currentEarnings + commission.commissionValue;
-
-            const { error: updateArchError } = await (supabase.from('architects') as any)
-                .update({ total_earnings: newEarnings })
-                .eq('id', commission.architectId);
-
-            if (updateArchError) throw updateArchError;
-
-            alert('Comissão marcada como paga com sucesso e saldo do arquiteto atualizado!');
-            fetchCommissions();
+            await fetchCommissions();
         } catch (error) {
-            console.error('Error marking as paid:', error);
-            alert('Erro ao processar o pagamento.');
+            console.error('Error paying architect:', error);
+            alert('Erro ao processar pagamento.');
+        } finally {
+            setActionLoading(null);
+        }
+    };
+
+    // ─── History: mark single as paid ─────────────────────────────────
+    const handleMarkAsPaid = async (commission: CombinedCommission) => {
+        if (!confirm(`Marcar comissão de R$ ${commission.commissionValue.toLocaleString('pt-BR')} para ${commission.architectName} como PAGA?`)) return;
+        setActionLoading(commission.id);
+        try {
+            if (commission.type === 'PROPOSAL') {
+                await (supabase.from('sales') as any).update({ status: 'paid' }).eq('id', commission.originalId);
+            } else {
+                await (supabase.from('magazord_commissions') as any).update({ status: 'PAID' }).eq('id', commission.originalId);
+            }
+            const { data: archData } = await supabase.from('architects').select('total_earnings').eq('id', commission.architectId).single();
+            const newEarnings = (Number((archData as any)?.total_earnings) || 0) + commission.commissionValue;
+            await (supabase.from('architects') as any).update({ total_earnings: newEarnings }).eq('id', commission.architectId);
+            await fetchCommissions();
+        } catch (error) {
+            alert('Erro ao processar pagamento.');
         } finally {
             setActionLoading(null);
         }
     };
 
     const handleMarkAsCancelled = async (commission: CombinedCommission) => {
-        if (!confirm(`Tem certeza que deseja marcar esta comissão de ${commission.architectName} como CANCELADA?`)) {
-            return;
-        }
-
+        if (!confirm(`Cancelar esta comissão de ${commission.architectName}?`)) return;
         setActionLoading(commission.id);
         try {
             if (commission.type === 'PROPOSAL') {
-                const { error } = await (supabase.from('sales') as any)
-                    .update({ status: 'cancelled' })
-                    .eq('id', commission.originalId);
-                if (error) throw error;
-            } else if (commission.type === 'MAGAZORD') {
-                const { error } = await (supabase.from('magazord_commissions') as any)
-                    .update({ status: 'CANCELED' })
-                    .eq('id', commission.originalId);
-                if (error) throw error;
+                await (supabase.from('sales') as any).update({ status: 'cancelled' }).eq('id', commission.originalId);
+            } else {
+                await (supabase.from('magazord_commissions') as any).update({ status: 'CANCELED' }).eq('id', commission.originalId);
             }
-
-            fetchCommissions();
+            await fetchCommissions();
         } catch (error) {
-            console.error('Error cancelling:', error);
-            alert('Erro ao cancelar comissão.');
+            alert('Erro ao cancelar.');
         } finally {
             setActionLoading(null);
         }
     };
 
-    const filteredCommissions = commissions.filter(c => {
+    const filteredHistory = commissions.filter(c => {
         const matchesSearch = c.architectName.toLowerCase().includes(searchTerm.toLowerCase()) ||
             c.reference.toLowerCase().includes(searchTerm.toLowerCase()) ||
             c.clientName.toLowerCase().includes(searchTerm.toLowerCase());
@@ -175,157 +220,312 @@ export const AdminCommissions: React.FC = () => {
         return matchesSearch && matchesStatus;
     });
 
-    const pendingTotal = commissions
-        .filter(c => c.status === 'pending')
-        .reduce((sum, c) => sum + c.commissionValue, 0);
-
     return (
         <div className="space-y-6">
-            <h3 className="text-xl font-bold text-white flex items-center gap-3">
-                <DollarSign className="text-gold" /> Gestão de Repasses de Arquitetos
-            </h3>
-
-            {/* Top Stats */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="glass p-6 border-l-2 border-gold relative overflow-hidden">
-                    <div className="absolute top-0 right-0 p-4 opacity-5">
-                        <DollarSign size={80} />
-                    </div>
-                    <p className="text-[10px] uppercase tracking-[0.2em] font-bold text-zinc-500 mb-2">Comissões Pendentes</p>
-                    <h3 className="text-3xl font-serif text-white">R$ {pendingTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</h3>
-                    <p className="text-[10px] text-zinc-400 mt-2">Aguardando repasse manual</p>
-                </div>
+            <div className="flex items-center justify-between">
+                <h3 className="text-xl font-bold text-white flex items-center gap-3">
+                    <DollarSign className="text-gold" /> Gestão de Repasses
+                </h3>
+                <button onClick={fetchCommissions} className="p-2 bg-white/5 hover:bg-white/10 rounded border border-white/10 text-zinc-400" title="Atualizar">
+                    <RefreshCw size={14} className={loading ? 'animate-spin' : ''} />
+                </button>
             </div>
 
-            {/* Filters */}
-            <div className="flex flex-col md:flex-row gap-4 justify-between items-center glass p-4">
-                <div className="relative w-full md:w-96">
-                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500" size={16} />
-                    <input
-                        type="text"
-                        placeholder="Buscar por arquiteto, cliente ou ref..."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full bg-black/50 border border-white/10 rounded-lg pl-12 pr-4 py-3 text-sm text-white focus:border-gold outline-none"
-                    />
-                </div>
-                <div className="flex gap-2 w-full md:w-auto">
-                    <button
-                        onClick={() => setStatusFilter('all')}
-                        className={`px-4 py-2 text-[10px] uppercase tracking-widest font-bold rounded flex-1 md:flex-none transition-colors border ${statusFilter === 'all' ? 'bg-white text-black border-white' : 'border-white/10 text-zinc-400 hover:border-gold'}`}
-                    >
-                        Todos
-                    </button>
-                    <button
-                        onClick={() => setStatusFilter('pending')}
-                        className={`px-4 py-2 text-[10px] uppercase tracking-widest font-bold rounded flex-1 md:flex-none transition-colors border ${statusFilter === 'pending' ? 'bg-gold/20 text-gold border-gold' : 'border-white/10 text-zinc-400 hover:border-gold'}`}
-                    >
-                        Pendentes
-                    </button>
-                    <button
-                        onClick={() => setStatusFilter('paid')}
-                        className={`px-4 py-2 text-[10px] uppercase tracking-widest font-bold rounded flex-1 md:flex-none transition-colors border ${statusFilter === 'paid' ? 'bg-green-500/20 text-green-500 border-green-500' : 'border-white/10 text-zinc-400 hover:border-gold'}`}
-                    >
-                        Pagos
-                    </button>
-                    <button
-                        onClick={fetchCommissions}
-                        className="px-4 py-2 bg-white/5 hover:bg-white/10 text-zinc-300 rounded border border-white/10 flex items-center justify-center"
-                        title="Atualizar lista"
-                    >
-                        <RefreshCw size={14} className={loading ? "animate-spin" : ""} />
-                    </button>
-                </div>
+            {/* ── Tabs ── */}
+            <div className="flex gap-1 bg-black/40 p-1 rounded-lg border border-white/5 w-fit">
+                <button
+                    onClick={() => setActiveTab('summary')}
+                    className={`px-5 py-2 rounded text-[11px] font-bold uppercase tracking-widest transition-all flex items-center gap-2
+                        ${activeTab === 'summary' ? 'bg-gold text-black' : 'text-zinc-400 hover:text-white'}`}
+                >
+                    <Users size={13} /> Repasses do Mês
+                </button>
+                <button
+                    onClick={() => setActiveTab('history')}
+                    className={`px-5 py-2 rounded text-[11px] font-bold uppercase tracking-widest transition-all flex items-center gap-2
+                        ${activeTab === 'history' ? 'bg-gold text-black' : 'text-zinc-400 hover:text-white'}`}
+                >
+                    <History size={13} /> Histórico
+                </button>
             </div>
 
-            {/* List */}
-            <div className="glass overflow-hidden">
-                <div className="overflow-x-auto">
-                    <table className="w-full text-left">
-                        <thead>
-                            <tr className="bg-black/40 border-b border-white/5 text-[9px] uppercase tracking-[0.3em] text-zinc-500 font-bold">
-                                <th className="px-6 py-4">Data</th>
-                                <th className="px-6 py-4">Arquiteto</th>
-                                <th className="px-6 py-4">Origem / Ref</th>
-                                <th className="px-6 py-4 text-right">Repasse (R$)</th>
-                                <th className="px-6 py-4 text-center">Status</th>
-                                <th className="px-6 py-4 text-center">Ação</th>
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y divide-white/5">
-                            {loading ? (
-                                <tr>
-                                    <td colSpan={6} className="px-6 py-12 text-center text-zinc-500">
-                                        <Loader2 className="animate-spin mx-auto mb-2 text-gold" size={24} />
-                                        <p className="text-[10px] uppercase tracking-widest">Carregando comissões...</p>
-                                    </td>
-                                </tr>
-                            ) : filteredCommissions.length === 0 ? (
-                                <tr>
-                                    <td colSpan={6} className="px-6 py-12 text-center text-zinc-500">
-                                        <AlertCircle className="mx-auto mb-2 opacity-50" size={24} />
-                                        <p className="text-[10px] uppercase tracking-widest">Nenhuma comissão encontrada</p>
-                                    </td>
-                                </tr>
-                            ) : (
-                                filteredCommissions.map(commission => (
-                                    <tr key={commission.id} className="hover:bg-white/5 transition-colors">
-                                        <td className="px-6 py-4 text-xs text-zinc-400">
-                                            {new Date(commission.date).toLocaleDateString()}
-                                        </td>
-                                        <td className="px-6 py-4">
-                                            <p className="text-sm font-bold text-white">{commission.architectName}</p>
-                                        </td>
-                                        <td className="px-6 py-4">
-                                            <p className="text-xs text-zinc-300">{commission.clientName}</p>
-                                            <div className="flex items-center gap-2 mt-1">
-                                                <span className="text-[10px] font-mono text-zinc-500">{commission.reference}</span>
-                                                {commission.type === 'MAGAZORD' && (
-                                                    <span className="text-[8px] bg-gold/20 text-gold px-1.5 py-0.5 rounded border border-gold/30">ONLINE</span>
-                                                )}
-                                            </div>
-                                        </td>
-                                        <td className="px-6 py-4 text-right">
-                                            <p className="text-sm font-bold text-gold">R$ {commission.commissionValue.toLocaleString('pt-BR')}</p>
-                                            <p className="text-[9px] text-zinc-500">Venda: R$ {commission.saleValue.toLocaleString('pt-BR')}</p>
-                                        </td>
-                                        <td className="px-6 py-4 text-center">
-                                            <span className={`text-[9px] font-bold uppercase tracking-widest px-2 py-1 rounded inline-flex items-center gap-1
-                                                ${commission.status === 'paid' ? 'bg-green-500/10 text-green-500 border border-green-500/20' :
-                                                    commission.status === 'cancelled' ? 'bg-red-500/10 text-red-500 border border-red-500/20' :
-                                                        'bg-gold/10 text-gold border border-gold/20'}`
-                                            }>
-                                                {commission.status === 'paid' ? 'Pago' : commission.status === 'pending' ? 'Pendente' : 'Cancelado'}
-                                            </span>
-                                        </td>
-                                        <td className="px-6 py-4 text-center">
-                                            {commission.status === 'pending' && (
-                                                <div className="flex items-center justify-center gap-2">
-                                                    <button
-                                                        onClick={() => handleMarkAsPaid(commission)}
-                                                        disabled={!!actionLoading}
-                                                        className="px-3 py-1.5 bg-green-500/10 hover:bg-green-500/20 text-green-500 border border-green-500/20 rounded text-[9px] font-bold uppercase tracking-widest transition-all disabled:opacity-50"
-                                                    >
-                                                        {actionLoading === commission.id ? <Loader2 size={12} className="animate-spin inline mr-1" /> : <CheckCircle2 size={12} className="inline mr-1" />}
-                                                        Pagar
-                                                    </button>
-                                                    <button
-                                                        onClick={() => handleMarkAsCancelled(commission)}
-                                                        disabled={!!actionLoading}
-                                                        className="px-3 py-1.5 hover:bg-red-500/10 text-zinc-500 hover:text-red-500 rounded text-[9px] font-bold uppercase tracking-widest transition-all disabled:opacity-50"
-                                                    >
-                                                        Cancelar
-                                                    </button>
-                                                </div>
-                                            )}
-                                        </td>
-                                    </tr>
-                                ))
+            {/* ══════════════════════════════════════════════
+                TAB: SUMMARY
+            ══════════════════════════════════════════════ */}
+            {activeTab === 'summary' && (
+                <div className="space-y-6">
+
+                    {/* Payment Day Banner */}
+                    <div className={`glass p-4 border rounded-xl flex items-center justify-between
+                        ${isPaymentDay ? 'border-green-500/50 bg-green-500/5' : 'border-gold/30 bg-gold/5'}`}>
+                        <div className="flex items-center gap-3">
+                            <Calendar className={isPaymentDay ? 'text-green-400' : 'text-gold'} size={22} />
+                            <div>
+                                <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-500 font-bold">
+                                    {isPaymentDay ? '🎉 Hoje é dia de pagamento!' : 'Próximo pagamento'}
+                                </p>
+                                <p className={`text-lg font-bold ${isPaymentDay ? 'text-green-400' : 'text-white'}`}>
+                                    Dia {paymentDay} de cada mês
+                                </p>
+                            </div>
+                        </div>
+                        <div className="text-right">
+                            {!isPaymentDay && (
+                                <>
+                                    <p className="text-2xl font-serif text-gold">{daysUntilPayment}</p>
+                                    <p className="text-[10px] text-zinc-500 uppercase tracking-widest">dias restantes</p>
+                                </>
                             )}
-                        </tbody>
-                    </table>
+                        </div>
+                    </div>
+
+                    {/* Month Selector + Grand Total */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {/* Month selector */}
+                        <div className="glass p-5 rounded-xl border border-white/5">
+                            <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-500 font-bold mb-3">Período</p>
+                            <div className="flex gap-2">
+                                <select
+                                    value={selectedMonth}
+                                    onChange={e => setSelectedMonth(Number(e.target.value))}
+                                    className="flex-1 bg-black/50 border border-white/10 text-white rounded px-3 py-2 text-sm outline-none focus:border-gold"
+                                >
+                                    {monthNames.map((m, i) => (
+                                        <option key={i} value={i}>{m}</option>
+                                    ))}
+                                </select>
+                                <select
+                                    value={selectedYear}
+                                    onChange={e => setSelectedYear(Number(e.target.value))}
+                                    className="w-28 bg-black/50 border border-white/10 text-white rounded px-3 py-2 text-sm outline-none focus:border-gold"
+                                >
+                                    {[2025, 2026, 2027].map(y => <option key={y}>{y}</option>)}
+                                </select>
+                            </div>
+                        </div>
+
+                        {/* Grand Total */}
+                        <div className="glass p-5 rounded-xl border-l-2 border-gold relative overflow-hidden">
+                            <div className="absolute top-0 right-0 p-4 opacity-5"><DollarSign size={60} /></div>
+                            <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-500 font-bold mb-1">
+                                Total a Pagar — {monthNames[selectedMonth]} {selectedYear}
+                            </p>
+                            <p className="text-3xl font-serif text-gold">
+                                R$ {monthGrandTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                            </p>
+                            <p className="text-[10px] text-zinc-500 mt-1">
+                                {architectSummaries.filter(a => a.pendingTotal > 0).length} arquiteto(s) com saldo pendente
+                            </p>
+                        </div>
+                    </div>
+
+                    {/* Per-architect cards */}
+                    {loading ? (
+                        <div className="flex items-center justify-center py-16">
+                            <Loader2 className="animate-spin text-gold mr-3" size={24} />
+                            <span className="text-zinc-400 text-sm">Carregando...</span>
+                        </div>
+                    ) : architectSummaries.length === 0 ? (
+                        <div className="glass p-12 rounded-xl text-center">
+                            <TrendingUp className="mx-auto mb-3 text-zinc-600" size={32} />
+                            <p className="text-zinc-400 text-sm">Nenhuma comissão em {monthNames[selectedMonth]} {selectedYear}</p>
+                        </div>
+                    ) : (
+                        <div className="space-y-3">
+                            {architectSummaries.map(summary => (
+                                <div key={summary.architectId}
+                                    className={`glass p-5 rounded-xl border transition-all
+                                        ${summary.pendingTotal > 0 ? 'border-gold/20 bg-gold/3' : 'border-white/5 opacity-60'}`}
+                                >
+                                    <div className="flex items-center justify-between flex-wrap gap-4">
+                                        <div className="flex items-center gap-4">
+                                            <div className="w-10 h-10 rounded-full bg-gold/20 flex items-center justify-center text-gold font-bold text-sm">
+                                                {summary.architectName.charAt(0).toUpperCase()}
+                                            </div>
+                                            <div>
+                                                <p className="text-white font-bold">{summary.architectName}</p>
+                                                <p className="text-[10px] text-zinc-500 mt-0.5">
+                                                    {summary.commissions.length} venda(s) no mês
+                                                    {summary.pendingCount > 0 && (
+                                                        <span className="ml-2 text-gold">· {summary.pendingCount} pendente(s)</span>
+                                                    )}
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        <div className="flex items-center gap-6">
+                                            <div className="text-right">
+                                                <p className="text-[10px] text-zinc-500 uppercase tracking-widest">A pagar</p>
+                                                <p className={`text-xl font-serif ${summary.pendingTotal > 0 ? 'text-gold' : 'text-zinc-600'}`}>
+                                                    R$ {summary.pendingTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                                                </p>
+                                            </div>
+
+                                            {summary.pendingTotal > 0 && (
+                                                <button
+                                                    onClick={() => handlePayArchitect(summary)}
+                                                    disabled={!!actionLoading}
+                                                    className="px-5 py-2.5 bg-gold text-black font-bold text-[11px] uppercase tracking-widest rounded-lg hover:bg-gold/90 transition-all disabled:opacity-50 flex items-center gap-2 whitespace-nowrap"
+                                                >
+                                                    {actionLoading === summary.architectId
+                                                        ? <Loader2 size={13} className="animate-spin" />
+                                                        : <CheckCircle2 size={13} />}
+                                                    Pagar R$ {summary.pendingTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                                                </button>
+                                            )}
+
+                                            {summary.pendingTotal === 0 && (
+                                                <span className="px-4 py-2 bg-green-500/10 text-green-500 text-[10px] font-bold uppercase tracking-widest rounded-lg border border-green-500/20 flex items-center gap-1.5">
+                                                    <CheckCircle2 size={11} /> Pago
+                                                </span>
+                                            )}
+                                        </div>
+                                    </div>
+
+                                    {/* Mini breakdown */}
+                                    {summary.commissions.filter(c => c.status === 'pending').length > 0 && (
+                                        <div className="mt-4 pt-4 border-t border-white/5 space-y-1.5">
+                                            {summary.commissions.filter(c => c.status === 'pending').map(c => (
+                                                <div key={c.id} className="flex justify-between items-center text-xs">
+                                                    <span className="text-zinc-500">
+                                                        {new Date(c.date).toLocaleDateString('pt-BR')}
+                                                        <span className="mx-2 text-zinc-700">·</span>
+                                                        {c.clientName}
+                                                        {c.type === 'MAGAZORD' && (
+                                                            <span className="ml-2 text-[9px] bg-gold/20 text-gold px-1.5 py-0.5 rounded border border-gold/30">ONLINE</span>
+                                                        )}
+                                                    </span>
+                                                    <span className="text-gold font-mono">
+                                                        R$ {c.commissionValue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                                                    </span>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+                    )}
                 </div>
-            </div>
+            )}
+
+            {/* ══════════════════════════════════════════════
+                TAB: HISTORY
+            ══════════════════════════════════════════════ */}
+            {activeTab === 'history' && (
+                <div className="space-y-4">
+                    {/* Filters */}
+                    <div className="flex flex-col md:flex-row gap-4 justify-between items-center glass p-4">
+                        <div className="relative w-full md:w-96">
+                            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500" size={16} />
+                            <input
+                                type="text"
+                                placeholder="Buscar por arquiteto, cliente ou ref..."
+                                value={searchTerm}
+                                onChange={e => setSearchTerm(e.target.value)}
+                                className="w-full bg-black/50 border border-white/10 rounded-lg pl-12 pr-4 py-3 text-sm text-white focus:border-gold outline-none"
+                            />
+                        </div>
+                        <div className="flex gap-2 w-full md:w-auto">
+                            {(['all', 'pending', 'paid', 'cancelled'] as const).map(s => (
+                                <button
+                                    key={s}
+                                    onClick={() => setStatusFilter(s)}
+                                    className={`px-4 py-2 text-[10px] uppercase tracking-widest font-bold rounded flex-1 md:flex-none transition-colors border
+                                        ${statusFilter === s
+                                            ? s === 'all' ? 'bg-white text-black border-white'
+                                                : s === 'pending' ? 'bg-gold/20 text-gold border-gold'
+                                                    : s === 'paid' ? 'bg-green-500/20 text-green-500 border-green-500'
+                                                        : 'bg-red-500/20 text-red-500 border-red-500'
+                                            : 'border-white/10 text-zinc-400 hover:border-gold'}`}
+                                >
+                                    {s === 'all' ? 'Todos' : s === 'pending' ? 'Pendentes' : s === 'paid' ? 'Pagos' : 'Cancelados'}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Table */}
+                    <div className="glass overflow-hidden">
+                        <div className="overflow-x-auto">
+                            <table className="w-full text-left">
+                                <thead>
+                                    <tr className="bg-black/40 border-b border-white/5 text-[9px] uppercase tracking-[0.3em] text-zinc-500 font-bold">
+                                        <th className="px-6 py-4">Data</th>
+                                        <th className="px-6 py-4">Arquiteto</th>
+                                        <th className="px-6 py-4">Origem / Ref</th>
+                                        <th className="px-6 py-4 text-right">Comissão (R$)</th>
+                                        <th className="px-6 py-4 text-center">Status</th>
+                                        <th className="px-6 py-4 text-center">Ação</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-white/5">
+                                    {loading ? (
+                                        <tr><td colSpan={6} className="px-6 py-12 text-center text-zinc-500">
+                                            <Loader2 className="animate-spin mx-auto mb-2 text-gold" size={24} />
+                                            <p className="text-[10px] uppercase tracking-widest">Carregando...</p>
+                                        </td></tr>
+                                    ) : filteredHistory.length === 0 ? (
+                                        <tr><td colSpan={6} className="px-6 py-12 text-center text-zinc-500">
+                                            <AlertCircle className="mx-auto mb-2 opacity-50" size={24} />
+                                            <p className="text-[10px] uppercase tracking-widest">Nenhuma comissão encontrada</p>
+                                        </td></tr>
+                                    ) : filteredHistory.map(c => (
+                                        <tr key={c.id} className="hover:bg-white/5 transition-colors">
+                                            <td className="px-6 py-4 text-xs text-zinc-400">
+                                                {new Date(c.date).toLocaleDateString('pt-BR')}
+                                            </td>
+                                            <td className="px-6 py-4 text-sm font-bold text-white">{c.architectName}</td>
+                                            <td className="px-6 py-4">
+                                                <p className="text-xs text-zinc-300">{c.clientName}</p>
+                                                <div className="flex items-center gap-2 mt-0.5">
+                                                    <span className="text-[10px] font-mono text-zinc-600">{c.reference}</span>
+                                                    {c.type === 'MAGAZORD' && (
+                                                        <span className="text-[8px] bg-gold/20 text-gold px-1.5 py-0.5 rounded border border-gold/30">ONLINE</span>
+                                                    )}
+                                                </div>
+                                            </td>
+                                            <td className="px-6 py-4 text-right">
+                                                <p className="text-sm font-bold text-gold">R$ {c.commissionValue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
+                                                <p className="text-[9px] text-zinc-500">Venda: R$ {c.saleValue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
+                                            </td>
+                                            <td className="px-6 py-4 text-center">
+                                                <span className={`text-[9px] font-bold uppercase tracking-widest px-2 py-1 rounded border inline-flex items-center gap-1
+                                                    ${c.status === 'paid' ? 'bg-green-500/10 text-green-500 border-green-500/20'
+                                                        : c.status === 'cancelled' ? 'bg-red-500/10 text-red-500 border-red-500/20'
+                                                            : 'bg-gold/10 text-gold border-gold/20'}`}>
+                                                    {c.status === 'paid' ? 'Pago' : c.status === 'pending' ? 'Pendente' : 'Cancelado'}
+                                                </span>
+                                            </td>
+                                            <td className="px-6 py-4 text-center">
+                                                {c.status === 'pending' && (
+                                                    <div className="flex items-center justify-center gap-2">
+                                                        <button
+                                                            onClick={() => handleMarkAsPaid(c)}
+                                                            disabled={!!actionLoading}
+                                                            className="px-3 py-1.5 bg-green-500/10 hover:bg-green-500/20 text-green-500 border border-green-500/20 rounded text-[9px] font-bold uppercase tracking-widest transition-all disabled:opacity-50"
+                                                        >
+                                                            {actionLoading === c.id ? <Loader2 size={12} className="animate-spin inline mr-1" /> : <CheckCircle2 size={12} className="inline mr-1" />}
+                                                            Pagar
+                                                        </button>
+                                                        <button
+                                                            onClick={() => handleMarkAsCancelled(c)}
+                                                            disabled={!!actionLoading}
+                                                            className="px-3 py-1.5 hover:bg-red-500/10 text-zinc-500 hover:text-red-500 rounded text-[9px] font-bold uppercase tracking-widest transition-all disabled:opacity-50"
+                                                        >
+                                                            Cancelar
+                                                        </button>
+                                                    </div>
+                                                )}
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
-}
+};
