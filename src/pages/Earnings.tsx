@@ -115,64 +115,60 @@ export const Earnings: React.FC = () => {
                 <h2 className="text-7xl font-serif text-white">Gestão de Repasses</h2>
             </header>
 
-            <div className="glass p-16 flex flex-col md:flex-row justify-between items-center gap-10 bg-gradient-to-br from-white/5 to-transparent">
-                <div className="space-y-4">
+            <div className="glass p-12 flex flex-col md:flex-row justify-between items-center gap-10 bg-gradient-to-br from-white/5 to-transparent">
+                <div className="space-y-2">
                     <h3 className="text-5xl font-serif text-white">Sua Performance</h3>
                     <p className="text-zinc-500 text-sm font-light uppercase tracking-widest">Extrato consolidado de indicações técnicas.</p>
                 </div>
-                <div className="text-center md:text-right space-y-6">
-                    <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-[0.6em]">Saldo para Resgate</p>
-                    <p className="text-6xl font-serif text-gold">R$ {stats.availableForWithdrawal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
-                    {/* Button Removed */}
-                    {stats.pendingEarnings > 0 && (
-                        <p className="text-[10px] text-zinc-500 uppercase tracking-widest">
-                            Em processamento: R$ {stats.pendingEarnings.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
-                        </p>
-                    )}
+                <div className="flex flex-col md:flex-row gap-10 items-center md:items-end text-center md:text-right">
+                    {/* Pending amount for this month */}
+                    {(() => {
+                        const now = new Date();
+                        const monthPending = sales
+                            .filter(s => {
+                                const d = new Date(s.date);
+                                return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear() && s.status === 'pending';
+                            })
+                            .reduce((sum, s) => sum + s.commissionValue, 0);
+                        return (
+                            <div>
+                                <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-[0.6em] mb-1">A Receber</p>
+                                <p className={`text-5xl font-serif ${monthPending > 0 ? 'text-gold' : 'text-zinc-600'}`}>
+                                    R$ {monthPending.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                                </p>
+                                {monthPending === 0 && (
+                                    <p className="text-[10px] text-green-500 flex items-center justify-end gap-1 mt-1">
+                                        <CheckCircle2 size={10} /> Pago este mês
+                                    </p>
+                                )}
+                            </div>
+                        );
+                    })()}
+                    {/* Next payment date */}
+                    {(() => {
+                        const today = new Date();
+                        const paymentDay = 10;
+                        const next = new Date(today.getFullYear(), today.getMonth(), paymentDay);
+                        if (next <= today && today.getDate() !== paymentDay) next.setMonth(next.getMonth() + 1);
+                        const monthNames = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+                        const isToday = today.getDate() === paymentDay;
+                        return (
+                            <div className={`border-l border-white/10 pl-10 ${isToday ? 'text-green-400' : ''}`}>
+                                <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-[0.6em] mb-1">Próximo Pagamento</p>
+                                <p className={`text-2xl font-serif ${isToday ? 'text-green-400' : 'text-white'}`}>
+                                    {isToday ? '🎉 Hoje!' : `${paymentDay} de ${monthNames[next.getMonth()]}`}
+                                </p>
+                                <p className="text-[10px] text-zinc-500 mt-1 flex items-center gap-1.5 justify-end">
+                                    <Calendar size={10} /> Todo dia 10
+                                </p>
+                            </div>
+                        );
+                    })()}
                 </div>
             </div>
 
-            {/* Payment Day Banner */}
-            {(() => {
-                const today = new Date();
-                const paymentDay = 10;
-                const nextPayment = new Date(today.getFullYear(), today.getMonth(), paymentDay);
-                if (nextPayment <= today && today.getDate() !== paymentDay) nextPayment.setMonth(nextPayment.getMonth() + 1);
-                const daysLeft = Math.ceil((nextPayment.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
-                const isToday = today.getDate() === paymentDay;
-                const monthNames = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
-                const now = new Date();
-                const monthPending = sales
-                    .filter(s => {
-                        const d = new Date(s.date);
-                        return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear() && s.status === 'pending';
-                    })
-                    .reduce((sum, s) => sum + s.commissionValue, 0);
-                return (
-                    <div className={`glass p-6 flex flex-col md:flex-row justify-between items-center gap-6 border rounded-xl ${isToday ? 'border-green-500/40 bg-green-500/5' : 'border-gold/20 bg-gold/3'}`}>
-                        <div className="flex items-center gap-4">
-                            <Calendar className={isToday ? 'text-green-400' : 'text-gold'} size={28} />
-                            <div>
-                                <p className="text-[10px] uppercase tracking-[0.25em] text-zinc-500 font-bold">Próximo Pagamento</p>
-                                <p className={`text-lg font-bold ${isToday ? 'text-green-400' : 'text-white'}`}>
-                                    {isToday ? '🎉 Hoje é seu dia de pagamento!' : `Dia ${paymentDay} de ${monthNames[nextPayment.getMonth()]} — faltam ${daysLeft} dia(s)`}
-                                </p>
-                            </div>
-                        </div>
-                        <div className="text-right">
-                            <p className="text-[10px] uppercase tracking-[0.25em] text-zinc-500 font-bold">A receber no Dia {paymentDay}</p>
-                            <p className={`text-3xl font-serif ${monthPending > 0 ? 'text-gold' : 'text-zinc-500'}`}>
-                                R$ {monthPending.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
-                            </p>
-                            {monthPending === 0 && (
-                                <p className="text-[10px] text-green-500 flex items-center justify-end gap-1 mt-1">
-                                    <CheckCircle2 size={10} /> Pago este mês
-                                </p>
-                            )}
-                        </div>
-                    </div>
-                );
-            })()}
+
+
 
             <div className="glass overflow-hidden border border-white/5">
                 <table className="w-full text-left">
