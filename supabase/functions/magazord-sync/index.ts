@@ -26,14 +26,10 @@ serve(async (req) => {
             return new Response(JSON.stringify({ error: 'Missing configurations' }), { headers: corsHeaders, status: 500 });
         }
 
-        // DEBUG MODE: Fetching all orders (no date filter) to diagnose
-        // which orders the API returns and why the test order isn't showing up.
-        console.log('Buscando todos os pedidos (modo debug sem filtro de data)...');
-
         // Basic Auth combination
         const authHeader = `Basic ${btoa(`${apiUser}:${apiPass}`)}`;
 
-        // Fetch all orders without date filter to see full list
+        // Fetch all orders without date filter (debug) to understand response structure
         const url = `${baseUrl}/v2/site/pedido?limit=100`;
         console.log('Chamando URL:', url);
 
@@ -48,11 +44,8 @@ serve(async (req) => {
 
         const responseText = await response.text();
         console.log('MagaZord API response status:', response.status);
-        // Log full response for debugging (split into chunks if large)
-        const chunkSize = 800;
-        for (let i = 0; i < responseText.length; i += chunkSize) {
-            console.log(`MagaZord API response [${i}]:`, responseText.substring(i, i + chunkSize));
-        }
+        // Log first 1000 chars to see initial structure
+        console.log('MagaZord API response (início):', responseText.substring(0, 1000));
 
         if (!response.ok) {
             console.error('Falha ao comunicar com API MagaZord:', response.status, responseText);
@@ -60,41 +53,103 @@ serve(async (req) => {
         }
 
         const responseData = JSON.parse(responseText);
-        // MagaZord v2 returns { data: { itens: [...] } } or { data: [...] } or { itens: [...] } or direct array
-        const orders = responseData.data?.itens || responseData.data?.registros || (Array.isArray(responseData.data) ? responseData.data : null)
-            || responseData.itens || responseData.registros || (Array.isArray(responseData) ? responseData : []);
+
+        // === STRUCTURE DEBUG ===
+        console.log('responseData top-level keys:', JSON.stringify(Object.keys(responseData || {})));
+        const dataValue = responseData.data;
+        console.log('data typeof:', typeof dataValue, '| isArray:', Array.isArray(dataValue));
+        if (dataValue && typeof dataValue === 'object' && !Array.isArray(dataValue)) {
+            console.log('data object keys:', JSON.stringify(Object.keys(dataValue)));
+            const itens = dataValue.itens;
+            console.log('data.itens typeof:', typeof itens, '| isArray:', Array.isArray(itens), '| length:', Array.isArray(itens) ? itens.length : 'N/A');
+        }
+
+        // MagaZord v2: try multiple response structures
+        const orders = responseData.data?.itens
+            || responseData.data?.registros
+            || (Array.isArray(responseData.data) ? responseData.data : null)
+            || responseData.itens
+            || responseData.registros
+            || (Array.isArray(responseData) ? responseData : []);
+
+        console.log('orders isArray:', Array.isArray(orders), '| length:', orders?.length);
 
         if (!Array.isArray(orders) || orders.length === 0) {
             console.log('Nenhum pedido encontrado na resposta. Total:', orders?.length);
             return new Response(JSON.stringify({ success: true, message: 'No orders found.' }), { headers: corsHeaders, status: 200 });
         }
 
-        console.log(`Encontrados ${orders.length} pedidos para processar.`);
+        // Log first order structure to understand field names
+        if (orders.length > 0) {
+            const first = orders[0];
+            console.log('Primeiro pedido - chaves:', JSON.stringify(Object.keys(first)));
+            console.log('Primeiro pedido - campos situação:', JSON.stringify({
+                situacao: first.situacao,
+                pedidoSituacaoId: first.pedidoSituacaoId,
+                pedidoSituacaoDescricao: first.pedidoSituacaoDescricao,
+            }));
+            console.log('Primeiro pedido - campos cupom:', JSON.stringify({
+                codigoCupom: first.codigoCupom,
+                cupom: first.cupom,
+                cupons: first.cupons,
+                cupomDesconto: first.cupomDesconto,
+                codigoCupomDesconto: first.codigoCupomDesconto,
+                passouCupom: first.passouCupom,
+                cuponsDesconto: first.cuponsDesconto,
+            }));
+        }
 
+        console.log(`Encontrados ${orders.length} pedidos para processar.`);
         let processedCount = 0;
 
         for (const order of orders) {
-            // MagaZord v2 uses string status codes like "APROVADO", "FATURADO" etc
-            const situacaoStr = (order.situacao?.nome || order.situacao?.codigo || order.situacao || '').toString().toUpperCase();
-            const situacaoId = order.situacao?.id || 0;
-            const isApproved = ['APROVADO', 'FATURADO', 'FATURAMENTO_INICIADO', 'APROVADO_PARCIAL'].includes(situacaoStr)
-                || situacaoId === 4 || situacaoId === 5 || situacaoId === 6 || situacaoId === 8;
+            // Handle BOTH field naming conventions:
+            // - Old/generic: order.situacao.nome / order.situacao.id
+            // - MagaZord specific: order.pedidoSituacaoId / order.pedidoSituacaoDescricao
+            const situacaoStr = (
+                order.pedidoSituacaoDescricao ||
+                order.situacao?.nome ||
+                order.situacao?.codigo ||
+                order.situacao ||
+                ''
+            ).toString().toUpperCase();
+
+            const situacaoId = order.pedidoSituacaoId || order.situacao?.id || 0;
+
+            // Portuguese and English approved status variants + common IDs
+            const isApproved = [
+                'APROVADO', 'FATURADO', 'FATURAMENTO_INICIADO', 'APROVADO_PARCIAL',
+                'APROVADO PAGAMENTO', 'PAGO', 'ENTREGUE', 'TRANSITO', 'EM TRÂNSITO'
+            ].includes(situacaoStr)
+                || situacaoId === 4 || situacaoId === 5 || situacaoId === 6
+                || situacaoId === 7 || situacaoId === 8 || situacaoId === 9;
+
             // Debug: log each order's key fields
-            const couponDebug = order.codigoCupom || order.cupom || (order.cupons?.[0]?.codigo) || 'nenhum';
-            console.log(`Pedido ${order.codigo || order.id}: situacao='${situacaoStr}' (id=${situacaoId}), aprovado=${isApproved}, cupom='${couponDebug}'`);
+            let couponDebug = order.codigoCupom || order.cupom
+                || order.cupomDesconto?.codigo || order.codigoCupomDesconto
+                || order.cuponsDesconto?.[0]?.codigo || order.cupons?.[0]?.codigo || 'nenhum';
+            console.log(`Pedido ${order.codigo || order.numero || order.id}: situacao='${situacaoStr}' (id=${situacaoId}), aprovado=${isApproved}, cupom='${couponDebug}'`);
 
             if (isApproved) {
                 const orderId = order.codigo || order.numero || order.id;
                 const orderValue = parseFloat(order.valorTotal || order.total || '0');
 
-                let couponCode = order.codigoCupom || order.cupom;
+                // Try multiple coupon field names used by MagaZord
+                let couponCode = order.codigoCupom || order.cupom
+                    || order.cupomDesconto?.codigo || order.codigoCupomDesconto
+                    || order.passouCupom;
+
                 if (!couponCode && order.cupons && Array.isArray(order.cupons) && order.cupons.length > 0) {
                     couponCode = order.cupons[0].codigo || order.cupons[0].nome || order.cupons[0];
                 }
-
+                if (!couponCode && order.cuponsDesconto && Array.isArray(order.cuponsDesconto) && order.cuponsDesconto.length > 0) {
+                    couponCode = order.cuponsDesconto[0].codigo || order.cuponsDesconto[0].nome || order.cuponsDesconto[0];
+                }
                 if (typeof couponCode === 'object' && couponCode !== null) {
                     couponCode = couponCode.codigo || couponCode.nome;
                 }
+
+                console.log(`  → orderId=${orderId}, valor=${orderValue}, cupomFinal='${couponCode}'`);
 
                 if (couponCode) {
                     // Find architect
@@ -107,7 +162,6 @@ serve(async (req) => {
                     if (!archError && architect) {
                         const commissionAmount = (orderValue * Number(architect.commission_rate)) / 100;
 
-                        // Check if commission already exists and is pending. If paid, don't overwrite.
                         const { data: existingComm, error: existingCommError } = await supabase
                             .from('magazord_commissions')
                             .select('status')
@@ -120,11 +174,10 @@ serve(async (req) => {
                         }
 
                         if (existingComm && existingComm.status === 'PAID') {
-                            // Skip already paid to prevent override
+                            console.log(`  → Skipping order ${orderId}: already PAID`);
                             continue;
                         }
 
-                        // Upsert
                         await supabase
                             .from('magazord_commissions')
                             .upsert({
@@ -133,10 +186,13 @@ serve(async (req) => {
                                 magazord_seller_code: couponCode,
                                 order_value: orderValue,
                                 commission_amount: commissionAmount,
-                                status: existingComm ? existingComm.status : 'PENDING' // Keep existing status if it's not paid yet (like cancelled), otherwise new is pending
+                                status: existingComm ? existingComm.status : 'PENDING'
                             }, { onConflict: 'magazord_order_id' });
 
+                        console.log(`  → Comissão registrada para arquiteto ${architect.id}: R$${commissionAmount}`);
                         processedCount++;
+                    } else {
+                        console.log(`  → Nenhum arquiteto encontrado com cupom '${couponCode}'`);
                     }
                 }
             }
