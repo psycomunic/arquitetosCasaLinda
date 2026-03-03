@@ -7,7 +7,6 @@ const corsHeaders = {
 };
 
 serve(async (req) => {
-    // Handle CORS preflight requests
     if (req.method === 'OPTIONS') {
         return new Response('ok', { headers: corsHeaders });
     }
@@ -26,11 +25,18 @@ serve(async (req) => {
             return new Response(JSON.stringify({ error: 'Missing configurations' }), { headers: corsHeaders, status: 500 });
         }
 
-        // Basic Auth combination
-        const authHeader = `Basic ${btoa(`${apiUser}:${apiPass}`)}`;
+        // Calculate date threshold in BRT (UTC-3) to match MagaZord's timezone.
+        // We use getTime() to work in absolute milliseconds and compute BRT manually.
+        const utcNow = new Date();
+        // BRT = UTC - 3h; threshold = BRT now - 48h
+        const brtThreshold = new Date(utcNow.getTime() - (3 + 48) * 60 * 60 * 1000);
+        const pad = (n: number) => String(n).padStart(2, '0');
+        const dateStr = `${brtThreshold.getUTCFullYear()}-${pad(brtThreshold.getUTCMonth() + 1)}-${pad(brtThreshold.getUTCDate())}T${pad(brtThreshold.getUTCHours())}:${pad(brtThreshold.getUTCMinutes())}:${pad(brtThreshold.getUTCSeconds())}-03:00`;
 
-        // Fetch all orders without date filter (debug) to understand response structure
-        const url = `${baseUrl}/v2/site/pedido?limit=100`;
+        console.log(`Buscando pedidos modificados após (BRT): ${dateStr}`);
+
+        const authHeader = `Basic ${btoa(`${apiUser}:${apiPass}`)}`;
+        const url = `${baseUrl}/v2/site/pedido?dataModificacaoInicio=${encodeURIComponent(dateStr)}&limit=100`;
         console.log('Chamando URL:', url);
 
         const response = await fetch(url, {
@@ -44,8 +50,7 @@ serve(async (req) => {
 
         const responseText = await response.text();
         console.log('MagaZord API response status:', response.status);
-        // Log first 1000 chars to see initial structure
-        console.log('MagaZord API response (início):', responseText.substring(0, 1000));
+        console.log('MagaZord API response (início):', responseText.substring(0, 800));
 
         if (!response.ok) {
             console.error('Falha ao comunicar com API MagaZord:', response.status, responseText);
@@ -54,154 +59,133 @@ serve(async (req) => {
 
         const responseData = JSON.parse(responseText);
 
-        // === STRUCTURE DEBUG ===
-        console.log('responseData top-level keys:', JSON.stringify(Object.keys(responseData || {})));
-        const dataValue = responseData.data;
-        console.log('data typeof:', typeof dataValue, '| isArray:', Array.isArray(dataValue));
-        if (dataValue && typeof dataValue === 'object' && !Array.isArray(dataValue)) {
-            console.log('data object keys:', JSON.stringify(Object.keys(dataValue)));
-            const itens = dataValue.itens;
-            console.log('data.itens typeof:', typeof itens, '| isArray:', Array.isArray(itens), '| length:', Array.isArray(itens) ? itens.length : 'N/A');
-        }
-
-        // MagaZord v2: try multiple response structures
-        const orders = responseData.data?.itens
+        // MagaZord v2 confirmed structure: { status, data: { items: [...] } }
+        // Also try legacy fallbacks just in case
+        const orders = responseData.data?.items
+            || responseData.data?.itens
             || responseData.data?.registros
             || (Array.isArray(responseData.data) ? responseData.data : null)
+            || responseData.items
             || responseData.itens
             || responseData.registros
             || (Array.isArray(responseData) ? responseData : []);
 
-        console.log('orders isArray:', Array.isArray(orders), '| length:', orders?.length);
+        console.log('Total pedidos retornados:', Array.isArray(orders) ? orders.length : `not array: ${typeof orders}`);
 
         if (!Array.isArray(orders) || orders.length === 0) {
-            console.log('Nenhum pedido encontrado na resposta. Total:', orders?.length);
-            return new Response(JSON.stringify({ success: true, message: 'No orders found.' }), { headers: corsHeaders, status: 200 });
+            return new Response(JSON.stringify({ success: true, message: 'No orders found in date range.' }), { headers: corsHeaders, status: 200 });
         }
 
-        // Log first order structure to understand field names
+        // Log first order structure for reference
         if (orders.length > 0) {
             const first = orders[0];
-            console.log('Primeiro pedido - chaves:', JSON.stringify(Object.keys(first)));
-            console.log('Primeiro pedido - campos situação:', JSON.stringify({
-                situacao: first.situacao,
-                pedidoSituacaoId: first.pedidoSituacaoId,
+            console.log('Campos do primeiro pedido:', JSON.stringify(Object.keys(first)));
+            console.log('Situação e cupom (1o pedido):', JSON.stringify({
+                pedidoSituacao: first.pedidoSituacao,
                 pedidoSituacaoDescricao: first.pedidoSituacaoDescricao,
-            }));
-            console.log('Primeiro pedido - campos cupom:', JSON.stringify({
-                codigoCupom: first.codigoCupom,
-                cupom: first.cupom,
-                cupons: first.cupons,
                 cupomDesconto: first.cupomDesconto,
                 codigoCupomDesconto: first.codigoCupomDesconto,
                 passouCupom: first.passouCupom,
-                cuponsDesconto: first.cuponsDesconto,
+                cupons: first.cupons,
+                codigoCupom: first.codigoCupom,
             }));
         }
 
-        console.log(`Encontrados ${orders.length} pedidos para processar.`);
         let processedCount = 0;
 
         for (const order of orders) {
-            // Handle BOTH field naming conventions:
-            // - Old/generic: order.situacao.nome / order.situacao.id
-            // - MagaZord specific: order.pedidoSituacaoId / order.pedidoSituacaoDescricao
+            // MagaZord confirmed fields: pedidoSituacao (number), pedidoSituacaoDescricao (string)
+            const situacaoId = order.pedidoSituacao || order.situacao?.id || 0;
             const situacaoStr = (
                 order.pedidoSituacaoDescricao ||
                 order.situacao?.nome ||
                 order.situacao?.codigo ||
-                order.situacao ||
                 ''
-            ).toString().toUpperCase();
+            ).toString().toUpperCase().trim();
 
-            const situacaoId = order.pedidoSituacaoId || order.situacao?.id || 0;
+            // Approved statuses: 4=Aprovado, 5=Faturamento Iniciado, 6=Faturado, 7=Separação,
+            // 8=Transporte, 9=Entregue
+            const isApproved = situacaoId >= 4 && situacaoId <= 9
+                || ['APROVADO', 'FATURADO', 'FATURAMENTO INICIADO', 'FATURAMENTO_INICIADO',
+                    'SEPARAÇÃO', 'TRANSPORTE', 'ENTREGUE', 'PAGO'].includes(situacaoStr);
 
-            // Portuguese and English approved status variants + common IDs
-            const isApproved = [
-                'APROVADO', 'FATURADO', 'FATURAMENTO_INICIADO', 'APROVADO_PARCIAL',
-                'APROVADO PAGAMENTO', 'PAGO', 'ENTREGUE', 'TRANSITO', 'EM TRÂNSITO'
-            ].includes(situacaoStr)
-                || situacaoId === 4 || situacaoId === 5 || situacaoId === 6
-                || situacaoId === 7 || situacaoId === 8 || situacaoId === 9;
+            // Try all possible coupon field names
+            let couponCode = order.cupomDesconto
+                || order.codigoCupomDesconto
+                || order.codigoCupom
+                || order.cupom
+                || order.passouCupom;
 
-            // Debug: log each order's key fields
-            let couponDebug = order.codigoCupom || order.cupom
-                || order.cupomDesconto?.codigo || order.codigoCupomDesconto
-                || order.cuponsDesconto?.[0]?.codigo || order.cupons?.[0]?.codigo || 'nenhum';
-            console.log(`Pedido ${order.codigo || order.numero || order.id}: situacao='${situacaoStr}' (id=${situacaoId}), aprovado=${isApproved}, cupom='${couponDebug}'`);
+            if (!couponCode && Array.isArray(order.cupons) && order.cupons.length > 0) {
+                couponCode = order.cupons[0].codigo || order.cupons[0].nome || order.cupons[0];
+            }
+            if (!couponCode && Array.isArray(order.cuponsDesconto) && order.cuponsDesconto.length > 0) {
+                couponCode = order.cuponsDesconto[0].codigo || order.cuponsDesconto[0];
+            }
+            if (typeof couponCode === 'object' && couponCode !== null) {
+                couponCode = couponCode.codigo || couponCode.nome;
+            }
 
-            if (isApproved) {
+            console.log(`Pedido ${order.codigo || order.id}: situacao=${situacaoId} (${situacaoStr}), aprovado=${isApproved}, cupom='${couponCode || 'nenhum'}'`);
+
+            if (isApproved && couponCode) {
                 const orderId = order.codigo || order.numero || order.id;
                 const orderValue = parseFloat(order.valorTotal || order.total || '0');
 
-                // Try multiple coupon field names used by MagaZord
-                let couponCode = order.codigoCupom || order.cupom
-                    || order.cupomDesconto?.codigo || order.codigoCupomDesconto
-                    || order.passouCupom;
+                const { data: architect, error: archError } = await supabase
+                    .from('architects')
+                    .select('id, commission_rate')
+                    .ilike('coupon_code', couponCode)
+                    .single();
 
-                if (!couponCode && order.cupons && Array.isArray(order.cupons) && order.cupons.length > 0) {
-                    couponCode = order.cupons[0].codigo || order.cupons[0].nome || order.cupons[0];
-                }
-                if (!couponCode && order.cuponsDesconto && Array.isArray(order.cuponsDesconto) && order.cuponsDesconto.length > 0) {
-                    couponCode = order.cuponsDesconto[0].codigo || order.cuponsDesconto[0].nome || order.cuponsDesconto[0];
-                }
-                if (typeof couponCode === 'object' && couponCode !== null) {
-                    couponCode = couponCode.codigo || couponCode.nome;
-                }
+                if (!archError && architect) {
+                    const commissionAmount = (orderValue * Number(architect.commission_rate)) / 100;
 
-                console.log(`  → orderId=${orderId}, valor=${orderValue}, cupomFinal='${couponCode}'`);
+                    const { data: existingComm, error: existingCommError } = await supabase
+                        .from('magazord_commissions')
+                        .select('status')
+                        .eq('magazord_order_id', String(orderId))
+                        .maybeSingle();
 
-                if (couponCode) {
-                    // Find architect
-                    const { data: architect, error: archError } = await supabase
-                        .from('architects')
-                        .select('id, commission_rate')
-                        .ilike('coupon_code', couponCode)
-                        .single();
-
-                    if (!archError && architect) {
-                        const commissionAmount = (orderValue * Number(architect.commission_rate)) / 100;
-
-                        const { data: existingComm, error: existingCommError } = await supabase
-                            .from('magazord_commissions')
-                            .select('status')
-                            .eq('magazord_order_id', String(orderId))
-                            .maybeSingle();
-
-                        if (existingCommError) {
-                            console.error(`Error fetching existing commission for order ${orderId}:`, existingCommError);
-                            continue;
-                        }
-
-                        if (existingComm && existingComm.status === 'PAID') {
-                            console.log(`  → Skipping order ${orderId}: already PAID`);
-                            continue;
-                        }
-
-                        await supabase
-                            .from('magazord_commissions')
-                            .upsert({
-                                architect_id: architect.id,
-                                magazord_order_id: String(orderId),
-                                magazord_seller_code: couponCode,
-                                order_value: orderValue,
-                                commission_amount: commissionAmount,
-                                status: existingComm ? existingComm.status : 'PENDING'
-                            }, { onConflict: 'magazord_order_id' });
-
-                        console.log(`  → Comissão registrada para arquiteto ${architect.id}: R$${commissionAmount}`);
-                        processedCount++;
-                    } else {
-                        console.log(`  → Nenhum arquiteto encontrado com cupom '${couponCode}'`);
+                    if (existingCommError) {
+                        console.error(`Error fetching commission for order ${orderId}:`, existingCommError);
+                        continue;
                     }
+
+                    if (existingComm && existingComm.status === 'PAID') {
+                        console.log(`Skipping order ${orderId}: already PAID`);
+                        continue;
+                    }
+
+                    await supabase
+                        .from('magazord_commissions')
+                        .upsert({
+                            architect_id: architect.id,
+                            magazord_order_id: String(orderId),
+                            magazord_seller_code: couponCode,
+                            order_value: orderValue,
+                            commission_amount: commissionAmount,
+                            status: existingComm ? existingComm.status : 'PENDING'
+                        }, { onConflict: 'magazord_order_id' });
+
+                    console.log(`✓ Comissão registrada: pedido ${orderId}, arquiteto ${architect.id}, valor R$${commissionAmount}`);
+                    processedCount++;
+                } else {
+                    console.log(`Nenhum arquiteto com cupom '${couponCode}'`);
                 }
             }
         }
 
-        return new Response(JSON.stringify({ success: true, message: `Processed ${processedCount} orders` }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 });
+        return new Response(
+            JSON.stringify({ success: true, message: `Processed ${processedCount} orders` }),
+            { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 }
+        );
 
     } catch (error) {
         console.error('Job error:', error);
-        return new Response(JSON.stringify({ error: error.message }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 400 });
+        return new Response(
+            JSON.stringify({ error: error.message }),
+            { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 400 }
+        );
     }
 });
