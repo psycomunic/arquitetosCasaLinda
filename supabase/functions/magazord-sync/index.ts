@@ -121,12 +121,14 @@ serve(async (req) => {
                 || ['APROVADO', 'FATURADO', 'FATURAMENTO INICIADO', 'FATURAMENTO_INICIADO',
                     'SEPARAÇÃO', 'TRANSPORTE', 'ENTREGUE', 'PAGO'].includes(situacaoStr);
 
-            // Try all possible coupon field names
-            let couponCode = order.cupomDesconto
+            // Try all possible coupon field names - cupomCodigo confirmed via webhook payload
+            let couponCode = order.cupomCodigo
+                || order.cupomDesconto
                 || order.codigoCupomDesconto
                 || order.codigoCupom
                 || order.cupom
                 || order.passouCupom;
+
 
             if (!couponCode && Array.isArray(order.cupons) && order.cupons.length > 0) {
                 couponCode = order.cupons[0].codigo || order.cupons[0].nome || order.cupons[0];

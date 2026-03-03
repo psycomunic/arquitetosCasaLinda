@@ -35,12 +35,18 @@ serve(async (req) => {
         }
 
         // Extracting order details from MagaZord payload.
-        const orderId = payload.id || payload.numero;
-        const status = payload.situacao; // 4 - Approved, 5 - Approved and Integrated, etc.
-        const orderValue = parseFloat(payload.valorTotal || payload.total || '0');
+        // Field names confirmed from real webhook payload:
+        // - Order code: payload.codigo (e.g. "0012603904143")
+        // - Status: payload.pedidoSituacao (numeric: 4=Aprovado)
+        // - Coupon: payload.cupomCodigo (e.g. "angelo20")
+        const orderId = payload.codigo || payload.id || payload.numero;
+        const status = payload.pedidoSituacao || payload.situacao; // pedidoSituacao confirmed in webhook
+        const orderValue = parseFloat(payload.valorTotal || payload.valorTotalFinal || payload.total || '0');
 
-        // Check for coupon in various common MagaZord payload formats
-        let couponCode = payload.codigoCupom || payload.cupom;
+        // Check for coupon - confirmed field name: cupomCodigo
+        let couponCode = payload.cupomCodigo
+            || payload.codigoCupom
+            || payload.cupom;
         if (!couponCode && payload.cupons && Array.isArray(payload.cupons) && payload.cupons.length > 0) {
             couponCode = payload.cupons[0].codigo || payload.cupons[0].nome || payload.cupons[0];
         }
@@ -49,8 +55,10 @@ serve(async (req) => {
             couponCode = couponCode.codigo || couponCode.nome;
         }
 
-        // Check if couponCode exists and status is approved/invoiced
-        if (couponCode && (status === 4 || status === 5 || status === 6 || status === 8)) {
+        console.log(`Pedido ${orderId}: situacao=${status}, cupom='${couponCode || 'nenhum'}', valor=${orderValue}`);
+
+        // Process only approved/invoiced orders (pedidoSituacao 4-9)
+        if (couponCode && status >= 4 && status <= 9) {
             // Find architect
             const { data: architect, error: archError } = await supabase
                 .from('architects')
