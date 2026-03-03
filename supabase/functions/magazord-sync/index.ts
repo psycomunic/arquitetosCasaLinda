@@ -25,18 +25,20 @@ serve(async (req) => {
             return new Response(JSON.stringify({ error: 'Missing configurations' }), { headers: corsHeaders, status: 500 });
         }
 
-        // Calculate date threshold in BRT (UTC-3) to match MagaZord's timezone.
-        // We use getTime() to work in absolute milliseconds and compute BRT manually.
+        // Filter by ORDER CREATION DATE (dataHoraInicio) in BRT (UTC-3).
+        // Using CREATION date avoids picking up old orders whose status was recently edited.
+        // BRT = UTC - 3h; window = last 4 days in BRT to safely capture recent orders.
         const utcNow = new Date();
-        // BRT = UTC - 3h; threshold = BRT now - 48h
-        const brtThreshold = new Date(utcNow.getTime() - (3 + 48) * 60 * 60 * 1000);
+        const brtThreshold = new Date(utcNow.getTime() - (3 + 96) * 60 * 60 * 1000); // 4 days back in BRT
         const pad = (n: number) => String(n).padStart(2, '0');
-        const dateStr = `${brtThreshold.getUTCFullYear()}-${pad(brtThreshold.getUTCMonth() + 1)}-${pad(brtThreshold.getUTCDate())}T${pad(brtThreshold.getUTCHours())}:${pad(brtThreshold.getUTCMinutes())}:${pad(brtThreshold.getUTCSeconds())}-03:00`;
+        // Use just the date part (YYYY-MM-DD) for cleaner daystart filtering
+        const dateStr = `${brtThreshold.getUTCFullYear()}-${pad(brtThreshold.getUTCMonth() + 1)}-${pad(brtThreshold.getUTCDate())}`;
 
-        console.log(`Buscando pedidos modificados após (BRT): ${dateStr}`);
+        console.log(`Buscando pedidos criados após (BRT date): ${dateStr}`);
 
         const authHeader = `Basic ${btoa(`${apiUser}:${apiPass}`)}`;
-        const url = `${baseUrl}/v2/site/pedido?dataModificacaoInicio=${encodeURIComponent(dateStr)}&limit=100`;
+        // Try dataHoraInicio (creation date filter) instead of dataModificacaoInicio
+        const url = `${baseUrl}/v2/site/pedido?dataHoraInicio=${encodeURIComponent(dateStr)}&limit=100`;
         console.log('Chamando URL:', url);
 
         const response = await fetch(url, {
