@@ -72,10 +72,25 @@ serve(async (req) => {
             || responseData.registros
             || (Array.isArray(responseData) ? responseData : []);
 
-        console.log('Total pedidos retornados:', Array.isArray(orders) ? orders.length : `not array: ${typeof orders}`);
+        console.log('Total pedidos retornados pela API:', Array.isArray(orders) ? orders.length : `not array: ${typeof orders}`);
 
         if (!Array.isArray(orders) || orders.length === 0) {
             return new Response(JSON.stringify({ success: true, message: 'No orders found in date range.' }), { headers: corsHeaders, status: 200 });
+        }
+
+        // CLIENT-SIDE DATE FILTER: only process orders created in the last 7 days.
+        // This definitively excludes old 2023 orders regardless of their modification date.
+        // dataHora format from MagaZord: "2026-03-03 15:29:13-03"
+        const clientSideThreshold = new Date(utcNow.getTime() - 7 * 24 * 60 * 60 * 1000); // 7 days ago UTC
+        const recentOrders = orders.filter((order: any) => {
+            if (!order.dataHora) return true; // keep if no date (let it fail later)
+            const orderDate = new Date(order.dataHora.replace(' ', 'T')); // make ISO-parseable
+            return orderDate >= clientSideThreshold;
+        });
+        console.log(`Pedidos recentes (últimos 7 dias): ${recentOrders.length} de ${orders.length}`);
+
+        if (recentOrders.length === 0) {
+            return new Response(JSON.stringify({ success: true, message: 'No recent orders found.' }), { headers: corsHeaders, status: 200 });
         }
 
         // Log first order structure for reference
@@ -95,7 +110,7 @@ serve(async (req) => {
 
         let processedCount = 0;
 
-        for (const order of orders) {
+        for (const order of recentOrders) {
             // MagaZord confirmed fields: pedidoSituacao (number), pedidoSituacaoDescricao (string)
             const situacaoId = order.pedidoSituacao || order.situacao?.id || 0;
             const situacaoStr = (
