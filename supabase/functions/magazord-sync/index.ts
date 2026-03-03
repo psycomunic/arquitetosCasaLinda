@@ -26,28 +26,15 @@ serve(async (req) => {
             return new Response(JSON.stringify({ error: 'Missing configurations' }), { headers: corsHeaders, status: 500 });
         }
 
-        // Use a 48-hour window to safely avoid timezone offset issues between
-        // the Supabase server (UTC) and MagaZord (BRT/UTC-3). Already-paid
-        // commissions are protected against reprocessing via the PAID status check.
-        const dateThreshold = new Date();
-        dateThreshold.setHours(dateThreshold.getHours() - 48);
-
-        const year = dateThreshold.getFullYear();
-        const month = String(dateThreshold.getMonth() + 1).padStart(2, '0');
-        const day = String(dateThreshold.getDate()).padStart(2, '0');
-        const hours = String(dateThreshold.getHours()).padStart(2, '0');
-        const minutes = String(dateThreshold.getMinutes()).padStart(2, '0');
-        const seconds = String(dateThreshold.getSeconds()).padStart(2, '0');
-
-        const dataModificacao = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
-
-        console.log(`Buscando pedidos modificados após: ${dataModificacao}...`);
+        // DEBUG MODE: Fetching all orders (no date filter) to diagnose
+        // which orders the API returns and why the test order isn't showing up.
+        console.log('Buscando todos os pedidos (modo debug sem filtro de data)...');
 
         // Basic Auth combination
         const authHeader = `Basic ${btoa(`${apiUser}:${apiPass}`)}`;
 
-        // Fetch orders from MagaZord using the correct v2 endpoint
-        const url = `${baseUrl}/v2/site/pedido?dataModificacaoInicio=${encodeURIComponent(dataModificacao)}&limit=100`;
+        // Fetch all orders without date filter to see full list
+        const url = `${baseUrl}/v2/site/pedido?limit=100`;
         console.log('Chamando URL:', url);
 
         const response = await fetch(url, {
@@ -61,7 +48,11 @@ serve(async (req) => {
 
         const responseText = await response.text();
         console.log('MagaZord API response status:', response.status);
-        console.log('MagaZord API response:', responseText.substring(0, 500));
+        // Log full response for debugging (split into chunks if large)
+        const chunkSize = 800;
+        for (let i = 0; i < responseText.length; i += chunkSize) {
+            console.log(`MagaZord API response [${i}]:`, responseText.substring(i, i + chunkSize));
+        }
 
         if (!response.ok) {
             console.error('Falha ao comunicar com API MagaZord:', response.status, responseText);
@@ -88,6 +79,9 @@ serve(async (req) => {
             const situacaoId = order.situacao?.id || 0;
             const isApproved = ['APROVADO', 'FATURADO', 'FATURAMENTO_INICIADO', 'APROVADO_PARCIAL'].includes(situacaoStr)
                 || situacaoId === 4 || situacaoId === 5 || situacaoId === 6 || situacaoId === 8;
+            // Debug: log each order's key fields
+            const couponDebug = order.codigoCupom || order.cupom || (order.cupons?.[0]?.codigo) || 'nenhum';
+            console.log(`Pedido ${order.codigo || order.id}: situacao='${situacaoStr}' (id=${situacaoId}), aprovado=${isApproved}, cupom='${couponDebug}'`);
 
             if (isApproved) {
                 const orderId = order.codigo || order.numero || order.id;
