@@ -81,7 +81,7 @@ serve(async (req) => {
         // CLIENT-SIDE DATE FILTER: only process orders created in the last 7 days.
         // This definitively excludes old 2023 orders regardless of their modification date.
         // dataHora format from MagaZord: "2026-03-03 15:29:13-03"
-        const clientSideThreshold = new Date(utcNow.getTime() - 7 * 24 * 60 * 60 * 1000); // 7 days ago UTC
+        const clientSideThreshold = new Date(utcNow.getTime() - 30 * 24 * 60 * 60 * 1000); // 30 days ago UTC
         const recentOrders = orders.filter((order: any) => {
             if (!order.dataHora) return true; // keep if no date (let it fail later)
             const orderDate = new Date(order.dataHora.replace(' ', 'T')); // make ISO-parseable
