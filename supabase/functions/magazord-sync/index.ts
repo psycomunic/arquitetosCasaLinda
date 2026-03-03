@@ -68,8 +68,9 @@ serve(async (req) => {
         }
 
         const responseData = JSON.parse(responseText);
-        // MagaZord v2 returns { data: [...] } or { itens: [...] } or direct array
-        const orders = responseData.data || responseData.itens || responseData.registros || (Array.isArray(responseData) ? responseData : []);
+        // MagaZord v2 returns { data: { itens: [...] } } or { data: [...] } or { itens: [...] } or direct array
+        const orders = responseData.data?.itens || responseData.data?.registros || (Array.isArray(responseData.data) ? responseData.data : null)
+            || responseData.itens || responseData.registros || (Array.isArray(responseData) ? responseData : []);
 
         if (!Array.isArray(orders) || orders.length === 0) {
             console.log('Nenhum pedido encontrado na resposta. Total:', orders?.length);
