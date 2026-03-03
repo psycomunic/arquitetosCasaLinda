@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { CheckCircle2, Heart } from 'lucide-react';
+import React, { useEffect, useState, useMemo } from 'react';
+import { CheckCircle2, Heart, Calendar } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { Sale, MagazordCommission } from '../types/database';
+
 
 interface CombinedSale {
     id: string;
@@ -130,6 +131,48 @@ export const Earnings: React.FC = () => {
                     )}
                 </div>
             </div>
+
+            {/* Payment Day Banner */}
+            {(() => {
+                const today = new Date();
+                const paymentDay = 10;
+                const nextPayment = new Date(today.getFullYear(), today.getMonth(), paymentDay);
+                if (nextPayment <= today && today.getDate() !== paymentDay) nextPayment.setMonth(nextPayment.getMonth() + 1);
+                const daysLeft = Math.ceil((nextPayment.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+                const isToday = today.getDate() === paymentDay;
+                const monthNames = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+                const now = new Date();
+                const monthPending = sales
+                    .filter(s => {
+                        const d = new Date(s.date);
+                        return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear() && s.status === 'pending';
+                    })
+                    .reduce((sum, s) => sum + s.commissionValue, 0);
+                return (
+                    <div className={`glass p-6 flex flex-col md:flex-row justify-between items-center gap-6 border rounded-xl ${isToday ? 'border-green-500/40 bg-green-500/5' : 'border-gold/20 bg-gold/3'}`}>
+                        <div className="flex items-center gap-4">
+                            <Calendar className={isToday ? 'text-green-400' : 'text-gold'} size={28} />
+                            <div>
+                                <p className="text-[10px] uppercase tracking-[0.25em] text-zinc-500 font-bold">Próximo Pagamento</p>
+                                <p className={`text-lg font-bold ${isToday ? 'text-green-400' : 'text-white'}`}>
+                                    {isToday ? '🎉 Hoje é seu dia de pagamento!' : `Dia ${paymentDay} de ${monthNames[nextPayment.getMonth()]} — faltam ${daysLeft} dia(s)`}
+                                </p>
+                            </div>
+                        </div>
+                        <div className="text-right">
+                            <p className="text-[10px] uppercase tracking-[0.25em] text-zinc-500 font-bold">A receber no Dia {paymentDay}</p>
+                            <p className={`text-3xl font-serif ${monthPending > 0 ? 'text-gold' : 'text-zinc-500'}`}>
+                                R$ {monthPending.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                            </p>
+                            {monthPending === 0 && (
+                                <p className="text-[10px] text-green-500 flex items-center justify-end gap-1 mt-1">
+                                    <CheckCircle2 size={10} /> Pago este mês
+                                </p>
+                            )}
+                        </div>
+                    </div>
+                );
+            })()}
 
             <div className="glass overflow-hidden border border-white/5">
                 <table className="w-full text-left">
