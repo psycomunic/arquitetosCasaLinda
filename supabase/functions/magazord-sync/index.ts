@@ -26,10 +26,11 @@ serve(async (req) => {
             return new Response(JSON.stringify({ error: 'Missing configurations' }), { headers: corsHeaders, status: 500 });
         }
 
-        // Calculate a timeframe for polling. E.g., fetch orders modified in the last 2 hours to be safe.
-        // We do this to not process the entire database on every request.
+        // Use a 48-hour window to safely avoid timezone offset issues between
+        // the Supabase server (UTC) and MagaZord (BRT/UTC-3). Already-paid
+        // commissions are protected against reprocessing via the PAID status check.
         const dateThreshold = new Date();
-        dateThreshold.setHours(dateThreshold.getHours() - 2);
+        dateThreshold.setHours(dateThreshold.getHours() - 48);
 
         const year = dateThreshold.getFullYear();
         const month = String(dateThreshold.getMonth() + 1).padStart(2, '0');
