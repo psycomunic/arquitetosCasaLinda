@@ -25,21 +25,16 @@ serve(async (req) => {
             return new Response(JSON.stringify({ error: 'Missing configurations' }), { headers: corsHeaders, status: 500 });
         }
 
-        // Use a short 3-hour window on MODIFICATION DATE in BRT (UTC-3).
-        // Old 2023 orders won't appear since they were modified days ago.
-        // Recent orders approved/created today will appear because their modification is recent.
+        // MagaZord API ignores dataModificacaoInicio/dataHoraInicio date filters.
+        // It always returns orders sorted by ID ascending (oldest first).
+        // Fix: use ordenacao=desc to request newest orders first.
         const utcNow = new Date();
-        // BRT = UTC - 3h; look back 3h in BRT time
-        const brtThreshold = new Date(utcNow.getTime() - (3 + 3) * 60 * 60 * 1000);
-        const pad = (n: number) => String(n).padStart(2, '0');
-        // Full datetime with BRT timezone offset
-        const dateStr = `${brtThreshold.getUTCFullYear()}-${pad(brtThreshold.getUTCMonth() + 1)}-${pad(brtThreshold.getUTCDate())}T${pad(brtThreshold.getUTCHours())}:${pad(brtThreshold.getUTCMinutes())}:${pad(brtThreshold.getUTCSeconds())}-03:00`;
-
-        console.log(`Buscando pedidos modificados nas últimas 3h (BRT): ${dateStr}`);
 
         const authHeader = `Basic ${btoa(`${apiUser}:${apiPass}`)}`;
-        const url = `${baseUrl}/v2/site/pedido?dataModificacaoInicio=${encodeURIComponent(dateStr)}&limit=100`;
+        // Try multiple ordering params - MagaZord may use different param names
+        const url = `${baseUrl}/v2/site/pedido?limit=100&ordenacao=desc&order=desc&sort=desc`;
         console.log('Chamando URL:', url);
+
 
         const response = await fetch(url, {
             method: 'GET',
