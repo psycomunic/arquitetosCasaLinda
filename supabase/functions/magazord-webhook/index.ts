@@ -70,28 +70,48 @@ serve(async (req) => {
         // ─── If status is pending (1-3), re-check current status via MagaZord API ───
         // MagaZord fires webhook on creation (status=1). When admin approves later,
         // no second webhook fires. So we always re-check the LIVE order status.
-        if (status < 4 && apiUser && apiPass && baseUrl && internalId) {
-            console.log(`Status=${status} — Re-consultando status atual do pedido ${internalId} na API MagaZord...`);
+        if (status < 4 && apiUser && apiPass && baseUrl) {
+            console.log(`Status=${status} — Re-consultando status atual do pedido ${orderId} (id=${internalId}) na API MagaZord...`);
             try {
                 const authHeader = `Basic ${btoa(`${apiUser}:${apiPass}`)}`;
-                // Try fetching the specific order by internal ID
-                const apiResp = await fetch(`${baseUrl}/v2/site/pedido/${internalId}`, {
+                // Try fetching by order code (codigo) — same pattern as magazord-sync
+                // API format: /v2/site/pedido?codigo={codigo}
+                const urlByCodigo = `${baseUrl}/v2/site/pedido?codigo=${encodeURIComponent(String(orderId))}`;
+                console.log('Re-check URL:', urlByCodigo);
+                let apiResp = await fetch(urlByCodigo, {
                     method: 'GET',
                     headers: { 'Authorization': authHeader, 'Content-Type': 'application/json', 'Accept': 'application/json' }
                 });
 
+                // If that fails, try by internal id param
+                if (!apiResp.ok && internalId) {
+                    const urlById = `${baseUrl}/v2/site/pedido?id=${internalId}`;
+                    console.log(`Tentando URL alternativa: ${urlById}`);
+                    apiResp = await fetch(urlById, {
+                        method: 'GET',
+                        headers: { 'Authorization': authHeader, 'Content-Type': 'application/json', 'Accept': 'application/json' }
+                    });
+                }
+
                 if (apiResp.ok) {
-                    const apiData = await apiResp.json();
-                    // API may return an array or a single object
-                    const freshOrder = Array.isArray(apiData) ? apiData[0] : apiData;
+                    const apiText = await apiResp.text();
+                    console.log('API re-check resposta (início):', apiText.substring(0, 300));
+                    const apiData = JSON.parse(apiText);
+                    // API may return an array or object with items
+                    let freshOrder = null;
+                    if (Array.isArray(apiData) && apiData.length > 0) freshOrder = apiData[0];
+                    else if (apiData && typeof apiData === 'object' && !Array.isArray(apiData)) {
+                        freshOrder = apiData.items?.[0] || apiData.data?.[0] || apiData;
+                    }
                     if (freshOrder) {
                         const freshStatus = freshOrder.pedidoSituacao ?? freshOrder.situacao ?? status;
                         const freshCoupon = freshOrder.cupomCodigo || freshOrder.codigoCupom || freshOrder.cupom || couponCode;
                         const freshValue = parseFloat(freshOrder.valorTotal || freshOrder.valorTotalFinal || String(orderValue));
                         console.log(`API re-check: situacao=${freshStatus}, cupom='${freshCoupon}', valor=${freshValue}`);
-                        // Update with fresh data
                         status = freshStatus;
                         if (freshCoupon) couponCode = freshCoupon;
+                    } else {
+                        console.log('API re-check: nenhum pedido encontrado no retorno.');
                     }
                 } else {
                     console.log(`API re-check falhou (${apiResp.status}) — usando status do webhook (${status}).`);
@@ -100,6 +120,7 @@ serve(async (req) => {
                 console.log('Erro no re-check da API:', apiErr, '— usando status do webhook.');
             }
         }
+
 
         // ─── Process only approved orders (status 4–9) ───────────────────────
         if (status >= 4 && status <= 9) {
