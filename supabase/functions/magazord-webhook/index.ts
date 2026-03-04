@@ -40,11 +40,10 @@ serve(async (req) => {
         }
 
         // Field names confirmed from real webhook payloads:
-        // payload.codigo = order code ("0012603904143")
-        // payload.id = internal MagaZord ID (33790)
+        // payload.id       = internal numeric ID (e.g., 33790)
+        // payload.codigo   = order code (e.g., "0012603991922")
         // payload.pedidoSituacao = status (1=Aguardando, 4=Aprovado)
-        // payload.cupomCodigo = coupon code ("angelo20")
-        // payload.dataHora = order date ("2026-03-03 15:29:13-03")
+        // payload.cupomCodigo   = coupon code (e.g., "angelo20")
         const internalId = payload.id;
         const orderId = payload.codigo || String(payload.id);
         let status = payload.pedidoSituacao ?? payload.situacao ?? 0;
@@ -58,7 +57,7 @@ serve(async (req) => {
             couponCode = couponCode.codigo || couponCode.nome;
         }
 
-        console.log(`Pedido ${orderId}: situacao=${status}, cupom='${couponCode || 'nenhum'}', valor=${orderValue}`);
+        console.log(`Pedido ${orderId} (id interno: ${internalId}): situacao=${status}, cupom='${couponCode || 'nenhum'}', valor=${orderValue}`);
 
         // If no coupon, ignore immediately
         if (!couponCode) {
@@ -68,65 +67,65 @@ serve(async (req) => {
             });
         }
 
-        // ─── If status is pending (1-3), re-check current status via MagaZord API ───
+        // ─── Re-check current status via MagaZord API (always, not just when pending) ───
         // MagaZord fires webhook on creation (status=1). When admin approves later,
         // no second webhook fires. So we always re-check the LIVE order status.
-        if (status < 4 && apiUser && apiPass && baseUrl) {
-            console.log(`Status=${status} — Re-consultando pedido ${orderId} na API MagaZord...`);
+        // CRITICAL FIX: Use the direct order endpoint by internal ID, NOT the list endpoint.
+        // The list endpoint returns the oldest orders first (2023), ignoring all sort/date params.
+        if (internalId && apiUser && apiPass && baseUrl) {
             try {
                 const authHeader = `Basic ${btoa(`${apiUser}:${apiPass}`)}`;
 
-                // Only search orders from the last 30 days so we don't get 2023 orders.
-                const now = new Date();
-                const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
-                const dateFrom = thirtyDaysAgo.toISOString().split('T')[0];
-                const dateTo = now.toISOString().split('T')[0];
+                // PRIMARY: Direct order lookup by internal numeric ID
+                const directUrl = `${baseUrl}/v2/site/pedido/${internalId}`;
+                console.log('Re-check direto:', directUrl);
 
-                const listUrl = `${baseUrl}/v2/site/pedido?limit=100&ordenacao=desc&dataHoraInicio=${dateFrom}&dataHoraFim=${dateTo}`;
-                console.log('Re-check URL:', listUrl);
-
-                const apiResp = await fetch(listUrl, {
+                const directResp = await fetch(directUrl, {
                     method: 'GET',
                     headers: { 'Authorization': authHeader, 'Content-Type': 'application/json', 'Accept': 'application/json' }
                 });
 
-                if (apiResp.ok) {
-                    const apiText = await apiResp.text();
-                    console.log('API re-check resposta (início):', apiText.substring(0, 200));
-                    const apiData = JSON.parse(apiText);
+                console.log('Re-check status HTTP:', directResp.status);
 
-                    const rawOrders: any[] = apiData?.data?.items
-                        || apiData?.data?.itens
-                        || (Array.isArray(apiData?.data) ? apiData.data : null)
-                        || apiData?.items
-                        || (Array.isArray(apiData) ? apiData : []);
+                if (directResp.ok) {
+                    const directText = await directResp.text();
+                    console.log('Re-check resposta:', directText.substring(0, 400));
+                    const directData = JSON.parse(directText);
 
-                    // Unpack 'seq' wrapper if present: [{seq: {...order}}] → [{...order}]
-                    const allOrders = rawOrders.map((o: any) => o?.seq || o);
+                    // Single order endpoint may wrap in data: { ... } or data.items[0]
+                    const freshOrder = directData?.data?.seq
+                        || directData?.data?.items?.[0]?.seq
+                        || directData?.data?.items?.[0]
+                        || directData?.data
+                        || directData?.seq
+                        || directData;
 
-                    console.log(`Re-check: ${allOrders.length} pedidos encontrados no período de ${dateFrom} a ${dateTo}`);
-
-                    // Find the specific order by codigo or internal id
-                    const freshOrder = allOrders.find((o: any) =>
-                        String(o?.codigo) === String(orderId)
-                        || (internalId && String(o?.id) === String(internalId))
-                    );
-
-                    if (freshOrder) {
+                    if (freshOrder && (freshOrder.codigo || freshOrder.id)) {
                         const freshStatus = freshOrder.pedidoSituacao ?? freshOrder.situacao ?? status;
                         const freshCoupon = freshOrder.cupomCodigo || freshOrder.codigoCupom || freshOrder.cupom || couponCode;
                         const freshValue = parseFloat(freshOrder.valorTotal || freshOrder.valorTotalFinal || String(orderValue));
-                        console.log(`API re-check: situacao=${freshStatus}, cupom='${freshCoupon}', valor=${freshValue}, data=${freshOrder.dataHora}`);
+                        console.log(`Re-check direto OK: situacao=${freshStatus}, cupom='${freshCoupon}', valor=${freshValue}`);
                         status = freshStatus;
                         if (freshCoupon) couponCode = freshCoupon;
                     } else {
-                        console.log(`Pedido ${orderId} não encontrado nos pedidos recentes (${dateFrom} a ${dateTo}). Total consultados: ${allOrders.length}. Status do webhook: ${status}.`);
+                        console.log('Re-check direto: resposta sem dados de pedido:', JSON.stringify(directData).substring(0, 200));
+                        // FALLBACK: search by codigo in the list, but paginate to recent orders
+                        await recheckViaList(baseUrl, authHeader, orderId, internalId, (freshStatus: number, freshCoupon: string) => {
+                            status = freshStatus;
+                            if (freshCoupon) couponCode = freshCoupon;
+                        });
                     }
                 } else {
-                    console.log(`API re-check falhou (${apiResp.status}) — usando status do webhook (${status}).`);
+                    console.log(`Re-check direto falhou (${directResp.status}) — tentando via lista...`);
+                    // FALLBACK: paginate via list to find the order
+                    const authHeaderFallback = authHeader;
+                    await recheckViaList(baseUrl, authHeaderFallback, orderId, internalId, (freshStatus: number, freshCoupon: string) => {
+                        status = freshStatus;
+                        if (freshCoupon) couponCode = freshCoupon;
+                    });
                 }
             } catch (apiErr) {
-                console.log('Erro no re-check da API:', apiErr, '— usando status do webhook.');
+                console.log('Erro no re-check:', apiErr, '— usando status do webhook.');
             }
         }
 
@@ -140,7 +139,7 @@ serve(async (req) => {
                 .single();
 
             if (archError || !architect) {
-                console.log(`Arquiteto não encontrado para cupom '${cleanCoupon}'. Verificar campo coupon_code.`);
+                console.log(`Arquiteto não encontrado para cupom '${cleanCoupon}'.`);
                 return new Response(JSON.stringify({ success: false, message: `Architect not found for coupon: ${cleanCoupon}` }), {
                     headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200
                 });
@@ -165,7 +164,7 @@ serve(async (req) => {
                 throw insertError;
             }
 
-            console.log(`✅ Comissão salva: pedido ${orderId}, arquiteto ${(architect as any).name}, valor ${commissionAmount}`);
+            console.log(`✅ Comissão salva: pedido ${orderId}, arquiteto ${(architect as any).name}, valor R$${commissionAmount}`);
             return new Response(JSON.stringify({ success: true, message: 'Commission saved' }), {
                 headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200
             });
@@ -183,3 +182,70 @@ serve(async (req) => {
         });
     }
 });
+
+// Fallback: find order in list using paginated approach to get NEWEST orders
+async function recheckViaList(
+    baseUrl: string,
+    authHeader: string,
+    orderId: string,
+    internalId: number,
+    onFound: (status: number, coupon: string) => void
+) {
+    try {
+        // First get the total count
+        const countResp = await fetch(`${baseUrl}/v2/site/pedido?limit=1&pagina=1`, {
+            method: 'GET',
+            headers: { 'Authorization': authHeader, 'Content-Type': 'application/json', 'Accept': 'application/json' }
+        });
+
+        let lastPage = 1;
+        if (countResp.ok) {
+            const countData = await countResp.json();
+            const total = countData.data?.total || countData.data?.totalRegistros || countData.total || 0;
+            console.log(`Fallback lista: total de pedidos = ${total}`);
+            if (total > 0) {
+                lastPage = Math.ceil(total / 100);
+            }
+        }
+
+        // Fetch the last page (newest orders)
+        const listUrl = `${baseUrl}/v2/site/pedido?limit=100&pagina=${lastPage}`;
+        console.log('Fallback lista URL:', listUrl);
+
+        const listResp = await fetch(listUrl, {
+            method: 'GET',
+            headers: { 'Authorization': authHeader, 'Content-Type': 'application/json', 'Accept': 'application/json' }
+        });
+
+        if (!listResp.ok) {
+            console.log(`Fallback lista falhou: ${listResp.status}`);
+            return;
+        }
+
+        const listData = await listResp.json();
+        const rawOrders: any[] = listData?.data?.items
+            || listData?.data?.itens
+            || (Array.isArray(listData?.data) ? listData.data : null)
+            || listData?.items
+            || (Array.isArray(listData) ? listData : []);
+
+        const allOrders = rawOrders.map((o: any) => o?.seq || o);
+        console.log(`Fallback lista: ${allOrders.length} pedidos na página ${lastPage}`);
+
+        const freshOrder = allOrders.find((o: any) =>
+            String(o?.codigo) === String(orderId)
+            || (internalId && String(o?.id) === String(internalId))
+        );
+
+        if (freshOrder) {
+            const freshStatus = freshOrder.pedidoSituacao ?? freshOrder.situacao ?? 1;
+            const freshCoupon = freshOrder.cupomCodigo || freshOrder.codigoCupom || freshOrder.cupom || '';
+            console.log(`Fallback lista encontrou pedido: situacao=${freshStatus}, cupom='${freshCoupon}'`);
+            onFound(freshStatus, freshCoupon);
+        } else {
+            console.log(`Pedido ${orderId} não encontrado na página ${lastPage}.`);
+        }
+    } catch (err) {
+        console.log('Erro no fallback lista:', err);
+    }
+}
