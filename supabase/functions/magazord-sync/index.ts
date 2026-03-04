@@ -105,9 +105,14 @@ serve(async (req) => {
 
         let processedCount = 0;
 
-        for (const order of recentOrders) {
+        for (const rawOrder of recentOrders) {
+            // MagaZord API wraps each order in a 'seq' field: [{seq: {...order}}]
+            // Unpack it so we can read fields directly
+            const order = rawOrder?.seq || rawOrder;
+
             // MagaZord confirmed fields: pedidoSituacao (number), pedidoSituacaoDescricao (string)
             const situacaoId = order.pedidoSituacao || order.situacao?.id || 0;
+
             const situacaoStr = (
                 order.pedidoSituacaoDescricao ||
                 order.situacao?.nome ||

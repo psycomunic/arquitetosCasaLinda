@@ -71,38 +71,37 @@ serve(async (req) => {
         // MagaZord fires webhook on creation (status=1). When admin approves later,
         // no second webhook fires. So we always re-check the LIVE order status.
         if (status < 4 && apiUser && apiPass && baseUrl) {
-            console.log(`Status=${status} — Re-consultando status atual do pedido ${orderId} (id=${internalId}) na API MagaZord...`);
+            console.log(`Status=${status} — Re-consultando pedido ${orderId} na API MagaZord...`);
             try {
                 const authHeader = `Basic ${btoa(`${apiUser}:${apiPass}`)}`;
-                // Try fetching by order code (codigo) — same pattern as magazord-sync
-                // API format: /v2/site/pedido?codigo={codigo}
-                const urlByCodigo = `${baseUrl}/v2/site/pedido?codigo=${encodeURIComponent(String(orderId))}`;
-                console.log('Re-check URL:', urlByCodigo);
-                let apiResp = await fetch(urlByCodigo, {
+                // MagaZord list endpoint — same as magazord-sync uses successfully
+                const listUrl = `${baseUrl}/v2/site/pedido?limit=50&ordenacao=desc&order=desc&sort=desc`;
+                console.log('Re-check URL:', listUrl);
+                const apiResp = await fetch(listUrl, {
                     method: 'GET',
                     headers: { 'Authorization': authHeader, 'Content-Type': 'application/json', 'Accept': 'application/json' }
                 });
 
-                // If that fails, try by internal id param
-                if (!apiResp.ok && internalId) {
-                    const urlById = `${baseUrl}/v2/site/pedido?id=${internalId}`;
-                    console.log(`Tentando URL alternativa: ${urlById}`);
-                    apiResp = await fetch(urlById, {
-                        method: 'GET',
-                        headers: { 'Authorization': authHeader, 'Content-Type': 'application/json', 'Accept': 'application/json' }
-                    });
-                }
-
                 if (apiResp.ok) {
                     const apiText = await apiResp.text();
-                    console.log('API re-check resposta (início):', apiText.substring(0, 300));
+                    console.log('API re-check resposta (início):', apiText.substring(0, 200));
                     const apiData = JSON.parse(apiText);
-                    // API may return an array or object with items
-                    let freshOrder = null;
-                    if (Array.isArray(apiData) && apiData.length > 0) freshOrder = apiData[0];
-                    else if (apiData && typeof apiData === 'object' && !Array.isArray(apiData)) {
-                        freshOrder = apiData.items?.[0] || apiData.data?.[0] || apiData;
-                    }
+                    // Extract orders array — MagaZord may use data.items, data[] or top-level array
+                    const rawOrders: any[] = apiData?.data?.items
+                        || apiData?.data?.itens
+                        || (Array.isArray(apiData?.data) ? apiData.data : null)
+                        || apiData?.items
+                        || (Array.isArray(apiData) ? apiData : []);
+
+                    // Unpack 'seq' wrapper if present: [{seq: {...order}}] → [{...order}]
+                    const allOrders = rawOrders.map((o: any) => o?.seq || o);
+
+                    // Find the specific order by codigo or internal id
+                    const freshOrder = allOrders.find((o: any) =>
+                        String(o?.codigo) === String(orderId)
+                        || (internalId && String(o?.id) === String(internalId))
+                    );
+
                     if (freshOrder) {
                         const freshStatus = freshOrder.pedidoSituacao ?? freshOrder.situacao ?? status;
                         const freshCoupon = freshOrder.cupomCodigo || freshOrder.codigoCupom || freshOrder.cupom || couponCode;
@@ -111,7 +110,7 @@ serve(async (req) => {
                         status = freshStatus;
                         if (freshCoupon) couponCode = freshCoupon;
                     } else {
-                        console.log('API re-check: nenhum pedido encontrado no retorno.');
+                        console.log(`Pedido ${orderId} não encontrado nos últimos 50 pedidos. Status do webhook: ${status}.`);
                     }
                 } else {
                     console.log(`API re-check falhou (${apiResp.status}) — usando status do webhook (${status}).`);
@@ -120,6 +119,7 @@ serve(async (req) => {
                 console.log('Erro no re-check da API:', apiErr, '— usando status do webhook.');
             }
         }
+
 
 
         // ─── Process only approved orders (status 4–9) ───────────────────────
