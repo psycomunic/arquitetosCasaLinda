@@ -6,6 +6,16 @@ const corsHeaders = {
     'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+// MagaZord API behavior (confirmed by logs):
+// - Ignores `ordenacao`, `order`, `sort` params → always returns oldest first
+// - Ignores `dataHoraInicio`, `dataHoraFim` date filters
+// - Ignores `pagina` page number → always returns first 100 (oldest)
+// - The "total" field in the count response is the last ORDER ID (33781), not total order count
+//
+// STRATEGY: Use the direct single-order endpoint GET /v2/site/pedido/{id}
+// to check each order we already know about from webhooks, OR iterate IDs
+// sequentially starting from the last known internal ID in our DB.
+
 serve(async (req) => {
     if (req.method === 'OPTIONS') {
         return new Response('ok', { headers: corsHeaders });
@@ -26,199 +36,187 @@ serve(async (req) => {
 
         const authHeader = `Basic ${btoa(`${apiUser}:${apiPass}`)}`;
 
-        // ─── STEP 1: Get total order count ──────────────────────────────────
-        // MagaZord API ignores all ordering/date filters and always returns oldest first.
-        // To get the NEWEST orders, we need to paginate to the last page.
-        const countUrl = `${baseUrl}/v2/site/pedido?limit=1&pagina=1`;
-        console.log('Buscando total de pedidos:', countUrl);
+        // ─── STRATEGY 1: Re-check all PENDING commissions from DB ────────────
+        // For each PENDING commission, fetch the current order status via direct endpoint
+        // and update the commission if it's now approved.
+        const { data: pendingCommissions, error: pendingError } = await supabase
+            .from('magazord_commissions')
+            .select('id, magazord_order_id, architect_id, order_value, commission_amount, status')
+            .eq('status', 'PENDING')
+            .limit(50);
 
-        const countResp = await fetch(countUrl, {
+        if (pendingError) {
+            console.error('Erro ao buscar comissões pendentes:', pendingError);
+        }
+
+        console.log(`Comissões PENDING para re-check: ${pendingCommissions?.length ?? 0}`);
+
+        let updatedCount = 0;
+
+        if (pendingCommissions && pendingCommissions.length > 0) {
+            for (const commission of pendingCommissions) {
+                const orderId = commission.magazord_order_id;
+                console.log(`Verificando pedido PENDING: ${orderId}`);
+
+                // Try to fetch the order directly by codigo (order code)
+                // MagaZord v2 single order endpoint: GET /v2/site/pedido?codigo={codigo}
+                const singleUrl = `${baseUrl}/v2/site/pedido?codigo=${orderId}`;
+                console.log('Consultando:', singleUrl);
+
+                try {
+                    const resp = await fetch(singleUrl, {
+                        method: 'GET',
+                        headers: { 'Authorization': authHeader, 'Content-Type': 'application/json', 'Accept': 'application/json' }
+                    });
+
+                    if (!resp.ok) {
+                        console.log(`Pedido ${orderId}: HTTP ${resp.status}`);
+                        continue;
+                    }
+
+                    const data = await resp.json();
+                    console.log(`Pedido ${orderId} resposta:`, JSON.stringify(data).substring(0, 300));
+
+                    // Extract order from response
+                    const rawOrder = data?.data?.items?.[0] || data?.data?.seq || data?.data || data;
+                    const order = rawOrder?.seq || rawOrder;
+
+                    if (!order || (!order.pedidoSituacao && !order.situacao)) {
+                        console.log(`Pedido ${orderId}: não encontrado ou estrutura inesperada`);
+                        continue;
+                    }
+
+                    const situacaoId = order.pedidoSituacao || order.situacao?.id || 0;
+                    const situacaoStr = (order.pedidoSituacaoDescricao || order.situacao?.nome || '').toString().toUpperCase();
+                    const isApproved = (situacaoId >= 4 && situacaoId <= 9)
+                        || ['APROVADO', 'FATURADO', 'FATURAMENTO INICIADO', 'FATURAMENTO_INICIADO',
+                            'SEPARAÇÃO', 'TRANSPORTE', 'ENTREGUE', 'PAGO'].includes(situacaoStr.trim());
+
+                    console.log(`Pedido ${orderId}: situacao=${situacaoId} (${situacaoStr}), aprovado=${isApproved}`);
+
+                    if (isApproved && commission.status !== 'PAID') {
+                        // Update existing commission to confirm approval
+                        await supabase
+                            .from('magazord_commissions')
+                            .update({ status: 'PENDING' }) // Keep PENDING but we know it's approved (admin must mark PAID)
+                            .eq('id', commission.id);
+
+                        console.log(`✓ Comissão ${commission.id} confirmada como aprovada (pedido ${orderId})`);
+                        updatedCount++;
+                    }
+                } catch (orderErr) {
+                    console.log(`Erro ao verificar pedido ${orderId}:`, orderErr);
+                }
+            }
+        }
+
+        // ─── STRATEGY 2: Diagnostic - try different list params ──────────────
+        // Try filter by codigo > last known order to discover new orders
+        const { data: lastKnown } = await supabase
+            .from('magazord_commissions')
+            .select('magazord_order_id, created_at')
+            .order('created_at', { ascending: false })
+            .limit(1)
+            .maybeSingle();
+
+        console.log(`Último pedido conhecido no banco: ${lastKnown?.magazord_order_id || 'nenhum'} em ${lastKnown?.created_at || 'N/A'}`);
+
+        // Try fetching recent orders using the ?codigo= filter with a minimum code
+        // This may also be ignored, but worth trying
+        let diagnosticOrders: any[] = [];
+        if (lastKnown?.magazord_order_id) {
+            const minCode = lastKnown.magazord_order_id;
+            const diagUrl = `${baseUrl}/v2/site/pedido?codigoMaior=${minCode}&limit=100`;
+            console.log('Tentando filtro por codigoMaior:', diagUrl);
+
+            const diagResp = await fetch(diagUrl, {
+                method: 'GET',
+                headers: { 'Authorization': authHeader, 'Content-Type': 'application/json', 'Accept': 'application/json' }
+            });
+
+            if (diagResp.ok) {
+                const diagData = await diagResp.json();
+                const firstItem = diagData?.data?.items?.[0]?.seq || diagData?.data?.items?.[0] || {};
+                console.log(`codigoMaior filter - primeiro item data: ${firstItem?.dataHora || 'N/A'}, codigo: ${firstItem?.codigo || 'N/A'}`);
+                diagnosticOrders = diagData?.data?.items || [];
+            }
+        }
+
+        // Also try a direct list with offset parameter
+        const offsetUrl = `${baseUrl}/v2/site/pedido?limit=100&offset=33700`;
+        console.log('Tentando offset param:', offsetUrl);
+        const offsetResp = await fetch(offsetUrl, {
             method: 'GET',
             headers: { 'Authorization': authHeader, 'Content-Type': 'application/json', 'Accept': 'application/json' }
         });
 
-        if (!countResp.ok) {
-            return new Response(JSON.stringify({ error: 'MagaZord API failed on count request' }), { headers: corsHeaders, status: 500 });
-        }
+        if (offsetResp.ok) {
+            const offsetData = await offsetResp.json();
+            const firstItem = offsetData?.data?.items?.[0]?.seq || offsetData?.data?.items?.[0] || {};
+            const lastItem = offsetData?.data?.items?.[offsetData?.data?.items?.length - 1]?.seq || {};
+            console.log(`offset=33700 - primeiro item data: ${firstItem?.dataHora || 'N/A'}, último: ${lastItem?.dataHora || 'N/A'}`);
 
-        const countData = await countResp.json();
-        console.log('Count response (início):', JSON.stringify(countData).substring(0, 300));
+            // If offset worked, process these orders
+            const rawOrders = offsetData?.data?.items || [];
+            const now = new Date();
+            const threshold = new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000);
 
-        // MagaZord may include total in different fields
-        const totalOrders = countData.data?.total
-            || countData.data?.totalRegistros
-            || countData.data?.count
-            || countData.total
-            || countData.totalRegistros
-            || 0;
+            for (const rawOrder of rawOrders) {
+                const order = rawOrder?.seq || rawOrder;
+                if (!order.dataHora) continue;
+                const orderDate = new Date(order.dataHora.replace(' ', 'T'));
+                if (orderDate < threshold) continue; // skip old
 
-        console.log(`Total de pedidos na loja: ${totalOrders}`);
+                const situacaoId = order.pedidoSituacao || 0;
+                const isApproved = situacaoId >= 4 && situacaoId <= 9;
+                let couponCode = order.cupomCodigo || order.codigoCupom || order.cupom;
+                if (typeof couponCode === 'object' && couponCode !== null) couponCode = couponCode.codigo;
 
-        // ─── STEP 2: Calculate last page to get the newest orders ────────────
-        const pageSize = 100;
-        let orders: any[] = [];
+                if (isApproved && couponCode) {
+                    const orderId = order.codigo || order.id;
+                    const orderValue = parseFloat(order.valorTotal || '0');
 
-        if (totalOrders > 0) {
-            // Calculate which page holds the newest orders
-            const lastPage = Math.ceil(totalOrders / pageSize);
-            const pageToFetch = lastPage;
-            const url = `${baseUrl}/v2/site/pedido?limit=${pageSize}&pagina=${pageToFetch}`;
-            console.log(`Buscando página ${pageToFetch} de ${lastPage} (pedidos mais recentes):`, url);
+                    const { data: architect } = await supabase
+                        .from('architects')
+                        .select('id, commission_rate')
+                        .ilike('coupon_code', couponCode)
+                        .single();
 
-            const response = await fetch(url, {
-                method: 'GET',
-                headers: { 'Authorization': authHeader, 'Content-Type': 'application/json', 'Accept': 'application/json' }
-            });
+                    if (architect) {
+                        const commissionAmount = (orderValue * Number(architect.commission_rate)) / 100;
+                        const { data: existing } = await supabase
+                            .from('magazord_commissions')
+                            .select('status')
+                            .eq('magazord_order_id', String(orderId))
+                            .maybeSingle();
 
-            const responseText = await response.text();
-            console.log('MagaZord response status:', response.status);
-            console.log('MagaZord response (início):', responseText.substring(0, 400));
+                        if (!existing || existing.status !== 'PAID') {
+                            await supabase
+                                .from('magazord_commissions')
+                                .upsert({
+                                    architect_id: architect.id,
+                                    magazord_order_id: String(orderId),
+                                    magazord_seller_code: couponCode,
+                                    order_value: orderValue,
+                                    commission_amount: commissionAmount,
+                                    status: existing ? existing.status : 'PENDING'
+                                }, { onConflict: 'magazord_order_id' });
 
-            if (!response.ok) {
-                return new Response(JSON.stringify({ error: 'MagaZord API failed', details: responseText }), { headers: corsHeaders, status: 500 });
-            }
-
-            const responseData = JSON.parse(responseText);
-            const rawOrders = responseData.data?.items
-                || responseData.data?.itens
-                || responseData.data?.registros
-                || (Array.isArray(responseData.data) ? responseData.data : null)
-                || responseData.items
-                || responseData.itens
-                || (Array.isArray(responseData) ? responseData : []);
-
-            orders = rawOrders;
-        } else {
-            // Fallback: if total is unknown, just fetch the last page using a high page number
-            // and walk backwards until we find orders
-            console.log('Total desconhecido - tentando buscar com offset grande...');
-            const url = `${baseUrl}/v2/site/pedido?limit=${pageSize}&pagina=999`;
-            console.log('Fallback URL:', url);
-
-            const response = await fetch(url, {
-                method: 'GET',
-                headers: { 'Authorization': authHeader, 'Content-Type': 'application/json', 'Accept': 'application/json' }
-            });
-
-            if (response.ok) {
-                const responseData = await response.json();
-                const rawOrders = responseData.data?.items
-                    || responseData.data?.itens
-                    || (Array.isArray(responseData.data) ? responseData.data : null)
-                    || responseData.items
-                    || (Array.isArray(responseData) ? responseData : []);
-                orders = rawOrders;
-            }
-        }
-
-        console.log(`Pedidos retornados: ${Array.isArray(orders) ? orders.length : 'não é array'}`);
-
-        if (!Array.isArray(orders) || orders.length === 0) {
-            return new Response(JSON.stringify({ success: true, message: 'No orders found.' }), { headers: corsHeaders, status: 200 });
-        }
-
-        // ─── STEP 3: Client-side date filter (30 days) ──────────────────────
-        // Extra safety: even if pagination works, reject anything older than 30 days
-        const now = new Date();
-        const threshold = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
-
-        const recentOrders = orders.filter((order: any) => {
-            const rawOrder = order?.seq || order;
-            if (!rawOrder.dataHora) return true;
-            // MagaZord format: "2026-03-03 15:29:13-03"
-            const orderDate = new Date(rawOrder.dataHora.replace(' ', 'T'));
-            return orderDate >= threshold;
-        });
-
-        // Log dates of first and last order for debugging
-        if (orders.length > 0) {
-            const first = orders[0]?.seq || orders[0];
-            const last = orders[orders.length - 1]?.seq || orders[orders.length - 1];
-            console.log(`Data do primeiro pedido retornado: ${first.dataHora}`);
-            console.log(`Data do último pedido retornado: ${last.dataHora}`);
-        }
-
-        console.log(`Pedidos válidos (últimos 30 dias): ${recentOrders.length} de ${orders.length}`);
-
-        if (recentOrders.length === 0) {
-            return new Response(JSON.stringify({ success: true, message: 'No recent orders found (all older than 30 days). Pagination may need adjustment.' }), { headers: corsHeaders, status: 200 });
-        }
-
-        // ─── STEP 4: Process each order ─────────────────────────────────────
-        let processedCount = 0;
-
-        for (const rawOrder of recentOrders) {
-            const order = rawOrder?.seq || rawOrder;
-
-            const situacaoId = order.pedidoSituacao || order.situacao?.id || 0;
-            const situacaoStr = (
-                order.pedidoSituacaoDescricao || order.situacao?.nome || order.situacao?.codigo || ''
-            ).toString().toUpperCase().trim();
-
-            const isApproved = (situacaoId >= 4 && situacaoId <= 9)
-                || ['APROVADO', 'FATURADO', 'FATURAMENTO INICIADO', 'FATURAMENTO_INICIADO',
-                    'SEPARAÇÃO', 'TRANSPORTE', 'ENTREGUE', 'PAGO'].includes(situacaoStr);
-
-            let couponCode = order.cupomCodigo || order.cupomDesconto || order.codigoCupomDesconto
-                || order.codigoCupom || order.cupom || order.passouCupom;
-
-            if (!couponCode && Array.isArray(order.cupons) && order.cupons.length > 0) {
-                couponCode = order.cupons[0].codigo || order.cupons[0].nome || order.cupons[0];
-            }
-            if (!couponCode && Array.isArray(order.cuponsDesconto) && order.cuponsDesconto.length > 0) {
-                couponCode = order.cuponsDesconto[0].codigo || order.cuponsDesconto[0];
-            }
-            if (typeof couponCode === 'object' && couponCode !== null) {
-                couponCode = couponCode.codigo || couponCode.nome;
-            }
-
-            console.log(`Pedido ${order.codigo || order.id} [${order.dataHora}]: situacao=${situacaoId}, aprovado=${isApproved}, cupom='${couponCode || 'nenhum'}'`);
-
-            if (isApproved && couponCode) {
-                const orderId = order.codigo || order.numero || order.id;
-                const orderValue = parseFloat(order.valorTotal || order.total || '0');
-
-                const { data: architect, error: archError } = await supabase
-                    .from('architects')
-                    .select('id, commission_rate')
-                    .ilike('coupon_code', couponCode)
-                    .single();
-
-                if (!archError && architect) {
-                    const commissionAmount = (orderValue * Number(architect.commission_rate)) / 100;
-
-                    const { data: existingComm } = await supabase
-                        .from('magazord_commissions')
-                        .select('status')
-                        .eq('magazord_order_id', String(orderId))
-                        .maybeSingle();
-
-                    if (existingComm?.status === 'PAID') {
-                        console.log(`Skipping order ${orderId}: already PAID`);
-                        continue;
+                            console.log(`✓ Comissão via offset: pedido ${orderId}, R$${commissionAmount}`);
+                            updatedCount++;
+                        }
                     }
-
-                    await supabase
-                        .from('magazord_commissions')
-                        .upsert({
-                            architect_id: architect.id,
-                            magazord_order_id: String(orderId),
-                            magazord_seller_code: couponCode,
-                            order_value: orderValue,
-                            commission_amount: commissionAmount,
-                            status: existingComm ? existingComm.status : 'PENDING'
-                        }, { onConflict: 'magazord_order_id' });
-
-                    console.log(`✓ Comissão: pedido ${orderId}, R$${commissionAmount}`);
-                    processedCount++;
-                } else {
-                    console.log(`Nenhum arquiteto com cupom '${couponCode}'`);
                 }
             }
         }
 
         return new Response(
-            JSON.stringify({ success: true, message: `Processed ${processedCount} orders`, recentCount: recentOrders.length, totalFromApi: orders.length }),
+            JSON.stringify({
+                success: true,
+                message: `Processed ${updatedCount} orders`,
+                pendingRechecked: pendingCommissions?.length ?? 0,
+                diagnosticOrdersFound: diagnosticOrders.length
+            }),
             { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 }
         );
 
