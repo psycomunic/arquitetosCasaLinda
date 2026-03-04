@@ -25,16 +25,19 @@ serve(async (req) => {
             return new Response(JSON.stringify({ error: 'Missing configurations' }), { headers: corsHeaders, status: 500 });
         }
 
-        // MagaZord API ignores dataModificacaoInicio/dataHoraInicio date filters.
-        // It always returns orders sorted by ID ascending (oldest first).
-        // Fix: use ordenacao=desc to request newest orders first.
-        const utcNow = new Date();
+        // Build date filter: fetch orders from the last 30 days only.
+        // Format required by MagaZord API: YYYY-MM-DD
+        const now = new Date();
+        const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+        const dateFrom = thirtyDaysAgo.toISOString().split('T')[0]; // e.g. "2026-02-01"
+        const dateTo = now.toISOString().split('T')[0];             // e.g. "2026-03-03"
 
         const authHeader = `Basic ${btoa(`${apiUser}:${apiPass}`)}`;
-        // Try multiple ordering params - MagaZord may use different param names
-        const url = `${baseUrl}/v2/site/pedido?limit=100&ordenacao=desc&order=desc&sort=desc`;
-        console.log('Chamando URL:', url);
 
+        // Pass date filters directly in the API URL so MagaZord returns only recent orders.
+        // dataHoraInicio/dataHoraFim filter by order creation date.
+        const url = `${baseUrl}/v2/site/pedido?limit=100&ordenacao=desc&dataHoraInicio=${dateFrom}&dataHoraFim=${dateTo}`;
+        console.log('Chamando URL:', url);
 
         const response = await fetch(url, {
             method: 'GET',
@@ -57,7 +60,6 @@ serve(async (req) => {
         const responseData = JSON.parse(responseText);
 
         // MagaZord v2 confirmed structure: { status, data: { items: [...] } }
-        // Also try legacy fallbacks just in case
         const orders = responseData.data?.items
             || responseData.data?.itens
             || responseData.data?.registros
@@ -73,44 +75,34 @@ serve(async (req) => {
             return new Response(JSON.stringify({ success: true, message: 'No orders found in date range.' }), { headers: corsHeaders, status: 200 });
         }
 
-        // CLIENT-SIDE DATE FILTER: only process orders created in the last 7 days.
-        // This definitively excludes old 2023 orders regardless of their modification date.
-        // dataHora format from MagaZord: "2026-03-03 15:29:13-03"
-        const clientSideThreshold = new Date(utcNow.getTime() - 30 * 24 * 60 * 60 * 1000); // 30 days ago UTC
+        // Secondary client-side date guard: reject anything older than 30 days.
+        // This protects against APIs that ignore date params and return old orders anyway.
+        const threshold = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
         const recentOrders = orders.filter((order: any) => {
-            if (!order.dataHora) return true; // keep if no date (let it fail later)
-            const orderDate = new Date(order.dataHora.replace(' ', 'T')); // make ISO-parseable
-            return orderDate >= clientSideThreshold;
+            if (!order.dataHora) return true; // keep if no date field
+            const orderDate = new Date(order.dataHora.replace(' ', 'T'));
+            return orderDate >= threshold;
         });
-        console.log(`Pedidos recentes (últimos 7 dias): ${recentOrders.length} de ${orders.length}`);
+
+        console.log(`Pedidos nos últimos 30 dias: ${recentOrders.length} de ${orders.length}`);
 
         if (recentOrders.length === 0) {
             return new Response(JSON.stringify({ success: true, message: 'No recent orders found.' }), { headers: corsHeaders, status: 200 });
         }
 
         // Log first order structure for reference
-        if (orders.length > 0) {
-            const first = orders[0];
-            console.log('Campos do primeiro pedido:', JSON.stringify(Object.keys(first)));
-            console.log('Situação e cupom (1o pedido):', JSON.stringify({
-                pedidoSituacao: first.pedidoSituacao,
-                pedidoSituacaoDescricao: first.pedidoSituacaoDescricao,
-                cupomDesconto: first.cupomDesconto,
-                codigoCupomDesconto: first.codigoCupomDesconto,
-                passouCupom: first.passouCupom,
-                cupons: first.cupons,
-                codigoCupom: first.codigoCupom,
-            }));
+        if (recentOrders.length > 0) {
+            const first = recentOrders[0]?.seq || recentOrders[0];
+            console.log('Campos do primeiro pedido (recente):', JSON.stringify(Object.keys(first)));
+            console.log('Data do primeiro pedido:', first.dataHora);
         }
 
         let processedCount = 0;
 
         for (const rawOrder of recentOrders) {
             // MagaZord API wraps each order in a 'seq' field: [{seq: {...order}}]
-            // Unpack it so we can read fields directly
             const order = rawOrder?.seq || rawOrder;
 
-            // MagaZord confirmed fields: pedidoSituacao (number), pedidoSituacaoDescricao (string)
             const situacaoId = order.pedidoSituacao || order.situacao?.id || 0;
 
             const situacaoStr = (
@@ -122,7 +114,7 @@ serve(async (req) => {
 
             // Approved statuses: 4=Aprovado, 5=Faturamento Iniciado, 6=Faturado, 7=Separação,
             // 8=Transporte, 9=Entregue
-            const isApproved = situacaoId >= 4 && situacaoId <= 9
+            const isApproved = (situacaoId >= 4 && situacaoId <= 9)
                 || ['APROVADO', 'FATURADO', 'FATURAMENTO INICIADO', 'FATURAMENTO_INICIADO',
                     'SEPARAÇÃO', 'TRANSPORTE', 'ENTREGUE', 'PAGO'].includes(situacaoStr);
 
@@ -134,7 +126,6 @@ serve(async (req) => {
                 || order.cupom
                 || order.passouCupom;
 
-
             if (!couponCode && Array.isArray(order.cupons) && order.cupons.length > 0) {
                 couponCode = order.cupons[0].codigo || order.cupons[0].nome || order.cupons[0];
             }
@@ -145,7 +136,7 @@ serve(async (req) => {
                 couponCode = couponCode.codigo || couponCode.nome;
             }
 
-            console.log(`Pedido ${order.codigo || order.id}: situacao=${situacaoId} (${situacaoStr}), aprovado=${isApproved}, cupom='${couponCode || 'nenhum'}'`);
+            console.log(`Pedido ${order.codigo || order.id} [${order.dataHora}]: situacao=${situacaoId} (${situacaoStr}), aprovado=${isApproved}, cupom='${couponCode || 'nenhum'}'`);
 
             if (isApproved && couponCode) {
                 const orderId = order.codigo || order.numero || order.id;
@@ -196,7 +187,7 @@ serve(async (req) => {
         }
 
         return new Response(
-            JSON.stringify({ success: true, message: `Processed ${processedCount} orders` }),
+            JSON.stringify({ success: true, message: `Processed ${processedCount} orders`, dateFrom, dateTo }),
             { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 }
         );
 

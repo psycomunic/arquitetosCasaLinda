@@ -44,6 +44,7 @@ serve(async (req) => {
         // payload.id = internal MagaZord ID (33790)
         // payload.pedidoSituacao = status (1=Aguardando, 4=Aprovado)
         // payload.cupomCodigo = coupon code ("angelo20")
+        // payload.dataHora = order date ("2026-03-03 15:29:13-03")
         const internalId = payload.id;
         const orderId = payload.codigo || String(payload.id);
         let status = payload.pedidoSituacao ?? payload.situacao ?? 0;
@@ -74,9 +75,16 @@ serve(async (req) => {
             console.log(`Status=${status} — Re-consultando pedido ${orderId} na API MagaZord...`);
             try {
                 const authHeader = `Basic ${btoa(`${apiUser}:${apiPass}`)}`;
-                // MagaZord list endpoint — same as magazord-sync uses successfully
-                const listUrl = `${baseUrl}/v2/site/pedido?limit=50&ordenacao=desc&order=desc&sort=desc`;
+
+                // Only search orders from the last 30 days so we don't get 2023 orders.
+                const now = new Date();
+                const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+                const dateFrom = thirtyDaysAgo.toISOString().split('T')[0];
+                const dateTo = now.toISOString().split('T')[0];
+
+                const listUrl = `${baseUrl}/v2/site/pedido?limit=100&ordenacao=desc&dataHoraInicio=${dateFrom}&dataHoraFim=${dateTo}`;
                 console.log('Re-check URL:', listUrl);
+
                 const apiResp = await fetch(listUrl, {
                     method: 'GET',
                     headers: { 'Authorization': authHeader, 'Content-Type': 'application/json', 'Accept': 'application/json' }
@@ -86,7 +94,7 @@ serve(async (req) => {
                     const apiText = await apiResp.text();
                     console.log('API re-check resposta (início):', apiText.substring(0, 200));
                     const apiData = JSON.parse(apiText);
-                    // Extract orders array — MagaZord may use data.items, data[] or top-level array
+
                     const rawOrders: any[] = apiData?.data?.items
                         || apiData?.data?.itens
                         || (Array.isArray(apiData?.data) ? apiData.data : null)
@@ -95,6 +103,8 @@ serve(async (req) => {
 
                     // Unpack 'seq' wrapper if present: [{seq: {...order}}] → [{...order}]
                     const allOrders = rawOrders.map((o: any) => o?.seq || o);
+
+                    console.log(`Re-check: ${allOrders.length} pedidos encontrados no período de ${dateFrom} a ${dateTo}`);
 
                     // Find the specific order by codigo or internal id
                     const freshOrder = allOrders.find((o: any) =>
@@ -106,11 +116,11 @@ serve(async (req) => {
                         const freshStatus = freshOrder.pedidoSituacao ?? freshOrder.situacao ?? status;
                         const freshCoupon = freshOrder.cupomCodigo || freshOrder.codigoCupom || freshOrder.cupom || couponCode;
                         const freshValue = parseFloat(freshOrder.valorTotal || freshOrder.valorTotalFinal || String(orderValue));
-                        console.log(`API re-check: situacao=${freshStatus}, cupom='${freshCoupon}', valor=${freshValue}`);
+                        console.log(`API re-check: situacao=${freshStatus}, cupom='${freshCoupon}', valor=${freshValue}, data=${freshOrder.dataHora}`);
                         status = freshStatus;
                         if (freshCoupon) couponCode = freshCoupon;
                     } else {
-                        console.log(`Pedido ${orderId} não encontrado nos últimos 50 pedidos. Status do webhook: ${status}.`);
+                        console.log(`Pedido ${orderId} não encontrado nos pedidos recentes (${dateFrom} a ${dateTo}). Total consultados: ${allOrders.length}. Status do webhook: ${status}.`);
                     }
                 } else {
                     console.log(`API re-check falhou (${apiResp.status}) — usando status do webhook (${status}).`);
@@ -120,11 +130,8 @@ serve(async (req) => {
             }
         }
 
-
-
         // ─── Process only approved orders (status 4–9) ───────────────────────
         if (status >= 4 && status <= 9) {
-            // Find architect by coupon_code (case-insensitive, trims whitespace)
             const cleanCoupon = String(couponCode).trim();
             const { data: architect, error: archError } = await supabase
                 .from('architects')
