@@ -129,51 +129,47 @@ serve(async (req) => {
             }
         }
 
-        // ─── Process only approved orders (status 4–9) ───────────────────────
-        if (status >= 4 && status <= 9) {
-            const cleanCoupon = String(couponCode).trim();
-            const { data: architect, error: archError } = await supabase
-                .from('architects')
-                .select('id, commission_rate, name')
-                .ilike('coupon_code', cleanCoupon)
-                .single();
+        // ─── Process orders ───────────────────────
+        const isApproved = status >= 4 && status <= 9;
+        const mappedStatus = isApproved ? 'PENDING' : 'AWAITING';
 
-            if (archError || !architect) {
-                console.log(`Arquiteto não encontrado para cupom '${cleanCoupon}'.`);
-                return new Response(JSON.stringify({ success: false, message: `Architect not found for coupon: ${cleanCoupon}` }), {
-                    headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200
-                });
-            }
+        const cleanCoupon = String(couponCode).trim();
+        const { data: architect, error: archError } = await supabase
+            .from('architects')
+            .select('id, commission_rate, name')
+            .ilike('coupon_code', cleanCoupon)
+            .single();
 
-            const commissionAmount = (orderValue * Number(architect.commission_rate)) / 100;
-            console.log(`Comissão: ${commissionAmount} para ${(architect as any).name} (${architect.commission_rate}% de ${orderValue})`);
-
-            const { error: insertError } = await supabase
-                .from('magazord_commissions')
-                .upsert({
-                    architect_id: architect.id,
-                    magazord_order_id: String(orderId),
-                    magazord_seller_code: cleanCoupon,
-                    order_value: orderValue,
-                    commission_amount: commissionAmount,
-                    status: 'PENDING'
-                }, { onConflict: 'magazord_order_id' });
-
-            if (insertError) {
-                console.error('Erro ao salvar comissão:', insertError);
-                throw insertError;
-            }
-
-            console.log(`✅ Comissão salva: pedido ${orderId}, arquiteto ${(architect as any).name}, valor R$${commissionAmount}`);
-            return new Response(JSON.stringify({ success: true, message: 'Commission saved' }), {
-                headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200
-            });
-        } else {
-            console.log(`Pedido ${orderId} ainda não aprovado (status=${status}) — aguardando aprovação.`);
-            return new Response(JSON.stringify({ success: true, message: `Order status=${status}, not yet approved` }), {
+        if (archError || !architect) {
+            console.log(`Arquiteto não encontrado para cupom '${cleanCoupon}'.`);
+            return new Response(JSON.stringify({ success: false, message: `Architect not found for coupon: ${cleanCoupon}` }), {
                 headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200
             });
         }
+
+        const commissionAmount = (orderValue * Number(architect.commission_rate)) / 100;
+        console.log(`Comissão: ${commissionAmount} para ${(architect as any).name} (${architect.commission_rate}% de ${orderValue}) - Status: ${mappedStatus}`);
+
+        const { error: insertError } = await supabase
+            .from('magazord_commissions')
+            .upsert({
+                architect_id: architect.id,
+                magazord_order_id: String(orderId),
+                magazord_seller_code: cleanCoupon,
+                order_value: orderValue,
+                commission_amount: commissionAmount,
+                status: mappedStatus
+            }, { onConflict: 'magazord_order_id' });
+
+        if (insertError) {
+            console.error('Erro ao salvar comissão:', insertError);
+            throw insertError;
+        }
+
+        console.log(`✅ Comissão salva (${mappedStatus}): pedido ${orderId}, arquiteto ${(architect as any).name}, valor R$${commissionAmount}`);
+        return new Response(JSON.stringify({ success: true, message: `Commission saved (${mappedStatus})` }), {
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200
+        });
 
     } catch (error: any) {
         console.error('Webhook error:', error);

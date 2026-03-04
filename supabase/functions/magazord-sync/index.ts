@@ -36,13 +36,13 @@ serve(async (req) => {
 
         const authHeader = `Basic ${btoa(`${apiUser}:${apiPass}`)}`;
 
-        // ─── STRATEGY 1: Re-check all PENDING commissions from DB ────────────
-        // For each PENDING commission, fetch the current order status via direct endpoint
+        // ─── STRATEGY 1: Re-check all PENDING or AWAITING commissions from DB ────────────
+        // For each PENDING or AWAITING commission, fetch the current order status via direct endpoint
         // and update the commission if it's now approved.
         const { data: pendingCommissions, error: pendingError } = await supabase
             .from('magazord_commissions')
             .select('id, magazord_order_id, architect_id, order_value, commission_amount, status')
-            .eq('status', 'PENDING')
+            .in('status', ['PENDING', 'AWAITING'])
             .limit(50);
 
         if (pendingError) {

@@ -12,7 +12,7 @@ interface CombinedSale {
     type: 'PROPOSAL' | 'MAGAZORD';
     saleValue: number;
     commissionValue: number;
-    status: 'pending' | 'paid' | 'cancelled';
+    status: 'awaiting' | 'pending' | 'paid' | 'cancelled';
 }
 
 export const Earnings: React.FC = () => {
@@ -69,7 +69,7 @@ export const Earnings: React.FC = () => {
                     type: 'PROPOSAL' as const,
                     saleValue: Number(s.sale_value),
                     commissionValue: Number(s.commission_value),
-                    status: s.status as 'pending' | 'paid' | 'cancelled'
+                    status: s.status as 'awaiting' | 'pending' | 'paid' | 'cancelled'
                 }))];
             }
 
@@ -82,7 +82,7 @@ export const Earnings: React.FC = () => {
                     type: 'MAGAZORD' as const,
                     saleValue: Number(m.order_value),
                     commissionValue: Number(m.commission_amount),
-                    status: (m.status === 'PAID' ? 'paid' : m.status === 'CANCELED' ? 'cancelled' : 'pending') as 'pending' | 'paid' | 'cancelled'
+                    status: (m.status === 'PAID' ? 'paid' : m.status === 'CANCELED' ? 'cancelled' : m.status === 'AWAITING' ? 'awaiting' : 'pending') as 'awaiting' | 'pending' | 'paid' | 'cancelled'
                 }))];
             }
 
@@ -202,9 +202,9 @@ export const Earnings: React.FC = () => {
                                     <td className="px-12 py-8 text-sm font-bold text-gold">R$ {sale.commissionValue.toLocaleString('pt-BR')}</td>
                                     <td className="px-12 py-8">
                                         <div className="flex items-center gap-3">
-                                            <div className={`w-2 h-2 rounded-full ${sale.status === 'paid' ? 'bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.5)]' : sale.status === 'cancelled' ? 'bg-red-500' : 'bg-gold shadow-[0_0_10px_rgba(197,160,89,0.5)]'}`} />
+                                            <div className={`w-2 h-2 rounded-full ${sale.status === 'paid' ? 'bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.5)]' : sale.status === 'cancelled' ? 'bg-red-500' : sale.status === 'awaiting' ? 'bg-zinc-500' : 'bg-gold shadow-[0_0_10px_rgba(197,160,89,0.5)]'}`} />
                                             <span className="text-[9px] font-bold uppercase tracking-widest text-zinc-500">
-                                                {sale.status === 'paid' ? 'Disponível' : sale.status === 'pending' ? 'Em Processamento' : 'Cancelado'}
+                                                {sale.status === 'paid' ? 'Disponível' : sale.status === 'awaiting' ? 'Aguardando Pgto' : sale.status === 'pending' ? 'Em Processamento' : 'Cancelado'}
                                             </span>
                                         </div>
                                     </td>

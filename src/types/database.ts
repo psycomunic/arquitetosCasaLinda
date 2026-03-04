@@ -37,7 +37,7 @@ export interface MagazordCommission {
     magazord_seller_code: string;
     order_value: number;
     commission_amount: number;
-    status: 'PENDING' | 'PAID' | 'CANCELED';
+    status: 'AWAITING' | 'PENDING' | 'PAID' | 'CANCELED';
     created_at: string;
     updated_at: string;
 }

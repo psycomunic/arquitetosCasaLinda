@@ -72,7 +72,7 @@ export const DashboardOverview: React.FC = () => {
                         type: 'MAGAZORD',
                         saleValue: Number(m.order_value),
                         commissionValue: Number(m.commission_amount),
-                        status: m.status === 'PAID' ? 'paid' : m.status === 'CANCELED' ? 'cancelled' : 'pending',
+                        status: m.status === 'PAID' ? 'paid' : m.status === 'CANCELED' ? 'cancelled' : m.status === 'AWAITING' ? 'awaiting' : 'pending',
                     }))];
                 }
 

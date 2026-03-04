@@ -15,7 +15,7 @@ interface CombinedCommission {
     type: 'PROPOSAL' | 'MAGAZORD';
     saleValue: number;
     commissionValue: number;
-    status: 'pending' | 'paid' | 'cancelled';
+    status: 'awaiting' | 'pending' | 'paid' | 'cancelled';
     originalId: string;
 }
 
@@ -65,7 +65,7 @@ export const AdminCommissions: React.FC = () => {
                     type: 'PROPOSAL' as const,
                     saleValue: Number(s.sale_value),
                     commissionValue: Number(s.commission_value),
-                    status: s.status as 'pending' | 'paid' | 'cancelled'
+                    status: s.status as 'awaiting' | 'pending' | 'paid' | 'cancelled'
                 }))];
             }
 
@@ -81,7 +81,7 @@ export const AdminCommissions: React.FC = () => {
                     type: 'MAGAZORD' as const,
                     saleValue: Number(m.order_value),
                     commissionValue: Number(m.commission_amount),
-                    status: (m.status === 'PAID' ? 'paid' : m.status === 'CANCELED' ? 'cancelled' : 'pending') as 'pending' | 'paid' | 'cancelled'
+                    status: (m.status === 'PAID' ? 'paid' : m.status === 'CANCELED' ? 'cancelled' : m.status === 'AWAITING' ? 'awaiting' : 'pending') as 'awaiting' | 'pending' | 'paid' | 'cancelled'
                 }))];
             }
 
@@ -427,19 +427,20 @@ export const AdminCommissions: React.FC = () => {
                             />
                         </div>
                         <div className="flex gap-2 w-full md:w-auto">
-                            {(['all', 'pending', 'paid', 'cancelled'] as const).map(s => (
+                            {(['all', 'awaiting', 'pending', 'paid', 'cancelled'] as const).map(s => (
                                 <button
                                     key={s}
-                                    onClick={() => setStatusFilter(s)}
+                                    onClick={() => setStatusFilter(s as any)}
                                     className={`px-4 py-2 text-[10px] uppercase tracking-widest font-bold rounded flex-1 md:flex-none transition-colors border
                                         ${statusFilter === s
                                             ? s === 'all' ? 'bg-white text-black border-white'
                                                 : s === 'pending' ? 'bg-gold/20 text-gold border-gold'
-                                                    : s === 'paid' ? 'bg-green-500/20 text-green-500 border-green-500'
-                                                        : 'bg-red-500/20 text-red-500 border-red-500'
+                                                    : s === 'awaiting' ? 'bg-zinc-500/20 text-zinc-400 border-zinc-500'
+                                                        : s === 'paid' ? 'bg-green-500/20 text-green-500 border-green-500'
+                                                            : 'bg-red-500/20 text-red-500 border-red-500'
                                             : 'border-white/10 text-zinc-400 hover:border-gold'}`}
                                 >
-                                    {s === 'all' ? 'Todos' : s === 'pending' ? 'Pendentes' : s === 'paid' ? 'Pagos' : 'Cancelados'}
+                                    {s === 'all' ? 'Todos' : s === 'awaiting' ? 'Aguardando MagaZord' : s === 'pending' ? 'Pendentes' : s === 'paid' ? 'Pagos' : 'Cancelados'}
                                 </button>
                             ))}
                         </div>
@@ -493,8 +494,9 @@ export const AdminCommissions: React.FC = () => {
                                                 <span className={`text-[9px] font-bold uppercase tracking-widest px-2 py-1 rounded border inline-flex items-center gap-1
                                                     ${c.status === 'paid' ? 'bg-green-500/10 text-green-500 border-green-500/20'
                                                         : c.status === 'cancelled' ? 'bg-red-500/10 text-red-500 border-red-500/20'
-                                                            : 'bg-gold/10 text-gold border-gold/20'}`}>
-                                                    {c.status === 'paid' ? 'Pago' : c.status === 'pending' ? 'Pendente' : 'Cancelado'}
+                                                            : c.status === 'awaiting' ? 'bg-zinc-500/10 text-zinc-400 border-zinc-500/30'
+                                                                : 'bg-gold/10 text-gold border-gold/20'}`}>
+                                                    {c.status === 'paid' ? 'Pago' : c.status === 'awaiting' ? 'Aguardando MagaZord' : c.status === 'pending' ? 'Pendente' : 'Cancelado'}
                                                 </span>
                                             </td>
                                             <td className="px-6 py-4 text-center">
