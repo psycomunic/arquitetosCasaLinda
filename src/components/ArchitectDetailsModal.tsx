@@ -141,7 +141,7 @@ export const ArchitectDetailsModal: React.FC<ArchitectDetailsModalProps> = ({ is
                         <h3 className="text-xs uppercase tracking-[0.2em] font-bold text-gold mb-4 flex items-center gap-2">
                             <CreditCard size={14} /> Dados Financeiros
                         </h3>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                             <div className="bg-zinc-900 p-4 rounded-lg border border-zinc-800">
                                 <p className="text-[10px] text-zinc-500 uppercase">Cupom Ativo</p>
                                 <p className="text-white font-mono text-lg">{architect.coupon_code || '—'}</p>
@@ -153,6 +153,22 @@ export const ArchitectDetailsModal: React.FC<ArchitectDetailsModalProps> = ({ is
                             <div className="bg-zinc-900 p-4 rounded-lg border border-zinc-800">
                                 <p className="text-[10px] text-zinc-500 uppercase">Total Recebido</p>
                                 <p className="text-green-400 font-bold text-lg">{formatCurrency(architect.total_earnings)}</p>
+                            </div>
+                        </div>
+
+                        {/* PIX and NF Warning */}
+                        <div className="grid grid-cols-1 md:grid-cols-1 gap-4 mb-6">
+                            <div className="bg-zinc-900 p-4 rounded-lg border border-zinc-800">
+                                <p className="text-[10px] text-zinc-500 uppercase">Chave PIX</p>
+                                <p className="text-white font-mono text-base">{architect.pix_key || 'Não informada'}</p>
+                            </div>
+                        </div>
+
+                        <div className="bg-yellow-500/10 border border-yellow-500/20 p-4 rounded-lg flex items-start gap-3">
+                            <div className="text-yellow-500 mt-0.5">⚠️</div>
+                            <div>
+                                <h4 className="text-yellow-500 font-bold text-sm">Atenção Arquiteto(a)</h4>
+                                <p className="text-zinc-400 text-sm mt-1">O pagamento dos repasses é realizado todo <strong>dia 10</strong>. É obrigatória a emissão de <strong>Nota Fiscal</strong> correspondente ao valor para recebimento.</p>
                             </div>
                         </div>
                     </section>

@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Image as ImageIcon, Loader2, Upload, User, MapPin, Phone, FileText } from 'lucide-react';
 import { ArchitectProfile } from '../types';
+import { Architect } from '../types/database';
 import { supabase } from '../lib/supabase';
 
 export const Settings: React.FC = () => {
@@ -21,7 +22,8 @@ export const Settings: React.FC = () => {
         neighborhood: '',
         zipCode: '',
         city: '',
-        state: ''
+        state: '',
+        pixKey: ''
     });
 
     const [loading, setLoading] = useState(false);
@@ -46,7 +48,7 @@ export const Settings: React.FC = () => {
                 .from('architects')
                 .select('*')
                 .eq('id', user.id)
-                .single();
+                .single<Architect>();
 
             if (error) throw error;
 
@@ -68,7 +70,8 @@ export const Settings: React.FC = () => {
                     neighborhood: data.neighborhood || '',
                     zipCode: data.zip_code || '',
                     city: data.city || '',
-                    state: data.state || ''
+                    state: data.state || '',
+                    pixKey: data.pix_key || ''
                 });
             }
         } catch (error) {
@@ -105,8 +108,9 @@ export const Settings: React.FC = () => {
                     neighborhood: profile.neighborhood,
                     zip_code: profile.zipCode,
                     city: profile.city,
-                    state: profile.state
-                });
+                    state: profile.state,
+                    pix_key: profile.pixKey
+                } as Architect);
 
             if (error) throw error;
 
@@ -302,11 +306,11 @@ export const Settings: React.FC = () => {
 
                 {/* Contacts & Address */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-                    {/* Contacts */}
+                    {/* Contacts & Financial */}
                     <div className="glass p-12 md:p-16 h-full">
                         <div className="flex items-center gap-4 mb-10">
                             <Phone className="text-gold" size={24} />
-                            <h3 className="font-serif text-3xl text-white">Contatos</h3>
+                            <h3 className="font-serif text-3xl text-white">Contatos e Dados Financeiros</h3>
                         </div>
                         <div className="space-y-8">
                             <div className="space-y-2">
@@ -327,6 +331,16 @@ export const Settings: React.FC = () => {
                                     onChange={(e) => setProfile({ ...profile, website: e.target.value })}
                                     className="w-full px-6 py-4 border border-white/5 focus:outline-none focus:border-gold transition-all text-sm glass-dark text-white rounded-lg placeholder-zinc-700"
                                     placeholder="https://seu-site.com"
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em]">Chave PIX</label>
+                                <input
+                                    type="text"
+                                    value={profile.pixKey || ''}
+                                    onChange={(e) => setProfile({ ...profile, pixKey: e.target.value })}
+                                    className="w-full px-6 py-4 border border-white/5 focus:outline-none focus:border-gold transition-all text-sm glass-dark text-white rounded-lg placeholder-zinc-700"
+                                    placeholder="Sua Chave PIX"
                                 />
                             </div>
                         </div>

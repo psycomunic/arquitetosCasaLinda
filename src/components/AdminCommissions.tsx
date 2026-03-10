@@ -2,7 +2,7 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { supabase } from '../lib/supabase';
 import {
     CheckCircle2, Search, Loader2, DollarSign, RefreshCw,
-    AlertCircle, Calendar, Users, Clock, History, TrendingUp
+    AlertCircle, Calendar, Users, Clock, History, TrendingUp, X
 } from 'lucide-react';
 
 interface CombinedCommission {
@@ -11,6 +11,7 @@ interface CombinedCommission {
     reference: string;
     architectId: string;
     architectName: string;
+    pixKey: string | null;
     clientName: string;
     type: 'PROPOSAL' | 'MAGAZORD';
     saleValue: number;
@@ -22,6 +23,7 @@ interface CombinedCommission {
 interface ArchitectSummary {
     architectId: string;
     architectName: string;
+    pixKey: string | null;
     pendingCount: number;
     pendingTotal: number;
     commissions: CombinedCommission[];
@@ -34,6 +36,7 @@ export const AdminCommissions: React.FC = () => {
     const [activeTab, setActiveTab] = useState<'summary' | 'history'>('summary');
     const [searchTerm, setSearchTerm] = useState('');
     const [statusFilter, setStatusFilter] = useState<'all' | 'pending' | 'paid' | 'cancelled'>('all');
+    const [selectedArchitectForPayment, setSelectedArchitectForPayment] = useState<ArchitectSummary | null>(null);
 
     // Month selector: default to current month
     const now = new Date();
@@ -45,11 +48,11 @@ export const AdminCommissions: React.FC = () => {
         try {
             const { data: salesData } = await supabase
                 .from('sales')
-                .select('*, architects(name)');
+                .select('*, architects(name, pix_key)');
 
             const { data: magazordData } = await supabase
                 .from('magazord_commissions')
-                .select('*, architects(name)');
+                .select('*, architects(name, pix_key)');
 
             let combined: CombinedCommission[] = [];
 
@@ -61,6 +64,7 @@ export const AdminCommissions: React.FC = () => {
                     reference: s.proposal_id ? s.proposal_id.slice(0, 8) : 'MANUAL',
                     architectId: s.architect_id,
                     architectName: s.architects?.name || 'Desconhecido',
+                    pixKey: s.architects?.pix_key || null,
                     clientName: s.client_name || 'Venda Assistida',
                     type: 'PROPOSAL' as const,
                     saleValue: Number(s.sale_value),
@@ -77,6 +81,7 @@ export const AdminCommissions: React.FC = () => {
                     reference: m.magazord_order_id || m.id,
                     architectId: m.architect_id,
                     architectName: m.architects?.name || 'Desconhecido',
+                    pixKey: m.architects?.pix_key || null,
                     clientName: 'MagaZord (Online)',
                     type: 'MAGAZORD' as const,
                     saleValue: Number(m.order_value),
@@ -111,6 +116,7 @@ export const AdminCommissions: React.FC = () => {
                 map.set(c.architectId, {
                     architectId: c.architectId,
                     architectName: c.architectName,
+                    pixKey: c.pixKey,
                     pendingCount: 0,
                     pendingTotal: 0,
                     commissions: []
@@ -142,9 +148,8 @@ export const AdminCommissions: React.FC = () => {
         'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
 
     // ─── Pay all pending for one architect ────────────────────────────
-    const handlePayArchitect = async (summary: ArchitectSummary) => {
+    const confirmPayment = async (summary: ArchitectSummary) => {
         if (summary.pendingTotal === 0) return;
-        if (!confirm(`Pagar R$ ${summary.pendingTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })} para ${summary.architectName}?\n\nIsso marca ${summary.pendingCount} comissões como PAGAS e atualiza o saldo do arquiteto.`)) return;
 
         setActionLoading(summary.architectId);
         try {
@@ -171,6 +176,7 @@ export const AdminCommissions: React.FC = () => {
             alert('Erro ao processar pagamento.');
         } finally {
             setActionLoading(null);
+            setSelectedArchitectForPayment(null);
         }
     };
 
@@ -363,13 +369,11 @@ export const AdminCommissions: React.FC = () => {
 
                                             {summary.pendingTotal > 0 && (
                                                 <button
-                                                    onClick={() => handlePayArchitect(summary)}
+                                                    onClick={() => setSelectedArchitectForPayment(summary)}
                                                     disabled={!!actionLoading}
                                                     className="px-5 py-2.5 bg-gold text-black font-bold text-[11px] uppercase tracking-widest rounded-lg hover:bg-gold/90 transition-all disabled:opacity-50 flex items-center gap-2 whitespace-nowrap"
                                                 >
-                                                    {actionLoading === summary.architectId
-                                                        ? <Loader2 size={13} className="animate-spin" />
-                                                        : <CheckCircle2 size={13} />}
+                                                    <CheckCircle2 size={13} />
                                                     Pagar R$ {summary.pendingTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                                                 </button>
                                             )}
@@ -524,6 +528,75 @@ export const AdminCommissions: React.FC = () => {
                                     ))}
                                 </tbody>
                             </table>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Payment Modal */}
+            {selectedArchitectForPayment && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
+                    <div className="bg-zinc-950 w-full max-w-lg rounded-2xl border border-gold/30 shadow-[0_0_50px_rgba(197,160,89,0.1)] relative flex flex-col max-h-[90vh]">
+                        <div className="p-6 border-b border-white/5 flex items-start justify-between bg-zinc-900/50 rounded-t-2xl">
+                            <div>
+                                <h2 className="text-xl font-bold text-white font-serif">Confirmar Pagamento</h2>
+                                <p className="text-sm text-zinc-400 mt-1">Detalhes do repasse para o arquiteto</p>
+                            </div>
+                            <button
+                                onClick={() => setSelectedArchitectForPayment(null)}
+                                className="p-2 hover:bg-white/5 rounded-full text-zinc-500 hover:text-white transition-colors"
+                            >
+                                <X size={20} />
+                            </button>
+                        </div>
+
+                        <div className="p-6 overflow-y-auto custom-scrollbar space-y-6">
+                            <div className="bg-white/5 p-4 rounded-lg border border-white/5">
+                                <p className="text-[10px] text-zinc-500 uppercase font-bold tracking-[0.2em] mb-1">Arquiteto(a)</p>
+                                <p className="text-white text-lg font-bold">{selectedArchitectForPayment.architectName}</p>
+                            </div>
+
+                            <div className="bg-gold/10 p-4 rounded-lg border border-gold/20">
+                                <p className="text-[10px] text-zinc-500 uppercase font-bold tracking-[0.2em] mb-1">Total a Transferir</p>
+                                <p className="text-gold text-3xl font-serif">R$ {selectedArchitectForPayment.pendingTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
+                                <p className="text-xs text-zinc-400 mt-1">Referente a {selectedArchitectForPayment.pendingCount} comissões pendentes.</p>
+                            </div>
+
+                            <div className="bg-white/5 p-4 rounded-lg border border-white/5">
+                                <p className="text-[10px] text-zinc-500 uppercase font-bold tracking-[0.2em] mb-1">Chave PIX do Arquiteto</p>
+                                <p className="text-white text-lg font-mono">{selectedArchitectForPayment.pixKey || 'Não informada'}</p>
+                            </div>
+
+                            {/* Detalhamento (opcional, mostra os itens que estão sendo pagos) */}
+                            <div className="mt-4">
+                                <p className="text-xs uppercase tracking-[0.2em] font-bold text-zinc-500 mb-2">Comissões (Este Mês)</p>
+                                <div className="space-y-2 max-h-32 overflow-y-auto pr-2 custom-scrollbar">
+                                    {selectedArchitectForPayment.commissions.filter(c => c.status === 'pending').map(c => (
+                                        <div key={c.id} className="flex justify-between items-center text-xs bg-black/40 p-2 rounded border border-white/5">
+                                            <span className="text-zinc-400 truncate w-3/4">{c.clientName}</span>
+                                            <span className="text-zinc-300 font-mono">R$ {c.commissionValue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="p-6 border-t border-white/5 bg-zinc-900/50 rounded-b-2xl flex gap-3">
+                            <button
+                                onClick={() => setSelectedArchitectForPayment(null)}
+                                className="flex-1 px-4 py-3 rounded-lg border border-white/10 text-zinc-400 hover:bg-white/5 transition-colors text-sm font-bold uppercase tracking-widest"
+                            >
+                                Cancelar
+                            </button>
+                            <button
+                                onClick={() => confirmPayment(selectedArchitectForPayment)}
+                                disabled={!!actionLoading}
+                                className="flex-1 px-4 py-3 rounded-lg bg-gold text-black hover:bg-gold/90 transition-all font-bold text-sm uppercase tracking-widest flex justify-center items-center"
+                            >
+                                {actionLoading === selectedArchitectForPayment.architectId
+                                    ? <Loader2 className="animate-spin" size={18} />
+                                    : 'Confirmar Pagamento'}
+                            </button>
                         </div>
                     </div>
                 </div>

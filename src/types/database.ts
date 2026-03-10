@@ -24,6 +24,7 @@ export interface Architect {
     profile_photo_url?: string | null;
     approved_at: string | null;
     approved_by: string | null;
+    pix_key?: string | null;
     coupon_code: string | null;
     magazord_seller_code?: string | null;
     created_at: string;

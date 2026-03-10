@@ -64,6 +64,7 @@ export interface ArchitectProfile {
   cnpj?: string;
   phone?: string;
   website?: string;
+  pixKey?: string | null;
   street?: string;
   number?: string;
   complement?: string;
