@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Image as ImageIcon, Loader2, Upload, User, MapPin, Phone, FileText } from 'lucide-react';
+import { Image as ImageIcon, Loader2, Upload, User, MapPin, Phone, FileText, AlertCircle } from 'lucide-react';
 import { ArchitectProfile } from '../types';
 import { Architect } from '../types/database';
 import { supabase } from '../lib/supabase';
@@ -333,15 +333,35 @@ export const Settings: React.FC = () => {
                                     placeholder="https://seu-site.com"
                                 />
                             </div>
-                            <div className="space-y-2">
-                                <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em]">Chave PIX</label>
-                                <input
-                                    type="text"
-                                    value={profile.pixKey || ''}
-                                    onChange={(e) => setProfile({ ...profile, pixKey: e.target.value })}
-                                    className="w-full px-6 py-4 border border-white/5 focus:outline-none focus:border-gold transition-all text-sm glass-dark text-white rounded-lg placeholder-zinc-700"
-                                    placeholder="Sua Chave PIX"
-                                />
+                            <div className="space-y-3">
+                                <label className="flex items-center gap-2 text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em]">
+                                    Chave PIX
+                                    {!profile.pixKey && <AlertCircle size={14} className="text-red-500 animate-pulse" />}
+                                </label>
+                                <div className="relative">
+                                    <input
+                                        type="text"
+                                        value={profile.pixKey || ''}
+                                        onChange={(e) => setProfile({ ...profile, pixKey: e.target.value })}
+                                        className={`w-full px-6 py-4 transition-all text-sm glass-dark text-white rounded-lg placeholder-zinc-700
+                                            ${!profile.pixKey
+                                                ? 'border-2 border-red-500/50 shadow-[0_0_15px_rgba(239,68,68,0.2)] focus:border-red-500 focus:outline-none focus:ring-1 focus:ring-red-500'
+                                                : 'border border-white/5 focus:outline-none focus:border-gold'
+                                            }
+                                        `}
+                                        placeholder="Sua Chave PIX"
+                                    />
+                                </div>
+                                {!profile.pixKey && (
+                                    <p className="text-xs text-red-500 font-bold mb-2">
+                                        ⚠️ Cadastre sua Chave PIX para receber as comissões no dia 10!
+                                    </p>
+                                )}
+                                {profile.pixKey && (
+                                    <p className="text-[10px] text-zinc-500">
+                                        As comissões aprovadas serão pagas nesta chave todo dia 10.
+                                    </p>
+                                )}
                             </div>
                         </div>
                     </div>

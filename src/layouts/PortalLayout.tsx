@@ -15,16 +15,19 @@ import {
 import { supabase } from '../lib/supabase';
 
 import { CompleteProfileModal } from '../components/CompleteProfileModal';
+import { PixReminderModal } from '../components/PixReminderModal';
 
 interface PortalLayoutProps {
     children: React.ReactNode;
     profile: {
+        id?: string;
         name: string;
         officeName: string;
         logoUrl: string;
         profilePhotoUrl?: string;
         isAdmin?: boolean;
         phone?: string;
+        pixKey?: string | null;
     };
     onProfileUpdate?: () => void;
 }
@@ -154,6 +157,14 @@ export const PortalLayout: React.FC<PortalLayoutProps> = ({ children, profile, o
                 <CompleteProfileModal
                     isOpen={!profile.phone}
                     onProfileUpdate={onProfileUpdate}
+                />
+            )}
+
+            {!profile.isAdmin && profile.id && !profile.pixKey && (
+                <PixReminderModal
+                    isOpen={true}
+                    onClose={() => { }} // Local state inside PixReminderModal handles the closing logic
+                    userId={profile.id}
                 />
             )}
         </div>

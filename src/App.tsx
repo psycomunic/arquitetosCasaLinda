@@ -36,12 +36,14 @@ const ScrollToTop: React.FC = () => {
 
 const App: React.FC = () => {
   const [profile, setProfile] = React.useState({
+    id: '',
     name: '',
     officeName: '',
     logoUrl: '',
     profilePhotoUrl: '',
     isAdmin: false,
-    phone: ''
+    phone: '',
+    pixKey: null as string | null
   });
   const [authLoading, setAuthLoading] = React.useState(true);
 
@@ -64,12 +66,14 @@ const App: React.FC = () => {
         if (data) {
           const isHardcodedAdmin = ADMIN_EMAILS.includes(user.email || '');
           setProfile({
+            id: user.id,
             name: data.name,
             officeName: data.office_name,
             logoUrl: data.logo_url || '',
             profilePhotoUrl: data.profile_photo_url || '', // Fetch profile photo
             isAdmin: data.is_admin || isHardcodedAdmin || false,
-            phone: data.phone || ''
+            phone: data.phone || '',
+            pixKey: data.pix_key || null
           });
         }
       }
