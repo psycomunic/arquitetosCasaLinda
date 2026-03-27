@@ -71,6 +71,8 @@ const LeadModal: React.FC<{
   const [activityForm, setActivityForm] = useState({ type: 'note', description: '' });
   const [followupForm, setFollowupForm] = useState({ due_date: '', message: '' });
   const [saving, setSaving] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(false);
   const [tab, setTab] = useState<'details' | 'activity' | 'followup'>('details');
 
   useEffect(() => {
@@ -147,6 +149,21 @@ const LeadModal: React.FC<{
   const handleCompleteFollowup = async (id: string) => {
     await (supabase.from('crm_followups') as any).update({ completed: true }).eq('id', id);
     setFollowups(followups.map(f => f.id === id ? { ...f, completed: true } : f));
+  };
+
+  const handleDeleteLead = async () => {
+    if (!lead) return;
+    setDeleting(true);
+    try {
+      await (supabase.from('crm_followups') as any).delete().eq('lead_id', lead.id);
+      await (supabase.from('crm_activities') as any).delete().eq('lead_id', lead.id);
+      await (supabase.from('crm_leads') as any).delete().eq('id', lead.id);
+      onSaved();
+      onClose();
+    } finally {
+      setDeleting(false);
+      setConfirmDelete(false);
+    }
   };
 
   return (
@@ -333,12 +350,47 @@ const LeadModal: React.FC<{
         </div>
 
         <div className="px-6 py-4 border-t border-white/10 flex gap-3">
+          {lead && (
+            <button onClick={() => setConfirmDelete(true)}
+              className="px-4 py-3 border border-red-500/30 text-red-400 rounded-lg text-sm font-bold hover:bg-red-500/10 transition-all flex items-center gap-2">
+              <Trash2 size={14} /> Excluir
+            </button>
+          )}
           <button onClick={onClose} className="flex-1 py-3 border border-white/10 text-zinc-400 rounded-lg text-sm font-bold hover:bg-white/5">Cancelar</button>
           <button onClick={handleSaveLead} disabled={saving} className="flex-1 py-3 bg-gold text-black rounded-lg text-sm font-bold hover:bg-white transition-all flex items-center justify-center gap-2">
             {saving ? <Loader2 size={14} className="animate-spin" /> : <CheckCircle2 size={14} />}
             Salvar
           </button>
         </div>
+
+        {/* Confirmation modal */}
+        {confirmDelete && (
+          <div className="absolute inset-0 z-10 flex items-center justify-center rounded-2xl bg-black/80 backdrop-blur-sm p-6">
+            <div className="bg-zinc-900 border border-red-500/30 rounded-2xl p-8 max-w-sm w-full text-center space-y-5 shadow-2xl">
+              <div className="w-14 h-14 rounded-full bg-red-500/10 flex items-center justify-center mx-auto">
+                <Trash2 size={24} className="text-red-400" />
+              </div>
+              <div>
+                <h4 className="text-white font-bold text-lg">Excluir Lead?</h4>
+                <p className="text-zinc-400 text-sm mt-2">
+                  Tem certeza que deseja excluir <span className="text-white font-bold">{lead?.contact_name}</span>?
+                  <br /><span className="text-red-400 text-xs">Esta ação não pode ser desfeita.</span>
+                </p>
+              </div>
+              <div className="flex gap-3">
+                <button onClick={() => setConfirmDelete(false)}
+                  className="flex-1 py-3 border border-white/10 text-zinc-400 rounded-lg text-sm font-bold hover:bg-white/5 transition-all">
+                  Cancelar
+                </button>
+                <button onClick={handleDeleteLead} disabled={deleting}
+                  className="flex-1 py-3 bg-red-500 text-white rounded-lg text-sm font-bold hover:bg-red-400 transition-all flex items-center justify-center gap-2 disabled:opacity-50">
+                  {deleting ? <Loader2 size={14} className="animate-spin" /> : <Trash2 size={14} />}
+                  Sim, excluir
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
