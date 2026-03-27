@@ -44,22 +44,28 @@ export const ArchitectDetailsModal: React.FC<ArchitectDetailsModalProps> = ({ is
                 .maybeSingle();
 
             if (existing) {
-                await (supabase.from('crm_leads') as any)
+                const { error: updateError } = await (supabase.from('crm_leads') as any)
                     .update({ attendant_name: crmAttendant, pipeline_stage: crmStage })
                     .eq('id', existing.id);
+                if (updateError) throw updateError;
             } else {
-                await (supabase.from('crm_leads') as any).insert({
+                const { error: insertError } = await (supabase.from('crm_leads') as any).insert({
+                    architect_id:   architect.id,
                     contact_name:   architect.name,
                     contact_email:  architect.email,
                     contact_phone:  architect.phone || '',
                     attendant_name: crmAttendant,
                     pipeline_stage: crmStage,
-                    tags:           ['arquiteto', architect.coupon_code].filter(Boolean),
                     notes:          `Arquiteto parceiro. Cupom: ${architect.coupon_code || '—'}. Cadastrado em ${formatDate(architect.created_at)}.`,
                 });
+                if (insertError) throw insertError;
             }
+            if (onUpdate) onUpdate();
             setCrmSent(true);
             setTimeout(() => { setSendCrmOpen(false); setCrmSent(false); }, 2000);
+        } catch (err) {
+            console.error('Erro ao enviar para o CRM:', err);
+            alert('Falha ao enviar para o CRM. Verifique se o e-mail já existe ou tente novamente.');
         } finally {
             setCrmSending(false);
         }

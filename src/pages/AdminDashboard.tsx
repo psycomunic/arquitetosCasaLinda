@@ -803,7 +803,7 @@ export const AdminDashboard: React.FC = () => {
                         fetchCrmEmails();
                     }}
                     architect={selectedDetailArchitect}
-                    onUpdate={fetchApprovedArchitects}
+                    onUpdate={fetchData}
                 />
             )}
         </div>
