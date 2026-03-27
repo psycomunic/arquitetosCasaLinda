@@ -506,7 +506,7 @@ const MessageTemplates: React.FC<{ selectedLead?: CRMLead | null }> = ({ selecte
                       <Trash2 size={12} />
                     </button>
                   </div>
-                  <pre className="text-xs text-zinc-400 whitespace-pre-wrap font-sans leading-relaxed line-clamp-4">{filled}</pre>
+                  <pre className="text-xs text-zinc-400 whitespace-pre-wrap font-sans leading-relaxed">{filled}</pre>
                   <div className="flex gap-2">
                     <button onClick={() => handleCopy(t.id, t.body)}
                       className={`flex items-center gap-1 text-[10px] px-3 py-1.5 rounded-lg font-bold transition-all ${copied === t.id ? 'bg-green-500/20 text-green-400' : 'bg-white/5 text-zinc-400 hover:bg-white/10 hover:text-white'}`}>
