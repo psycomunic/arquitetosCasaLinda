@@ -55,6 +55,8 @@ export const AdminDashboard: React.FC = () => {
     const [couponCode, setCouponCode] = useState('');
     const [selectedAttendant, setSelectedAttendant] = useState('');
     const [attendantsList, setAttendantsList] = useState<string[]>([]);
+    // Map of contact_email (lowercase) → attendant_name for CRM leads
+    const [crmLeadMap, setCrmLeadMap] = useState<Map<string, string>>(new Map());
 
     useEffect(() => {
         const tab = searchParams.get('tab');
@@ -78,15 +80,26 @@ export const AdminDashboard: React.FC = () => {
     const fetchData = async () => {
         try {
             await Promise.all([
-                fetchPendingArchitects(),
                 fetchApprovedArchitects(),
+                fetchPendingArchitects(),
                 fetchStats(),
-                fetchSettings()
+                fetchCrmEmails(),
             ]);
         } catch (err) {
             console.error(err);
         } finally {
             setLoading(false);
+        }
+    };
+
+    const fetchCrmEmails = async () => {
+        const { data } = await (supabase.from('crm_leads') as any).select('contact_email, attendant_name');
+        if (data) {
+            const map = new Map<string, string>();
+            (data as any[]).forEach((r: any) => {
+                if (r.contact_email) map.set(r.contact_email.toLowerCase(), r.attendant_name || '');
+            });
+            setCrmLeadMap(map);
         }
     };
 
@@ -104,7 +117,7 @@ export const AdminDashboard: React.FC = () => {
             averageTicket: totalCount > 0 ? totalValue / totalCount : 0,
             totalArchitects: architectsCount || 0
         });
-    }
+    };
 
     const fetchSettings = async () => {
         const { data } = await supabase
@@ -581,8 +594,22 @@ export const AdminDashboard: React.FC = () => {
                                     {approvedArchitects.map((arch) => (
                                         <tr key={arch.id} className="group hover:bg-white/5 transition-colors cursor-pointer" onClick={() => openDetailsModal(arch)}>
                                             <td className="py-4">
-                                                <div className="flex flex-col">
-                                                    <span className="text-white font-bold text-sm group-hover:text-gold transition-colors">{arch.name}</span>
+                                                <div className="flex flex-col gap-1">
+                                                    <div className="flex items-center gap-2 flex-wrap">
+                                                        <span className="text-white font-bold text-sm group-hover:text-gold transition-colors">{arch.name}</span>
+                                                        {crmLeadMap.has(arch.email?.toLowerCase()) && (
+                                                            <>
+                                                                <span className="inline-flex items-center gap-1 text-[8px] font-bold uppercase tracking-widest bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded-full">
+                                                                    <Kanban size={8} /> No CRM
+                                                                </span>
+                                                                {crmLeadMap.get(arch.email?.toLowerCase()) && (
+                                                                    <span className="inline-flex items-center gap-1 text-[8px] font-bold uppercase tracking-widest bg-gold/10 text-gold border border-gold/20 px-2 py-0.5 rounded-full">
+                                                                        {crmLeadMap.get(arch.email?.toLowerCase())?.split(' ')[0]}
+                                                                    </span>
+                                                                )}
+                                                            </>
+                                                        )}
+                                                    </div>
                                                     <span className="text-zinc-500 text-xs">{arch.email}</span>
                                                 </div>
                                             </td>
@@ -653,15 +680,12 @@ export const AdminDashboard: React.FC = () => {
                 </div>
             )}
 
-            {selectedArchitect && (
-                <AddSaleModal
-                    isOpen={isAddSaleModalOpen}
-                    onClose={() => setIsAddSaleModalOpen(false)}
-                    architect={selectedArchitect}
-                    onSuccess={() => {
-                        fetchApprovedArchitects();
-                        fetchStats();
-                    }}
+            {detailsModalOpen && selectedDetailArchitect && (
+                <ArchitectDetailsModal
+                    isOpen={detailsModalOpen}
+                    onClose={() => { setDetailsModalOpen(false); fetchCrmEmails(); }}
+                    architect={selectedDetailArchitect}
+                    onUpdate={fetchData}
                 />
             )}
 
