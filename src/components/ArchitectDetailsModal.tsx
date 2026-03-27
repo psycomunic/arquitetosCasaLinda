@@ -1,5 +1,5 @@
-import React from 'react';
-import { X, User, Phone, Mail, MapPin, Building, Calendar, Globe, CreditCard } from 'lucide-react';
+import React, { useState } from 'react';
+import { X, User, Phone, Building, MapPin, CreditCard, Kanban, CheckCircle2, Loader2 } from 'lucide-react';
 import { Architect } from '../types/database';
 import { supabase } from '../lib/supabase';
 
@@ -10,15 +10,59 @@ interface ArchitectDetailsModalProps {
     onUpdate?: () => void;
 }
 
+const CRM_VENDEDORES = [
+    { value: 'Kelly Cordeiro da Silva', label: 'Kelly Cordeiro da Silva' },
+    { value: 'Gisele Ferreira',         label: 'Gisele Ferreira' },
+    { value: 'Angelo',                  label: 'Angelo (Admin)' },
+];
+
+const CRM_STAGES = [
+    { value: 'novo',             label: 'Novo Lead' },
+    { value: 'contato_feito',    label: 'Contato Feito' },
+    { value: 'proposta_enviada', label: 'Proposta Enviada' },
+    { value: 'negociando',       label: 'Negociando' },
+];
+
 export const ArchitectDetailsModal: React.FC<ArchitectDetailsModalProps> = ({ isOpen, onClose, architect, onUpdate }) => {
+    const [sendCrmOpen, setSendCrmOpen] = useState(false);
+    const [crmAttendant, setCrmAttendant] = useState('Kelly Cordeiro da Silva');
+    const [crmStage, setCrmStage] = useState('novo');
+    const [crmSending, setCrmSending] = useState(false);
+    const [crmSent, setCrmSent] = useState(false);
+
     if (!isOpen) return null;
 
-    const formatDate = (dateString: string) => {
-        return new Date(dateString).toLocaleDateString('pt-BR');
-    };
+    const formatDate = (dateString: string) => new Date(dateString).toLocaleDateString('pt-BR');
+    const formatCurrency = (value: number) => value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
-    const formatCurrency = (value: number) => {
-        return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    const handleSendToCRM = async () => {
+        setCrmSending(true);
+        try {
+            const { data: existing } = await (supabase.from('crm_leads') as any)
+                .select('id')
+                .eq('contact_email', architect.email)
+                .maybeSingle();
+
+            if (existing) {
+                await (supabase.from('crm_leads') as any)
+                    .update({ attendant_name: crmAttendant, pipeline_stage: crmStage })
+                    .eq('id', existing.id);
+            } else {
+                await (supabase.from('crm_leads') as any).insert({
+                    contact_name:   architect.name,
+                    contact_email:  architect.email,
+                    contact_phone:  architect.phone || '',
+                    attendant_name: crmAttendant,
+                    pipeline_stage: crmStage,
+                    tags:           ['arquiteto', architect.coupon_code].filter(Boolean),
+                    notes:          `Arquiteto parceiro. Cupom: ${architect.coupon_code || '—'}. Cadastrado em ${formatDate(architect.created_at)}.`,
+                });
+            }
+            setCrmSent(true);
+            setTimeout(() => { setSendCrmOpen(false); setCrmSent(false); }, 2000);
+        } finally {
+            setCrmSending(false);
+        }
     };
 
     return (
@@ -48,16 +92,53 @@ export const ArchitectDetailsModal: React.FC<ArchitectDetailsModalProps> = ({ is
                             </div>
                         </div>
                     </div>
-                    <button
-                        onClick={onClose}
-                        className="p-2 hover:bg-white/5 rounded-full text-zinc-500 hover:text-white transition-colors"
-                    >
-                        <X size={20} />
-                    </button>
+                    <div className="flex items-center gap-2">
+                        <button
+                            onClick={() => setSendCrmOpen(!sendCrmOpen)}
+                            className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-bold transition-all ${sendCrmOpen ? 'bg-gold text-black' : 'bg-gold/10 border border-gold/20 text-gold hover:bg-gold/20'}`}
+                        >
+                            <Kanban size={14} /> Enviar ao CRM
+                        </button>
+                        <button onClick={onClose} className="p-2 hover:bg-white/5 rounded-full text-zinc-500 hover:text-white transition-colors">
+                            <X size={20} />
+                        </button>
+                    </div>
                 </div>
 
                 {/* Content - Scrollable */}
                 <div className="p-6 overflow-y-auto custom-scrollbar space-y-8">
+
+                    {/* CRM Send Panel */}
+                    {sendCrmOpen && (
+                        <section className="bg-gold/5 border border-gold/20 rounded-xl p-5 space-y-4">
+                            <h3 className="text-xs uppercase tracking-[0.2em] font-bold text-gold flex items-center gap-2">
+                                <Kanban size={14} /> Enviar para o CRM
+                            </h3>
+                            <p className="text-zinc-400 text-xs">Selecione o vendedor responsável e o estágio inicial. O lead será criado com os dados deste arquiteto.</p>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                <div className="space-y-1">
+                                    <label className="text-[10px] uppercase tracking-widest text-zinc-500">Atendente Responsável</label>
+                                    <select value={crmAttendant} onChange={e => setCrmAttendant(e.target.value)}
+                                        className="w-full bg-zinc-900 border border-white/10 rounded-lg px-3 py-2 text-white text-sm outline-none focus:border-gold">
+                                        {CRM_VENDEDORES.map(v => <option key={v.value} value={v.value}>{v.label}</option>)}
+                                    </select>
+                                </div>
+                                <div className="space-y-1">
+                                    <label className="text-[10px] uppercase tracking-widest text-zinc-500">Estágio Inicial</label>
+                                    <select value={crmStage} onChange={e => setCrmStage(e.target.value)}
+                                        className="w-full bg-zinc-900 border border-white/10 rounded-lg px-3 py-2 text-white text-sm outline-none focus:border-gold">
+                                        {CRM_STAGES.map(s => <option key={s.value} value={s.value}>{s.label}</option>)}
+                                    </select>
+                                </div>
+                            </div>
+                            <button onClick={handleSendToCRM} disabled={crmSending || crmSent}
+                                className={`w-full py-3 rounded-lg text-sm font-bold flex items-center justify-center gap-2 transition-all ${crmSent ? 'bg-green-500 text-white' : 'bg-gold text-black hover:bg-white'} disabled:opacity-70`}>
+                                {crmSent ? <><CheckCircle2 size={16} /> Lead enviado com sucesso!</> :
+                                 crmSending ? <><Loader2 size={16} className="animate-spin" /> Enviando…</> :
+                                 <><Kanban size={16} /> Confirmar e enviar ao CRM</>}
+                            </button>
+                        </section>
+                    )}
 
                     {/* Contact Info */}
                     <section>
@@ -155,15 +236,12 @@ export const ArchitectDetailsModal: React.FC<ArchitectDetailsModalProps> = ({ is
                                 <p className="text-green-400 font-bold text-lg">{formatCurrency(architect.total_earnings)}</p>
                             </div>
                         </div>
-
-                        {/* PIX and NF Warning */}
-                        <div className="grid grid-cols-1 md:grid-cols-1 gap-4 mb-6">
+                        <div className="grid grid-cols-1 gap-4 mb-6">
                             <div className="bg-zinc-900 p-4 rounded-lg border border-zinc-800">
                                 <p className="text-[10px] text-zinc-500 uppercase">Chave PIX</p>
                                 <p className="text-white font-mono text-base">{architect.pix_key || 'Não informada'}</p>
                             </div>
                         </div>
-
                         <div className="bg-yellow-500/10 border border-yellow-500/20 p-4 rounded-lg flex items-start gap-3">
                             <div className="text-yellow-500 mt-0.5">⚠️</div>
                             <div>
