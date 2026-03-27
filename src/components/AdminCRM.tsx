@@ -58,6 +58,8 @@ const LeadModal: React.FC<{
     deal_value: lead?.deal_value?.toString() || '0',
     notes: lead?.notes || '',
     attendant_name: lead?.attendant_name || attendantName,
+    next_followup_date: '',
+    next_followup_message: '',
   });
   const [activityForm, setActivityForm] = useState({ type: 'note', description: '' });
   const [followupForm, setFollowupForm] = useState({ due_date: '', message: '' });
@@ -75,15 +77,32 @@ const LeadModal: React.FC<{
   const handleSaveLead = async () => {
     setSaving(true);
     try {
+      const { next_followup_date, next_followup_message, ...leadFields } = form;
       const payload = {
-        ...form,
-        deal_value: Number(form.deal_value),
-        closed_at: form.pipeline_stage === 'fechado' ? new Date().toISOString() : null,
+        ...leadFields,
+        deal_value: Number(leadFields.deal_value),
+        closed_at: leadFields.pipeline_stage === 'fechado' ? new Date().toISOString() : null,
       };
       if (lead) {
         await (supabase.from('crm_leads') as any).update(payload).eq('id', lead.id);
+        if (next_followup_date) {
+          await (supabase.from('crm_followups') as any).insert({
+            lead_id: lead.id,
+            attendant_name: attendantName,
+            due_date: next_followup_date,
+            message: next_followup_message || null,
+          });
+        }
       } else {
-        await (supabase.from('crm_leads') as any).insert(payload);
+        const { data: newLead } = await (supabase.from('crm_leads') as any).insert(payload).select().single();
+        if (newLead && next_followup_date) {
+          await (supabase.from('crm_followups') as any).insert({
+            lead_id: newLead.id,
+            attendant_name: attendantName,
+            due_date: next_followup_date,
+            message: next_followup_message || null,
+          });
+        }
       }
       onSaved();
       onClose();
@@ -227,18 +246,59 @@ const LeadModal: React.FC<{
 
           {tab === 'followup' && (
             <div className="space-y-4">
-              {lead && (
-                <div className="grid grid-cols-2 gap-2">
-                  <input type="date" value={followupForm.due_date} onChange={e => setFollowupForm({...followupForm, due_date: e.target.value})}
-                    className="bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm outline-none focus:border-gold" />
-                  <input value={followupForm.message} onChange={e => setFollowupForm({...followupForm, message: e.target.value})}
-                    placeholder="Lembrete (opcional)"
-                    className="bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm outline-none focus:border-gold" />
-                  <button onClick={handleAddFollowup} className="col-span-2 py-2 bg-gold text-black rounded-lg text-xs font-bold">Agendar Follow-up</button>
+              {/* Next follow-up for new leads */}
+              {!lead && (
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2 mb-1">
+                    <Calendar size={13} className="text-gold" />
+                    <label className="text-[10px] uppercase tracking-widest text-zinc-400 font-bold">Próximo Contato</label>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    <div className="space-y-1">
+                      <label className="text-[10px] text-zinc-500">Data</label>
+                      <input type="date" value={form.next_followup_date}
+                        onChange={e => setForm({...form, next_followup_date: e.target.value})}
+                        className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm outline-none focus:border-gold" />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-[10px] text-zinc-500">Lembrete (opcional)</label>
+                      <input value={form.next_followup_message}
+                        onChange={e => setForm({...form, next_followup_message: e.target.value})}
+                        placeholder="Ex: Ligar às 14h"
+                        className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm outline-none focus:border-gold" />
+                    </div>
+                  </div>
+                  {form.next_followup_date && (
+                    <p className="text-[10px] text-gold/70 flex items-center gap-1">
+                      <CheckCircle2 size={10} /> Follow-up será criado ao salvar o lead
+                    </p>
+                  )}
                 </div>
               )}
+
+              {/* Add more follow-ups for existing leads */}
+              {lead && (
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2 mb-1">
+                    <Calendar size={13} className="text-gold" />
+                    <label className="text-[10px] uppercase tracking-widest text-zinc-400 font-bold">Agendar Novo Contato</label>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    <input type="date" value={followupForm.due_date} onChange={e => setFollowupForm({...followupForm, due_date: e.target.value})}
+                      className="bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm outline-none focus:border-gold" />
+                    <input value={followupForm.message} onChange={e => setFollowupForm({...followupForm, message: e.target.value})}
+                      placeholder="Lembrete (opcional)"
+                      className="bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm outline-none focus:border-gold" />
+                    <button onClick={handleAddFollowup} className="col-span-2 py-2 bg-gold text-black rounded-lg text-xs font-bold">Agendar Follow-up</button>
+                  </div>
+                </div>
+              )}
+
               <div className="space-y-2">
-                {followups.length === 0 && <p className="text-xs text-zinc-600 text-center py-4">Nenhum follow-up agendado.</p>}
+                {followups.length === 0 && lead && <p className="text-xs text-zinc-600 text-center py-4">Nenhum follow-up agendado.</p>}
+                {!lead && followups.length === 0 && !form.next_followup_date && (
+                  <p className="text-xs text-zinc-600 text-center py-4">Defina uma data acima para agendar o primeiro follow-up.</p>
+                )}
                 {followups.map(f => {
                   const isOverdue = !f.completed && new Date(f.due_date) < new Date();
                   return (
