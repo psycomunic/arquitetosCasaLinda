@@ -23,10 +23,18 @@ const CRM_STAGES = [
     { value: 'negociando',       label: 'Negociando' },
 ];
 
+const CRM_SERVICES = [
+    { value: 'indefinido',       label: 'Não Definido' },
+    { value: 'indicacao_direta', label: 'Indicação Direta' },
+    { value: 'venda_assistida',  label: 'Venda Assistida' },
+    { value: 'criacao_artistica',label: 'Criação Artística' },
+];
+
 export const ArchitectDetailsModal: React.FC<ArchitectDetailsModalProps> = ({ isOpen, onClose, architect, onUpdate }) => {
     const [sendCrmOpen, setSendCrmOpen] = useState(false);
     const [crmAttendant, setCrmAttendant] = useState('Kelly Cordeiro da Silva');
     const [crmStage, setCrmStage] = useState('novo');
+    const [crmServiceType, setCrmServiceType] = useState('indefinido');
     const [crmSending, setCrmSending] = useState(false);
     const [crmSent, setCrmSent] = useState(false);
 
@@ -45,7 +53,7 @@ export const ArchitectDetailsModal: React.FC<ArchitectDetailsModalProps> = ({ is
 
             if (existing) {
                 const { error: updateError } = await (supabase.from('crm_leads') as any)
-                    .update({ attendant_name: crmAttendant, pipeline_stage: crmStage })
+                    .update({ attendant_name: crmAttendant, pipeline_stage: crmStage, service_type: crmServiceType })
                     .eq('id', existing.id);
                 if (updateError) throw updateError;
             } else {
@@ -56,6 +64,7 @@ export const ArchitectDetailsModal: React.FC<ArchitectDetailsModalProps> = ({ is
                     contact_phone:  architect.phone || '',
                     attendant_name: crmAttendant,
                     pipeline_stage: crmStage,
+                    service_type:   crmServiceType,
                     notes:          `Arquiteto parceiro. Cupom: ${architect.coupon_code || '—'}. Cadastrado em ${formatDate(architect.created_at)}.`,
                 });
                 if (insertError) throw insertError;
@@ -121,9 +130,9 @@ export const ArchitectDetailsModal: React.FC<ArchitectDetailsModalProps> = ({ is
                                 <Kanban size={14} /> Enviar para o CRM
                             </h3>
                             <p className="text-zinc-400 text-xs">Selecione o vendedor responsável e o estágio inicial. O lead será criado com os dados deste arquiteto.</p>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                                 <div className="space-y-1">
-                                    <label className="text-[10px] uppercase tracking-widest text-zinc-500">Atendente Responsável</label>
+                                    <label className="text-[10px] uppercase tracking-widest text-zinc-500">Atendente</label>
                                     <select value={crmAttendant} onChange={e => setCrmAttendant(e.target.value)}
                                         className="w-full bg-zinc-900 border border-white/10 rounded-lg px-3 py-2 text-white text-sm outline-none focus:border-gold">
                                         {CRM_VENDEDORES.map(v => <option key={v.value} value={v.value}>{v.label}</option>)}
@@ -134,6 +143,13 @@ export const ArchitectDetailsModal: React.FC<ArchitectDetailsModalProps> = ({ is
                                     <select value={crmStage} onChange={e => setCrmStage(e.target.value)}
                                         className="w-full bg-zinc-900 border border-white/10 rounded-lg px-3 py-2 text-white text-sm outline-none focus:border-gold">
                                         {CRM_STAGES.map(s => <option key={s.value} value={s.value}>{s.label}</option>)}
+                                    </select>
+                                </div>
+                                <div className="space-y-1">
+                                    <label className="text-[10px] uppercase tracking-widest text-zinc-500">Serviço</label>
+                                    <select value={crmServiceType} onChange={e => setCrmServiceType(e.target.value)}
+                                        className="w-full bg-zinc-900 border border-white/10 rounded-lg px-3 py-2 text-white text-sm outline-none focus:border-gold">
+                                        {CRM_SERVICES.map(s => <option key={s.value} value={s.value}>{s.label}</option>)}
                                     </select>
                                 </div>
                             </div>

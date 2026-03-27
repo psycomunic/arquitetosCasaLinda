@@ -86,6 +86,7 @@ export interface Sale {
 export type PipelineStage = 'novo' | 'contato_feito' | 'proposta_enviada' | 'negociando' | 'fechado' | 'perdido';
 export type ActivityType = 'call' | 'whatsapp' | 'email' | 'note' | 'meeting';
 export type TemplateCategory = 'boas_vindas' | 'follow_up' | 'proposta' | 'reativacao' | 'outros';
+export type ServiceType = 'indefinido' | 'indicacao_direta' | 'venda_assistida' | 'criacao_artistica';
 
 export interface CRMLead {
     id: string;
@@ -95,6 +96,7 @@ export interface CRMLead {
     contact_phone: string;
     contact_email: string | null;
     pipeline_stage: PipelineStage;
+    service_type: ServiceType;
     deal_value: number;
     closed_at: string | null;
     notes: string | null;

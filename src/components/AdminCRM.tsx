@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { supabase } from '../lib/supabase';
-import { CRMLead, CRMActivity, CRMMessageTemplate, CRMFollowUp, PipelineStage } from '../types/database';
+import { CRMLead, CRMActivity, CRMMessageTemplate, CRMFollowUp, PipelineStage, ServiceType } from '../types/database';
 import {
   Users, MessageCircle, Bell, LayoutGrid, Plus, X, ChevronRight,
   Phone, Mail, DollarSign, CheckCircle2, XCircle, Copy, Clock,
@@ -41,6 +41,13 @@ const CATEGORY_LABELS: Record<string, string> = {
   outros:      'Outros',
 };
 
+const SERVICE_LABELS: Record<string, string> = {
+  indefinido:        'Não Definido',
+  indicacao_direta:  'Indicação Direta',
+  venda_assistida:   'Venda Assistida',
+  criacao_artistica: 'Criação Artística',
+};
+
 const fillTemplate = (body: string, lead?: CRMLead | null) =>
   body
     .replace(/\{\{nome\}\}/g, lead?.contact_name || 'Arquiteto')
@@ -62,6 +69,7 @@ const LeadModal: React.FC<{
     contact_phone: lead?.contact_phone || '',
     contact_email: lead?.contact_email || '',
     pipeline_stage: lead?.pipeline_stage || 'novo' as PipelineStage,
+    service_type: lead?.service_type || 'indefinido' as ServiceType,
     deal_value: lead?.deal_value?.toString() || '0',
     notes: lead?.notes || '',
     attendant_name: lead?.attendant_name || attendantName,
@@ -215,14 +223,23 @@ const LeadModal: React.FC<{
                     className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm outline-none focus:border-gold" />
                 </div>
               </div>
-              <div className="space-y-1">
-                <label className="text-[10px] uppercase tracking-widest text-zinc-500">Atendente</label>
-                <select value={form.attendant_name} onChange={e => setForm({...form, attendant_name: e.target.value})}
-                  className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm outline-none focus:border-gold">
-                  <option value="Kelly Cordeiro da Silva">Kelly Cordeiro da Silva</option>
-                  <option value="Gisele Ferreira">Gisele Ferreira</option>
-                  <option value="Angelo">Angelo</option>
-                </select>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-1">
+                  <label className="text-[10px] uppercase tracking-widest text-zinc-500">Atendente</label>
+                  <select value={form.attendant_name} onChange={e => setForm({...form, attendant_name: e.target.value})}
+                    className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm outline-none focus:border-gold">
+                    <option value="Kelly Cordeiro da Silva">Kelly Cordeiro da Silva</option>
+                    <option value="Gisele Ferreira">Gisele Ferreira</option>
+                    <option value="Angelo">Angelo</option>
+                  </select>
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[10px] uppercase tracking-widest text-zinc-500">Serviço</label>
+                  <select value={form.service_type} onChange={e => setForm({...form, service_type: e.target.value as ServiceType})}
+                    className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm outline-none focus:border-gold">
+                    {Object.entries(SERVICE_LABELS).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
+                  </select>
+                </div>
               </div>
               <div className="space-y-1">
                 <label className="text-[10px] uppercase tracking-widest text-zinc-500">Estágio</label>
@@ -500,14 +517,21 @@ const KanbanBoard: React.FC<{
                       {Number(lead.deal_value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
                     </p>
                   )}
-                  {lead.attendant_name && (
-                    <span className={`inline-block text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 rounded mt-2 ${
-                      lead.attendant_name.includes('Kelly')  ? 'bg-purple-500/20 text-purple-300' :
-                      lead.attendant_name.includes('Gisele') ? 'bg-teal-500/20 text-teal-300' :
-                      lead.attendant_name === 'Angelo'       ? 'bg-gold/15 text-gold' :
-                                                               'bg-white/5 text-zinc-500'
-                    }`}>{lead.attendant_name}</span>
-                  )}
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    {lead.service_type && lead.service_type !== 'indefinido' && (
+                      <span className="inline-block bg-white/10 border border-white/20 text-white text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 rounded">
+                        {SERVICE_LABELS[lead.service_type]}
+                      </span>
+                    )}
+                    {lead.attendant_name && (
+                      <span className={`inline-block text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 rounded ${
+                        lead.attendant_name.includes('Kelly')  ? 'bg-purple-500/20 text-purple-300' :
+                        lead.attendant_name.includes('Gisele') ? 'bg-teal-500/20 text-teal-300' :
+                        lead.attendant_name === 'Angelo'       ? 'bg-gold/15 text-gold' :
+                                                                 'bg-white/5 text-zinc-500'
+                      }`}>{lead.attendant_name}</span>
+                    )}
+                  </div>
                 </div>
               ))}
               {isOver && draggingId && (
