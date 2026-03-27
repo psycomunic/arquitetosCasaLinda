@@ -680,12 +680,15 @@ export const AdminDashboard: React.FC = () => {
                 </div>
             )}
 
-            {detailsModalOpen && selectedDetailArchitect && (
-                <ArchitectDetailsModal
-                    isOpen={detailsModalOpen}
-                    onClose={() => { setDetailsModalOpen(false); fetchCrmEmails(); }}
-                    architect={selectedDetailArchitect}
-                    onUpdate={fetchData}
+            {selectedArchitect && (
+                <AddSaleModal
+                    isOpen={isAddSaleModalOpen}
+                    onClose={() => setIsAddSaleModalOpen(false)}
+                    architect={selectedArchitect}
+                    onSuccess={() => {
+                        fetchApprovedArchitects();
+                        fetchStats();
+                    }}
                 />
             )}
 
@@ -797,6 +800,7 @@ export const AdminDashboard: React.FC = () => {
                     onClose={() => {
                         setDetailsModalOpen(false);
                         setSelectedDetailArchitect(null);
+                        fetchCrmEmails();
                     }}
                     architect={selectedDetailArchitect}
                     onUpdate={fetchApprovedArchitects}
