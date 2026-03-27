@@ -83,6 +83,53 @@ export interface Sale {
     updated_at: string;
 }
 
+export type PipelineStage = 'novo' | 'contato_feito' | 'proposta_enviada' | 'negociando' | 'fechado' | 'perdido';
+export type ActivityType = 'call' | 'whatsapp' | 'email' | 'note' | 'meeting';
+export type TemplateCategory = 'boas_vindas' | 'follow_up' | 'proposta' | 'reativacao' | 'outros';
+
+export interface CRMLead {
+    id: string;
+    architect_id: string | null;
+    attendant_name: string;
+    contact_name: string;
+    contact_phone: string;
+    contact_email: string | null;
+    pipeline_stage: PipelineStage;
+    deal_value: number;
+    closed_at: string | null;
+    notes: string | null;
+    created_at: string;
+    updated_at: string;
+}
+
+export interface CRMActivity {
+    id: string;
+    lead_id: string;
+    type: ActivityType;
+    description: string;
+    attendant_name: string;
+    created_at: string;
+}
+
+export interface CRMMessageTemplate {
+    id: string;
+    category: TemplateCategory;
+    title: string;
+    body: string;
+    created_at: string;
+    updated_at: string;
+}
+
+export interface CRMFollowUp {
+    id: string;
+    lead_id: string;
+    attendant_name: string;
+    due_date: string;
+    message: string | null;
+    completed: boolean;
+    created_at: string;
+}
+
 export interface Database {
     public: {
         Tables: {

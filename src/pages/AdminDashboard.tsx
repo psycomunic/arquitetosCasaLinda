@@ -14,10 +14,12 @@ import {
     Package,
     LayoutGrid,
     MessageCircle,
-    Copy
+    Copy,
+    Kanban
 } from 'lucide-react';
 import { Ranking } from '../components/Ranking';
 import { ProductionManager } from '../components/ProductionManager';
+import { AdminCRM } from '../components/AdminCRM';
 
 import { AddSaleModal } from '../components/AddSaleModal';
 import { ArchitectDetailsModal } from '../components/ArchitectDetailsModal';
@@ -44,7 +46,7 @@ export const AdminDashboard: React.FC = () => {
     const [storeDiscount, setStoreDiscount] = useState('20');
     const [savingDiscount, setSavingDiscount] = useState(false);
     const [migrating, setMigrating] = useState(false);
-    const [activeTab, setActiveTab] = useState<'overview' | 'production' | 'architects' | 'commissions'>('overview');
+    const [activeTab, setActiveTab] = useState<'overview' | 'production' | 'architects' | 'commissions' | 'crm'>('overview');
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
 
@@ -60,6 +62,8 @@ export const AdminDashboard: React.FC = () => {
             setActiveTab('architects');
         } else if (tab === 'commissions') {
             setActiveTab('commissions');
+        } else if (tab === 'crm') {
+            setActiveTab('crm');
         } else {
             setActiveTab('overview');
         }
@@ -362,6 +366,12 @@ export const AdminDashboard: React.FC = () => {
                     >
                         <DollarSign size={14} /> Gestão de Repasses
                     </button>
+                    <button
+                        onClick={() => setActiveTab('crm')}
+                        className={`px-6 py-3 text-[10px] uppercase font-bold tracking-widest rounded-lg transition-all flex items-center gap-3 whitespace-nowrap ${activeTab === 'crm' ? 'bg-white text-black' : 'text-zinc-500 hover:text-white'}`}
+                    >
+                        <Kanban size={14} /> CRM
+                    </button>
                     <div className="w-[1px] h-6 bg-white/10 mx-2 self-center hidden md:block"></div>
                     <button
                         onClick={() => navigate('/proposals')}
@@ -519,6 +529,8 @@ export const AdminDashboard: React.FC = () => {
             )}
 
             {activeTab === 'production' && <ProductionManager />}
+
+            {activeTab === 'crm' && <AdminCRM />}
 
             {activeTab === 'architects' && (
                 <div className="space-y-6">
