@@ -9,6 +9,7 @@ import {
     ImageIcon,
     Shield,
     Package,
+    Kanban,
     Menu,
     X,
     ChevronLeft,
@@ -43,11 +44,12 @@ export const PortalLayout: React.FC<PortalLayoutProps> = ({ children, profile, o
     const menuItems = [
         { id: 'dashboard', icon: <LayoutDashboard size={16} />, label: 'Overview', path: '/dashboard' },
         ...(profile.isAdmin ? [
-            { id: 'admin', icon: <Shield size={16} />, label: 'Painel Admin', path: '/adm' },
-            { id: 'production', icon: <Package size={16} />, label: 'Produção & Envios', path: '/adm?tab=production' }
+            { id: 'admin',      icon: <Shield size={16} />,  label: 'Painel Admin',    path: '/adm' },
+            { id: 'production', icon: <Package size={16} />, label: 'Produção & Envios', path: '/adm?tab=production' },
+            { id: 'crm',        icon: <Kanban size={16} />, label: 'CRM',              path: '/adm?tab=crm' },
         ] : []),
-        { id: 'sales', icon: <History size={16} />, label: 'Comissões', path: '/earnings' },
-        { id: 'settings', icon: <Settings size={16} />, label: 'Perfil', path: '/settings' }
+        { id: 'sales',    icon: <History size={16} />,  label: 'Comissões', path: '/earnings' },
+        { id: 'settings', icon: <Settings size={16} />, label: 'Perfil',    path: '/settings' }
     ];
 
     const handleLogout = async () => {
