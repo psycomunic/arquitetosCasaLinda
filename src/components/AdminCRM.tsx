@@ -200,8 +200,12 @@ const LeadModal: React.FC<{
               </div>
               <div className="space-y-1">
                 <label className="text-[10px] uppercase tracking-widest text-zinc-500">Atendente</label>
-                <input value={form.attendant_name} onChange={e => setForm({...form, attendant_name: e.target.value})}
-                  className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm outline-none focus:border-gold" />
+                <select value={form.attendant_name} onChange={e => setForm({...form, attendant_name: e.target.value})}
+                  className="w-full bg-zinc-800 border border-white/10 rounded-lg px-3 py-2 text-white text-sm outline-none focus:border-gold">
+                  <option value="Kelly Cordeiro da Silva">Kelly Cordeiro da Silva</option>
+                  <option value="Gisele Ferreira">Gisele Ferreira</option>
+                  <option value="Angelo">Angelo</option>
+                </select>
               </div>
               <div className="space-y-1">
                 <label className="text-[10px] uppercase tracking-widest text-zinc-500">Estágio</label>
