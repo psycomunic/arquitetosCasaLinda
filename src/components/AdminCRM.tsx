@@ -7,7 +7,14 @@ import {
   PhoneCall, Loader2, Edit2, Trash2, Calendar, AlertCircle, Star, RefreshCw
 } from 'lucide-react';
 
-// ─── helpers ────────────────────────────────────────────────────────────────
+// ─── Role mapping ────────────────────────────────────────────────────────────
+const CRM_ROLES: Record<string, { name: string; isAdmin: boolean }> = {
+  'kelly.cordeirodasilva.5@gmail.com': { name: 'Kelly Cordeiro da Silva', isAdmin: false },
+  'giselekf2@gmail.com':               { name: 'Gisele Ferreira',         isAdmin: false },
+  'psycomunic@gmail.com':              { name: 'Angelo',                  isAdmin: true  },
+};
+
+// ─── helpers ─────────────────────────────────────────────────────────────────
 
 const STAGES: { key: PipelineStage; label: string; color: string }[] = [
   { key: 'novo',              label: 'Novo Lead',          color: 'bg-blue-500/20 border-blue-500/40 text-blue-400' },
@@ -337,26 +344,33 @@ const LeadModal: React.FC<{
 
 const CRMStats: React.FC<{ leads: CRMLead[]; attendantFilter: string }> = ({ leads, attendantFilter }) => {
   const filtered = attendantFilter ? leads.filter(l => l.attendant_name === attendantFilter) : leads;
-  const closed = filtered.filter(l => l.pipeline_stage === 'fechado');
-  const lost = filtered.filter(l => l.pipeline_stage === 'perdido');
-  const total = filtered.length;
-  const totalValue = closed.reduce((a, l) => a + Number(l.deal_value), 0);
+  const closed   = filtered.filter(l => l.pipeline_stage === 'fechado');
+  const active   = filtered.filter(l => l.pipeline_stage !== 'fechado' && l.pipeline_stage !== 'perdido');
+  const rescue   = filtered.filter(l => (l.pipeline_stage === 'negociando' || l.pipeline_stage === 'proposta_enviada') && Number(l.deal_value) > 0);
+  const total    = filtered.length;
+  const closedValue   = closed.reduce((a, l)  => a + Number(l.deal_value), 0);
+  const pipelineValue = active.reduce((a, l)  => a + Number(l.deal_value), 0);
   const convRate = total > 0 ? ((closed.length / total) * 100).toFixed(0) : '0';
 
+  const stats = [
+    { icon: <Users size={18} className="text-gold" />,          label: 'Total de Leads',    value: total,                      sub: null },
+    { icon: <CheckCircle2 size={18} className="text-green-400" />, label: 'Fechados',        value: closed.length,              sub: closedValue > 0 ? closedValue.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : null },
+    { icon: <Star size={18} className="text-yellow-400" />,     label: 'Conversão',         value: `${convRate}%`,             sub: null },
+    { icon: <DollarSign size={18} className="text-emerald-400" />, label: 'Valor Fechado',  value: closedValue.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }), sub: null },
+    { icon: <Clock size={18} className="text-blue-400" />,      label: 'Valor em Pipeline', value: pipelineValue.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }), sub: `${active.length} leads ativos`, highlight: true },
+    { icon: <AlertCircle size={18} className="text-orange-400" />, label: 'A Resgatar 🔥',  value: rescue.length,              sub: rescue.reduce((a,l)=>a+Number(l.deal_value),0) > 0 ? rescue.reduce((a,l)=>a+Number(l.deal_value),0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'}) : 'Sem valor definido', highlight: true },
+  ];
+
   return (
-    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-      {[
-        { icon: <Users size={18} className="text-gold" />, label: 'Total de Leads', value: total },
-        { icon: <CheckCircle2 size={18} className="text-green-400" />, label: 'Fechados', value: closed.length },
-        { icon: <Star size={18} className="text-yellow-400" />, label: 'Conversão', value: `${convRate}%` },
-        { icon: <DollarSign size={18} className="text-emerald-400" />, label: 'Valor Fechado', value: totalValue.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) },
-      ].map((s, i) => (
-        <div key={i} className="glass p-5">
+    <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
+      {stats.map((s, i) => (
+        <div key={i} className={`glass p-5 ${s.highlight ? 'border border-orange-500/20' : ''}`}>
           <div className="flex items-center justify-between mb-3">
             {s.icon}
             <span className="text-[9px] uppercase tracking-widest text-zinc-600">{s.label}</span>
           </div>
-          <p className="text-2xl font-bold text-white">{s.value}</p>
+          <p className="text-xl font-bold text-white">{s.value}</p>
+          {s.sub && <p className="text-[10px] text-zinc-500 mt-1">{s.sub}</p>}
         </div>
       ))}
     </div>
@@ -636,6 +650,22 @@ export const AdminCRM: React.FC = () => {
   const [modalLead, setModalLead] = useState<CRMLead | null | 'new'>('new' as any);
   const [modalOpen, setModalOpen] = useState(false);
   const [attendantName, setAttendantName] = useState('Admin');
+  const [isAdmin, setIsAdmin] = useState(true);
+  const [myName, setMyName] = useState('');
+
+  // Detect logged-in user and derive role
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      const email = data?.user?.email?.toLowerCase() || '';
+      const role = CRM_ROLES[email];
+      if (role) {
+        setIsAdmin(role.isAdmin);
+        setMyName(role.name);
+        setAttendantName(role.name);
+        if (!role.isAdmin) setAttendantFilter(role.name);
+      }
+    });
+  }, []);
 
   const fetchLeads = useCallback(async () => {
     setLoading(true);
@@ -686,17 +716,25 @@ export const AdminCRM: React.FC = () => {
         </div>
 
         <div className="flex items-center gap-3 flex-wrap">
-          {/* Attendant filter */}
-          <select value={attendantFilter} onChange={e => setAttendantFilter(e.target.value)}
-            className="bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-xs outline-none focus:border-gold">
-            <option value="">Todos Atendentes</option>
-            {attendants.map(a => <option key={a} value={a}>{a}</option>)}
-          </select>
+          {/* Attendant filter — only admin sees this */}
+          {isAdmin && (
+            <select value={attendantFilter} onChange={e => setAttendantFilter(e.target.value)}
+              className="bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-xs outline-none focus:border-gold">
+              <option value="">Todos Atendentes</option>
+              {attendants.map(a => <option key={a} value={a}>{a}</option>)}
+            </select>
+          )}
 
-          {/* Attendant name input */}
-          <input value={attendantName} onChange={e => setAttendantName(e.target.value)}
-            placeholder="Seu nome (atendente)"
-            className="bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-xs outline-none focus:border-gold w-44" />
+          {/* Attendant name: editable for admin, badge for sellers */}
+          {isAdmin ? (
+            <input value={attendantName} onChange={e => setAttendantName(e.target.value)}
+              placeholder="Seu nome (atendente)"
+              className="bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-xs outline-none focus:border-gold w-44" />
+          ) : (
+            <span className="bg-gold/10 border border-gold/20 text-gold text-xs px-3 py-2 rounded-lg font-bold">
+              👤 {myName}
+            </span>
+          )}
 
           <button onClick={fetchLeads} className="p-2 text-zinc-500 hover:text-white hover:bg-white/10 rounded-lg transition-all">
             <RefreshCw size={16} />
@@ -731,15 +769,17 @@ export const AdminCRM: React.FC = () => {
             <div className="space-y-8">
               <CRMStats leads={leads} attendantFilter={attendantFilter} />
 
-              {/* Per-attendant breakdown */}
-              {attendants.length > 0 && (
+              {/* Per-attendant breakdown — admin only */}
+              {isAdmin && attendants.length > 0 && (
                 <div className="space-y-4">
                   <h4 className="text-sm font-bold text-white uppercase tracking-widest">Performance por Atendente</h4>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {attendants.map(att => {
                       const attLeads = leads.filter(l => l.attendant_name === att);
-                      const closed = attLeads.filter(l => l.pipeline_stage === 'fechado');
-                      const value = closed.reduce((a, l) => a + Number(l.deal_value), 0);
+                      const closed   = attLeads.filter(l => l.pipeline_stage === 'fechado');
+                      const pipeline = attLeads.filter(l => l.pipeline_stage !== 'fechado' && l.pipeline_stage !== 'perdido');
+                      const closedVal   = closed.reduce((a, l) => a + Number(l.deal_value), 0);
+                      const pipelineVal = pipeline.reduce((a, l) => a + Number(l.deal_value), 0);
                       return (
                         <div key={att} className="glass p-5 cursor-pointer hover:border-gold/30 border border-transparent transition-all"
                           onClick={() => setAttendantFilter(att === attendantFilter ? '' : att)}>
@@ -747,10 +787,13 @@ export const AdminCRM: React.FC = () => {
                             <p className="font-bold text-white">{att}</p>
                             {att === attendantFilter && <span className="text-[9px] bg-gold/20 text-gold px-2 py-1 rounded">Filtrado</span>}
                           </div>
-                          <div className="grid grid-cols-3 gap-2 text-center">
+                          <div className="grid grid-cols-2 gap-3 text-center">
                             <div><p className="text-xl font-bold text-white">{attLeads.length}</p><p className="text-[9px] text-zinc-600 uppercase">Leads</p></div>
                             <div><p className="text-xl font-bold text-green-400">{closed.length}</p><p className="text-[9px] text-zinc-600 uppercase">Fechados</p></div>
-                            <div><p className="text-base font-bold text-emerald-400">{value > 0 ? `R$${(value/1000).toFixed(1)}k` : '-'}</p><p className="text-[9px] text-zinc-600 uppercase">Volume</p></div>
+                          </div>
+                          <div className="mt-3 space-y-1">
+                            {closedVal > 0 && <p className="text-xs text-emerald-400 font-mono">✓ {closedVal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</p>}
+                            {pipelineVal > 0 && <p className="text-xs text-blue-400 font-mono">⏳ {pipelineVal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })} em pipeline</p>}
                           </div>
                         </div>
                       );
