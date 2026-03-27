@@ -53,6 +53,8 @@ export const AdminDashboard: React.FC = () => {
     const [approvalModalOpen, setApprovalModalOpen] = useState(false);
     const [architectToApprove, setArchitectToApprove] = useState<Architect | null>(null);
     const [couponCode, setCouponCode] = useState('');
+    const [selectedAttendant, setSelectedAttendant] = useState('');
+    const [attendantsList, setAttendantsList] = useState<string[]>([]);
 
     useEffect(() => {
         const tab = searchParams.get('tab');
@@ -264,6 +266,16 @@ export const AdminDashboard: React.FC = () => {
         }
 
         setCouponCode(finalCode);
+
+        // Fetch existing attendant names from CRM
+        const { data: leadsData } = await supabase
+            .from('crm_leads')
+            .select('attendant_name')
+            .not('attendant_name', 'is', null) as any;
+        const rawNames = (leadsData || []).map((l: any) => l.attendant_name as string).filter((n: string) => Boolean(n));
+        const names: string[] = Array.from(new Set(rawNames));
+        setAttendantsList(names);
+        setSelectedAttendant(names[0] || '');
         setApprovalModalOpen(true);
     };
 
@@ -301,10 +313,25 @@ export const AdminDashboard: React.FC = () => {
             setApprovalModalOpen(false);
             setArchitectToApprove(null);
             setCouponCode('');
+            setSelectedAttendant('');
+
+            // Auto-create CRM lead for the selected attendant
+            if (selectedAttendant) {
+                await (supabase.from('crm_leads') as any).insert({
+                    architect_id: architectToApprove.id,
+                    attendant_name: selectedAttendant,
+                    contact_name: architectToApprove.name,
+                    contact_phone: architectToApprove.phone || '',
+                    contact_email: architectToApprove.email || null,
+                    pipeline_stage: 'contato_feito',
+                    deal_value: 0,
+                    notes: `Aprovado em ${new Date().toLocaleDateString('pt-BR')}. Cupom: ${couponCode}`,
+                });
+            }
 
             fetchPendingArchitects();
             fetchApprovedArchitects();
-            alert('Arquiteto aprovado com sucesso! Cupom gerado.');
+            alert(`Arquiteto aprovado! Cupom gerado${selectedAttendant ? ` e lead enviado para ${selectedAttendant} no CRM` : ''}.`);
         } catch (error) {
             console.error(`Error approving architect:`, error);
             alert(`Erro ao aprovar arquiteto. Tente novamente.`);
@@ -698,6 +725,34 @@ export const AdminDashboard: React.FC = () => {
                                 placeholder="Ex: nome20"
                             />
                             <p className="text-[10px] text-zinc-600">Este cupom será vinculado ao perfil do arquiteto.</p>
+                        </div>
+
+                        <div className="space-y-2">
+                            <label className="text-[10px] uppercase tracking-widest font-bold text-zinc-500 flex items-center gap-2">
+                                <Users size={12} /> Atendente Responsável (CRM)
+                            </label>
+                            <div className="flex gap-2">
+                                <select
+                                    value={selectedAttendant}
+                                    onChange={(e) => setSelectedAttendant(e.target.value)}
+                                    className="flex-1 bg-zinc-800 border border-white/10 rounded-lg px-4 py-3 text-white text-sm focus:border-gold outline-none"
+                                >
+                                    <option value="">— Não atribuir —</option>
+                                    {attendantsList.map(a => <option key={a} value={a}>{a}</option>)}
+                                </select>
+                                <input
+                                    type="text"
+                                    value={selectedAttendant}
+                                    onChange={(e) => setSelectedAttendant(e.target.value)}
+                                    placeholder="Ou digite o nome..."
+                                    className="flex-1 bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white text-sm focus:border-gold outline-none"
+                                />
+                            </div>
+                            <p className="text-[10px] text-zinc-600">
+                                {selectedAttendant
+                                    ? `✓ Lead será criado no CRM de "${selectedAttendant}" com estágio Contato Feito`
+                                    : 'Lead não será criado no CRM.'}
+                            </p>
                         </div>
 
                         <button
