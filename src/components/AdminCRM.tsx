@@ -440,20 +440,59 @@ const KanbanBoard: React.FC<{
   onSelectLead: (l: CRMLead) => void;
   onStageChange: (id: string, stage: PipelineStage) => void;
 }> = ({ leads, onSelectLead, onStageChange }) => {
+  const [draggingId, setDraggingId] = useState<string | null>(null);
+  const [dragOverStage, setDragOverStage] = useState<string | null>(null);
+
+  const handleDragStart = (e: React.DragEvent, leadId: string) => {
+    setDraggingId(leadId);
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('leadId', leadId);
+  };
+
+  const handleDragEnd = () => {
+    setDraggingId(null);
+    setDragOverStage(null);
+  };
+
+  const handleDragOver = (e: React.DragEvent, stageKey: string) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    setDragOverStage(stageKey);
+  };
+
+  const handleDrop = (e: React.DragEvent, stageKey: PipelineStage) => {
+    e.preventDefault();
+    const leadId = e.dataTransfer.getData('leadId');
+    const lead = leads.find(l => l.id === leadId);
+    if (leadId && lead && lead.pipeline_stage !== stageKey) {
+      onStageChange(leadId, stageKey);
+    }
+    setDraggingId(null);
+    setDragOverStage(null);
+  };
+
   return (
     <div className="flex gap-4 overflow-x-auto pb-4">
       {STAGES.map(stage => {
         const cards = leads.filter(l => l.pipeline_stage === stage.key);
+        const isOver = dragOverStage === stage.key;
         return (
-          <div key={stage.key} className="flex-shrink-0 w-64">
-            <div className={`flex items-center justify-between mb-3 px-3 py-2 rounded-lg border ${stage.color}`}>
+          <div key={stage.key} className="flex-shrink-0 w-64"
+            onDragOver={e => handleDragOver(e, stage.key)}
+            onDragLeave={() => setDragOverStage(null)}
+            onDrop={e => handleDrop(e, stage.key as PipelineStage)}>
+            <div className={`flex items-center justify-between mb-3 px-3 py-2 rounded-lg border transition-all ${stage.color} ${isOver ? 'scale-[1.02] brightness-125' : ''}`}>
               <span className="text-xs font-bold uppercase tracking-wider">{stage.label}</span>
               <span className="text-xs font-mono">{cards.length}</span>
             </div>
-            <div className="space-y-3 min-h-[120px]">
+            <div className={`space-y-3 min-h-[120px] rounded-xl p-2 transition-all ${isOver ? 'bg-white/5 ring-1 ring-white/20' : ''}`}>
               {cards.map(lead => (
-                <div key={lead.id} onClick={() => onSelectLead(lead)}
-                  className="bg-zinc-900 border border-white/10 rounded-xl p-4 cursor-pointer hover:border-gold/40 hover:shadow-lg transition-all group">
+                <div key={lead.id}
+                  draggable
+                  onDragStart={e => handleDragStart(e, lead.id)}
+                  onDragEnd={handleDragEnd}
+                  onClick={() => onSelectLead(lead)}
+                  className={`bg-zinc-900 border border-white/10 rounded-xl p-4 cursor-grab active:cursor-grabbing hover:border-gold/40 hover:shadow-lg transition-all group select-none ${draggingId === lead.id ? 'opacity-40 scale-95' : ''}`}>
                   <p className="text-white font-bold text-sm group-hover:text-gold transition-colors truncate">{lead.contact_name}</p>
                   <p className="text-zinc-500 text-xs mt-1 truncate">{lead.contact_phone}</p>
                   {Number(lead.deal_value) > 0 && (
@@ -469,16 +508,13 @@ const KanbanBoard: React.FC<{
                                                                'bg-white/5 text-zinc-500'
                     }`}>{lead.attendant_name}</span>
                   )}
-                  <div className="flex gap-1 mt-3 flex-wrap">
-                    {STAGES.filter(s => s.key !== stage.key).slice(0, 2).map(s => (
-                      <button key={s.key} onClick={e => { e.stopPropagation(); onStageChange(lead.id, s.key); }}
-                        className="text-[9px] px-2 py-1 rounded border border-white/10 text-zinc-500 hover:border-white/30 hover:text-white transition-all">
-                        → {s.label.replace(' ✓', '')}
-                      </button>
-                    ))}
-                  </div>
                 </div>
               ))}
+              {isOver && draggingId && (
+                <div className="h-16 rounded-xl border-2 border-dashed border-white/20 flex items-center justify-center">
+                  <span className="text-zinc-600 text-[10px] uppercase tracking-widest">Soltar aqui</span>
+                </div>
+              )}
             </div>
           </div>
         );
@@ -486,6 +522,7 @@ const KanbanBoard: React.FC<{
     </div>
   );
 };
+
 
 // ─── Message Templates ────────────────────────────────────────────────────────
 
