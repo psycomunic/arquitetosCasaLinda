@@ -409,7 +409,14 @@ const KanbanBoard: React.FC<{
                       {Number(lead.deal_value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
                     </p>
                   )}
-                  <p className="text-[10px] text-zinc-600 mt-2">{lead.attendant_name}</p>
+                  {lead.attendant_name && (
+                    <span className={`inline-block text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 rounded mt-2 ${
+                      lead.attendant_name.includes('Kelly')  ? 'bg-purple-500/20 text-purple-300' :
+                      lead.attendant_name.includes('Gisele') ? 'bg-teal-500/20 text-teal-300' :
+                      lead.attendant_name === 'Angelo'       ? 'bg-gold/15 text-gold' :
+                                                               'bg-white/5 text-zinc-500'
+                    }`}>{lead.attendant_name}</span>
+                  )}
                   <div className="flex gap-1 mt-3 flex-wrap">
                     {STAGES.filter(s => s.key !== stage.key).slice(0, 2).map(s => (
                       <button key={s.key} onClick={e => { e.stopPropagation(); onStageChange(lead.id, s.key); }}
