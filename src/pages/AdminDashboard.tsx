@@ -13,7 +13,8 @@ import {
     FileText,
     Package,
     LayoutGrid,
-    MessageCircle
+    MessageCircle,
+    Copy
 } from 'lucide-react';
 import { Ranking } from '../components/Ranking';
 import { ProductionManager } from '../components/ProductionManager';
@@ -639,18 +640,39 @@ export const AdminDashboard: React.FC = () => {
                         <div>
                             <p className="text-sm text-zinc-400 mb-1">Arquiteto</p>
                             <p className="text-white font-bold">{architectToApprove.name}</p>
-                            {architectToApprove.phone && architectToApprove.phone.replace(/\D/g, '').length >= 10 && (
-                                <a
-                                    href={`https://wa.me/55${architectToApprove.phone.replace(/\D/g, '')}?text=${encodeURIComponent(
-                                        `Olá ${architectToApprove.name}! Seja muito bem-vindo(a) ao Time Casa Linda! ${String.fromCodePoint(0x1F680)}\n\nÉ um prazer ter você conosco. Para facilitar o seu dia a dia, confira abaixo nossos canais oficiais de suporte:\n\n${String.fromCodePoint(0x1F4F1)} Atendimento ao Arquiteto: (47) 99706-0582\n\n${String.fromCodePoint(0x1F464)} Atendimento ao Cliente Final: (47) 99722-0810\n\n${String.fromCodePoint(0x1F3DB, 0xFE0F)} Portal do Arquiteto\nPara consultar tabelas de preços, políticas de comissão e materiais exclusivos, acesse nossa plataforma oficial: ${String.fromCodePoint(0x1F517)} www.arquitetoscasalinda.com.br\n\nEstamos à disposição para o que precisar. Boas vendas! ${String.fromCodePoint(0x2728)}`
-                                    )}`}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="mt-4 flex items-center justify-center gap-2 text-xs text-green-500 hover:text-green-400 uppercase tracking-widest font-bold bg-green-500/10 hover:bg-green-500/20 px-4 py-3 rounded-lg transition-all w-full border border-green-500/20"
-                                >
-                                    <MessageCircle size={16} />
-                                    Enviar Boas Vindas
-                                </a>
+                            
+                            {architectToApprove.phone && (
+                                <div className="mt-4 p-4 bg-white/5 border border-white/10 rounded-lg space-y-3">
+                                    <div className="flex items-center justify-between">
+                                        <div>
+                                            <p className="text-[10px] uppercase tracking-widest font-bold text-zinc-500 mb-1">WhatsApp</p>
+                                            <p className="text-white font-mono text-sm">{architectToApprove.phone}</p>
+                                        </div>
+                                        <button 
+                                            onClick={() => {
+                                                navigator.clipboard.writeText(architectToApprove.phone.replace(/\D/g, ''));
+                                            }}
+                                            className="p-2 hover:bg-white/10 text-zinc-400 hover:text-white rounded transition-colors"
+                                            title="Copiar número"
+                                        >
+                                            <Copy size={16} />
+                                        </button>
+                                    </div>
+                                    
+                                    {architectToApprove.phone.replace(/\D/g, '').length >= 10 && (
+                                        <a
+                                            href={`https://wa.me/55${architectToApprove.phone.replace(/\D/g, '')}?text=${encodeURIComponent(
+                                                `Olá ${architectToApprove.name}! Seja muito bem-vindo(a) ao Time Casa Linda! ${String.fromCodePoint(0x1F680)}\n\nÉ um prazer ter você conosco. Seu cadastro foi aprovado e seu cupom de desconto exclusivo já está ativo!\n\n🏷️ *Seu Cupom:* ${couponCode}\n\nPara facilitar o seu dia a dia, confira abaixo nossos canais oficiais de suporte:\n\n${String.fromCodePoint(0x1F4F1)} Atendimento ao Arquiteto: (47) 99706-0582\n\n${String.fromCodePoint(0x1F464)} Atendimento ao Cliente Final: (47) 99722-0810\n\n${String.fromCodePoint(0x1F3DB, 0xFE0F)} Portal do Arquiteto\nPara consultar tabelas de preços, políticas de comissão e materiais exclusivos, acesse nossa plataforma oficial: ${String.fromCodePoint(0x1F517)} www.arquitetoscasalinda.com.br\n\nEstamos à disposição para o que precisar. Boas vendas! ${String.fromCodePoint(0x2728)}`
+                                            )}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="flex items-center justify-center gap-2 text-xs text-green-500 hover:text-green-400 uppercase tracking-widest font-bold bg-green-500/10 hover:bg-green-500/20 px-4 py-3 rounded-lg transition-all w-full border border-green-500/20"
+                                        >
+                                            <MessageCircle size={16} />
+                                            Enviar Boas Vindas
+                                        </a>
+                                    )}
+                                </div>
                             )}
                         </div>
 
