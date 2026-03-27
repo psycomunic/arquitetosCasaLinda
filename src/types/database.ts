@@ -102,6 +102,7 @@ export interface CRMLead {
     notes: string | null;
     created_at: string;
     updated_at: string;
+    architect?: { state: string | null } | null;
 }
 
 export interface CRMActivity {

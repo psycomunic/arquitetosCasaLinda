@@ -6,6 +6,7 @@ import {
   Phone, Mail, DollarSign, CheckCircle2, XCircle, Copy, Clock,
   PhoneCall, Loader2, Edit2, Trash2, Calendar, AlertCircle, Star, RefreshCw
 } from 'lucide-react';
+import { BrazilMap } from './BrazilMap';
 
 // ─── Role mapping ────────────────────────────────────────────────────────────
 const CRM_ROLES: Record<string, { name: string; isAdmin: boolean }> = {
@@ -793,7 +794,7 @@ export const AdminCRM: React.FC = () => {
 
   const fetchLeads = useCallback(async () => {
     setLoading(true);
-    const { data } = await supabase.from('crm_leads').select('*').order('created_at', { ascending: false });
+    const { data } = await supabase.from('crm_leads').select('*, architect:architects(state)').order('created_at', { ascending: false });
     setLeads((data as any) || []);
     setLoading(false);
   }, []);
@@ -892,6 +893,18 @@ export const AdminCRM: React.FC = () => {
           {view === 'dashboard' && (
             <div className="space-y-8">
               <CRMStats leads={leads} attendantFilter={attendantFilter} />
+
+              {/* Geographic Distribution */}
+              <div className="space-y-4">
+                <h4 className="text-sm font-bold text-white uppercase tracking-widest">Distribuição Geográfica</h4>
+                <div className="glass p-6">
+                  <BrazilMap data={filteredLeads.reduce((acc, lead) => {
+                    const state = lead.architect?.state;
+                    if (state) acc[state] = (acc[state] || 0) + 1;
+                    return acc;
+                  }, {} as Record<string, number>)} />
+                </div>
+              </div>
 
               {/* Per-attendant breakdown — admin only */}
               {isAdmin && attendants.length > 0 && (
