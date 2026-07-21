@@ -34,7 +34,9 @@ export const AddSaleModal: React.FC<AddSaleModalProps> = ({ isOpen, onClose, arc
             const newTotal = currentTotal + saleValue;
             const newRate = calculateCommissionRate(newTotal);
 
-            // 1. Insert Sale record
+            // 1. Insert Sale record as PENDING.
+            // O repasse só é marcado como pago quando o admin efetua o pagamento
+            // na aba "Gestão de Repasses" (pagamentos são feitos todo dia 10).
             const { error: saleError } = await supabase
                 .from('sales')
                 .insert({
@@ -42,8 +44,7 @@ export const AddSaleModal: React.FC<AddSaleModalProps> = ({ isOpen, onClose, arc
                     sale_value: saleValue,
                     commission_rate: newRate,
                     commission_value: saleValue * (newRate / 100),
-                    status: 'paid',
-                    paid_at: new Date().toISOString()
+                    status: 'pending'
                 } as any);
 
             if (saleError) throw saleError;

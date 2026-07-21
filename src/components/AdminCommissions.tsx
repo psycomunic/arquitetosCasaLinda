@@ -201,6 +201,29 @@ export const AdminCommissions: React.FC = () => {
         }
     };
 
+    // ─── Revert a paid commission back to pending ─────────────────────
+    // Desfaz o pagamento: volta o status para pendente e reverte o valor
+    // somado ao total do arquiteto (inverso exato de "Pagar").
+    const handleRevertToPending = async (commission: CombinedCommission) => {
+        if (!confirm(`Reverter a comissão de R$ ${commission.commissionValue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })} de ${commission.architectName} para PENDENTE? Ela voltará para "Repasses do Mês".`)) return;
+        setActionLoading(commission.id);
+        try {
+            if (commission.type === 'PROPOSAL') {
+                await (supabase.from('sales') as any).update({ status: 'pending', paid_at: null }).eq('id', commission.originalId);
+            } else {
+                await (supabase.from('magazord_commissions') as any).update({ status: 'PENDING' }).eq('id', commission.originalId);
+            }
+            const { data: archData } = await supabase.from('architects').select('total_earnings').eq('id', commission.architectId).single();
+            const newEarnings = Math.max(0, (Number((archData as any)?.total_earnings) || 0) - commission.commissionValue);
+            await (supabase.from('architects') as any).update({ total_earnings: newEarnings }).eq('id', commission.architectId);
+            await fetchCommissions();
+        } catch (error) {
+            alert('Erro ao reverter status.');
+        } finally {
+            setActionLoading(null);
+        }
+    };
+
     const handleMarkAsCancelled = async (commission: CombinedCommission) => {
         if (!confirm(`Cancelar esta comissão de ${commission.architectName}?`)) return;
         setActionLoading(commission.id);
@@ -522,6 +545,17 @@ export const AdminCommissions: React.FC = () => {
                                                             Cancelar
                                                         </button>
                                                     </div>
+                                                )}
+                                                {c.status === 'paid' && (
+                                                    <button
+                                                        onClick={() => handleRevertToPending(c)}
+                                                        disabled={!!actionLoading}
+                                                        title="Voltar esta comissão para pendente"
+                                                        className="px-3 py-1.5 bg-gold/10 hover:bg-gold/20 text-gold border border-gold/20 rounded text-[9px] font-bold uppercase tracking-widest transition-all disabled:opacity-50"
+                                                    >
+                                                        {actionLoading === c.id ? <Loader2 size={12} className="animate-spin inline mr-1" /> : <RefreshCw size={12} className="inline mr-1" />}
+                                                        Reverter p/ Pendente
+                                                    </button>
                                                 )}
                                             </td>
                                         </tr>
