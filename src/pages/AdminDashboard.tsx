@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
+import { calculateCommissionRate } from '../lib/commission';
 import { Architect } from '../types/database';
 import {
     CheckCircle2,
@@ -28,6 +29,7 @@ import { AdminCommissions } from '../components/AdminCommissions';
 export const AdminDashboard: React.FC = () => {
     const [pendingArchitects, setPendingArchitects] = useState<Architect[]>([]);
     const [approvedArchitects, setApprovedArchitects] = useState<Architect[]>([]);
+    const [monthRates, setMonthRates] = useState<Map<string, number>>(new Map());
     const [loading, setLoading] = useState(true);
     const [actionLoading, setActionLoading] = useState<string | null>(null);
     const [selectedArchitect, setSelectedArchitect] = useState<Architect | null>(null);
@@ -84,12 +86,44 @@ export const AdminDashboard: React.FC = () => {
                 fetchPendingArchitects(),
                 fetchStats(),
                 fetchCrmEmails(),
+                fetchMonthRates(),
             ]);
         } catch (err) {
             console.error(err);
         } finally {
             setLoading(false);
         }
+    };
+
+    // Calcula a faixa (%) do MÊS ATUAL por arquiteto, a partir do faturamento
+    // do mês (vendas manuais + online, não canceladas). Progressão mensal.
+    const fetchMonthRates = async () => {
+        const now = new Date();
+        const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+        const startOfNextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1).toISOString();
+
+        const [{ data: sales }, { data: magazord }] = await Promise.all([
+            (supabase.from('sales') as any)
+                .select('architect_id, sale_value, status')
+                .gte('created_at', startOfMonth).lt('created_at', startOfNextMonth),
+            (supabase.from('magazord_commissions') as any)
+                .select('architect_id, order_value, status')
+                .gte('created_at', startOfMonth).lt('created_at', startOfNextMonth),
+        ]);
+
+        const revenue = new Map<string, number>();
+        ((sales as any[]) || []).forEach(s => {
+            if (s.status === 'cancelled') return;
+            revenue.set(s.architect_id, (revenue.get(s.architect_id) || 0) + (Number(s.sale_value) || 0));
+        });
+        ((magazord as any[]) || []).forEach(m => {
+            if (m.status === 'CANCELED') return;
+            revenue.set(m.architect_id, (revenue.get(m.architect_id) || 0) + (Number(m.order_value) || 0));
+        });
+
+        const rates = new Map<string, number>();
+        revenue.forEach((total, id) => rates.set(id, calculateCommissionRate(total)));
+        setMonthRates(rates);
     };
 
     const fetchCrmEmails = async () => {
@@ -650,8 +684,8 @@ export const AdminDashboard: React.FC = () => {
                                                 </div>
                                             </td>
                                             <td className="py-4 text-right">
-                                                <span className="bg-gold/10 text-gold text-xs px-2 py-1 rounded border border-gold/20 font-bold">
-                                                    {arch.commission_rate}%
+                                                <span className="bg-gold/10 text-gold text-xs px-2 py-1 rounded border border-gold/20 font-bold" title="Faixa pelo faturamento do mês atual">
+                                                    {monthRates.get(arch.id) ?? 15}%
                                                 </span>
                                             </td>
                                             <td className="py-4 text-center">
@@ -803,6 +837,7 @@ export const AdminDashboard: React.FC = () => {
                         fetchCrmEmails();
                     }}
                     architect={selectedDetailArchitect}
+                    currentRate={monthRates.get(selectedDetailArchitect.id) ?? 15}
                     onUpdate={fetchData}
                 />
             )}

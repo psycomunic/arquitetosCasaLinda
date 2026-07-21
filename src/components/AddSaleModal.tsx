@@ -30,9 +30,37 @@ export const AddSaleModal: React.FC<AddSaleModalProps> = ({ isOpen, onClose, arc
                 return;
             }
 
-            const currentTotal = Number(architect.total_earnings) || 0;
-            const newTotal = currentTotal + saleValue;
-            const newRate = calculateCommissionRate(newTotal);
+            // Faixa MENSAL (progressão mensal): soma o faturamento do arquiteto no
+            // mês atual — verificando as vendas que JÁ existem — e inclui esta nova
+            // venda para definir a % correta da faixa.
+            const now = new Date();
+            const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+            const startOfNextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1).toISOString();
+
+            const { data: monthSales } = await supabase
+                .from('sales')
+                .select('sale_value, status')
+                .eq('architect_id', architect.id)
+                .gte('created_at', startOfMonth)
+                .lt('created_at', startOfNextMonth);
+
+            const { data: monthMagazord } = await supabase
+                .from('magazord_commissions')
+                .select('order_value, status')
+                .eq('architect_id', architect.id)
+                .gte('created_at', startOfMonth)
+                .lt('created_at', startOfNextMonth);
+
+            const existingRevenue =
+                ((monthSales as any[]) || [])
+                    .filter(s => s.status !== 'cancelled')
+                    .reduce((sum, s) => sum + (Number(s.sale_value) || 0), 0) +
+                ((monthMagazord as any[]) || [])
+                    .filter(m => m.status !== 'CANCELED')
+                    .reduce((sum, m) => sum + (Number(m.order_value) || 0), 0);
+
+            const monthRevenue = existingRevenue + saleValue;
+            const newRate = calculateCommissionRate(monthRevenue);
 
             // 1. Insert Sale record as PENDING.
             // O repasse só é marcado como pago quando o admin efetua o pagamento
@@ -49,11 +77,12 @@ export const AddSaleModal: React.FC<AddSaleModalProps> = ({ isOpen, onClose, arc
 
             if (saleError) throw saleError;
 
-            // 2. Update Architect totals
+            // 2. Atualiza a faixa atual do arquiteto (exibição) e o total de vendas.
+            const currentTotal = Number(architect.total_earnings) || 0;
             const { error: archError } = await supabase
                 .from('architects')
                 .update({
-                    total_earnings: newTotal,
+                    total_earnings: currentTotal + saleValue,
                     commission_rate: newRate
                 } as any)
                 .eq('id', architect.id);

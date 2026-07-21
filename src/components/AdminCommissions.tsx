@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { supabase } from '../lib/supabase';
+import { applyMonthlyCommission, calculateCommissionRate } from '../lib/commission';
 import {
     CheckCircle2, Search, Loader2, DollarSign, RefreshCw,
     AlertCircle, Calendar, Users, Clock, History, TrendingUp, X
@@ -16,6 +17,7 @@ interface CombinedCommission {
     type: 'PROPOSAL' | 'MAGAZORD';
     saleValue: number;
     commissionValue: number;
+    commissionRate: number;
     status: 'awaiting' | 'pending' | 'paid' | 'cancelled';
     originalId: string;
 }
@@ -26,6 +28,8 @@ interface ArchitectSummary {
     pixKey: string | null;
     pendingCount: number;
     pendingTotal: number;
+    monthRevenue: number;
+    rate: number;
     commissions: CombinedCommission[];
 }
 
@@ -69,6 +73,7 @@ export const AdminCommissions: React.FC = () => {
                     type: 'PROPOSAL' as const,
                     saleValue: Number(s.sale_value),
                     commissionValue: Number(s.commission_value),
+                    commissionRate: Number(s.commission_rate) || 0,
                     status: s.status as 'awaiting' | 'pending' | 'paid' | 'cancelled'
                 }))];
             }
@@ -86,9 +91,14 @@ export const AdminCommissions: React.FC = () => {
                     type: 'MAGAZORD' as const,
                     saleValue: Number(m.order_value),
                     commissionValue: Number(m.commission_amount),
+                    commissionRate: 0,
                     status: (m.status === 'PAID' ? 'paid' : m.status === 'CANCELED' ? 'cancelled' : m.status === 'AWAITING' ? 'awaiting' : 'pending') as 'awaiting' | 'pending' | 'paid' | 'cancelled'
                 }))];
             }
+
+            // Recalcula a comissão de cada venda pela FAIXA DO MÊS (progressão mensal
+            // por arquiteto): a % é definida pelo faturamento do mês e vale para o mês inteiro.
+            combined = applyMonthlyCommission(combined);
 
             combined.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
             setCommissions(combined);
@@ -119,15 +129,25 @@ export const AdminCommissions: React.FC = () => {
                     pixKey: c.pixKey,
                     pendingCount: 0,
                     pendingTotal: 0,
+                    monthRevenue: 0,
+                    rate: 0,
                     commissions: []
                 });
             }
             const entry = map.get(c.architectId)!;
             entry.commissions.push(c);
+            // Faturamento do mês = soma das vendas não canceladas (define a faixa).
+            if (c.status !== 'cancelled') {
+                entry.monthRevenue += c.saleValue;
+            }
             if (c.status === 'pending') {
                 entry.pendingCount++;
                 entry.pendingTotal += c.commissionValue;
             }
+        });
+        // Define a faixa (%) do mês a partir do faturamento total do arquiteto no mês.
+        map.forEach(entry => {
+            entry.rate = calculateCommissionRate(entry.monthRevenue);
         });
         return Array.from(map.values()).sort((a, b) => b.pendingTotal - a.pendingTotal);
     }, [monthCommissions]);
@@ -372,9 +392,15 @@ export const AdminCommissions: React.FC = () => {
                                                 {summary.architectName.charAt(0).toUpperCase()}
                                             </div>
                                             <div>
-                                                <p className="text-white font-bold">{summary.architectName}</p>
+                                                <div className="flex items-center gap-2 flex-wrap">
+                                                    <p className="text-white font-bold">{summary.architectName}</p>
+                                                    <span className="text-[10px] font-bold text-gold bg-gold/10 border border-gold/20 px-2 py-0.5 rounded-full whitespace-nowrap">
+                                                        Faixa {summary.rate}%
+                                                    </span>
+                                                </div>
                                                 <p className="text-[10px] text-zinc-500 mt-0.5">
                                                     {summary.commissions.length} venda(s) no mês
+                                                    · Faturamento R$ {summary.monthRevenue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                                                     {summary.pendingCount > 0 && (
                                                         <span className="ml-2 text-gold">· {summary.pendingCount} pendente(s)</span>
                                                     )}

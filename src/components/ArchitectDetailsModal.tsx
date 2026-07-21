@@ -8,6 +8,9 @@ interface ArchitectDetailsModalProps {
     onClose: () => void;
     architect: Architect;
     onUpdate?: () => void;
+    // Faixa (%) do mês atual, calculada pelo faturamento do mês. Se ausente,
+    // cai no valor armazenado no cadastro.
+    currentRate?: number;
 }
 
 const CRM_VENDEDORES = [
@@ -30,7 +33,7 @@ const CRM_SERVICES = [
     { value: 'criacao_artistica',label: 'Criação Artística' },
 ];
 
-export const ArchitectDetailsModal: React.FC<ArchitectDetailsModalProps> = ({ isOpen, onClose, architect, onUpdate }) => {
+export const ArchitectDetailsModal: React.FC<ArchitectDetailsModalProps> = ({ isOpen, onClose, architect, onUpdate, currentRate }) => {
     const [sendCrmOpen, setSendCrmOpen] = useState(false);
     const [crmAttendant, setCrmAttendant] = useState('Kelly Cordeiro da Silva');
     const [crmStage, setCrmStage] = useState('novo');
@@ -250,8 +253,8 @@ export const ArchitectDetailsModal: React.FC<ArchitectDetailsModalProps> = ({ is
                                 <p className="text-white font-mono text-lg">{architect.coupon_code || '—'}</p>
                             </div>
                             <div className="bg-zinc-900 p-4 rounded-lg border border-zinc-800">
-                                <p className="text-[10px] text-zinc-500 uppercase">Comissão Atual</p>
-                                <p className="text-gold font-bold text-lg">{architect.commission_rate}%</p>
+                                <p className="text-[10px] text-zinc-500 uppercase">Comissão do Mês</p>
+                                <p className="text-gold font-bold text-lg">{currentRate ?? architect.commission_rate}%</p>
                             </div>
                             <div className="bg-zinc-900 p-4 rounded-lg border border-zinc-800">
                                 <p className="text-[10px] text-zinc-500 uppercase">Total Recebido</p>

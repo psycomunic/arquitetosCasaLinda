@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { Copy, MapPin, Building, Activity, Wallet, Calendar, PlusCircle, Check, Play, BookOpen, Clock, Heart, Award, ArrowRight, MessageCircle, FileDown, ShieldCheck, Globe, CheckCircle2, DollarSign, Inbox, Share2, UploadCloud, Crown, MessageSquare, Star } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
+import { applyMonthlyCommission, currentMonthRate } from '../lib/commission';
 import { ArchitectProfile } from '../types';
 import { Architect, Sale, MagazordCommission } from '../types/database';
 import { Ranking } from '../components/Ranking';
@@ -53,6 +54,7 @@ export const DashboardOverview: React.FC = () => {
                 if (salesData) {
                     allSales = [...allSales, ...salesData.map((s: Sale) => ({
                         id: s.id,
+                        architectId: user.id,
                         date: s.created_at,
                         reference: s.proposal_id ? s.proposal_id.slice(0, 8) : 'MANUAL',
                         clientName: (s as any).client_name || 'Venda Assistida',
@@ -66,6 +68,7 @@ export const DashboardOverview: React.FC = () => {
                 if (magazordData) {
                     allSales = [...allSales, ...magazordData.map((m: MagazordCommission) => ({
                         id: m.id,
+                        architectId: user.id,
                         date: m.created_at,
                         reference: `ORD-${m.magazord_order_id}`,
                         clientName: 'E-commerce (MagaZord)',
@@ -76,7 +79,14 @@ export const DashboardOverview: React.FC = () => {
                     }))];
                 }
 
+                // Recalcula os repasses pela faixa do mês (progressão mensal).
+                allSales = applyMonthlyCommission(allSales);
+
                 dynamicTotalEarnings = allSales.reduce((acc, curr) => acc + (curr.status === 'paid' ? curr.commissionValue : 0), 0);
+
+                // Faixa atual = faixa do mês corrente pelo faturamento do arquiteto.
+                const nowRef = new Date();
+                const liveRate = currentMonthRate(allSales, user.id, nowRef.getFullYear(), nowRef.getMonth());
 
                 allSales.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
                 setRecentSales(allSales.slice(0, 5));
@@ -85,7 +95,7 @@ export const DashboardOverview: React.FC = () => {
                     setProfile({
                         name: architect.name,
                         officeName: architect.office_name,
-                        commissionRate: Number(architect.commission_rate),
+                        commissionRate: liveRate,
                         totalEarnings: dynamicTotalEarnings > 0 ? dynamicTotalEarnings : Number(architect.total_earnings), // Fallback to DB value if historical
                         logoUrl: architect.logo_url,
                         couponCode: architect.coupon_code,

@@ -2,10 +2,12 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { CheckCircle2, Heart, Calendar } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { Sale, MagazordCommission } from '../types/database';
+import { applyMonthlyCommission, currentMonthRate } from '../lib/commission';
 
 
 interface CombinedSale {
     id: string;
+    architectId: string;
     date: string;
     reference: string;
     clientName: string;
@@ -44,16 +46,8 @@ export const Earnings: React.FC = () => {
                 .select('*')
                 .eq('architect_id', user.id);
 
-            // Fetch current rate
-            const { data: architectData } = await supabase
-                .from('architects')
-                .select('commission_rate')
-                .eq('id', user.id)
-                .single();
-
-            if (architectData) {
-                setCurrentRate(Number((architectData as any).commission_rate));
-            }
+            // A faixa atual é calculada dinamicamente pelo faturamento do mês (abaixo),
+            // não mais a partir de um campo fixo em architects.
 
             if (salesError) throw salesError;
             if (magazordError) throw magazordError;
@@ -63,6 +57,7 @@ export const Earnings: React.FC = () => {
             if (salesData) {
                 combined = [...combined, ...salesData.map((s: Sale) => ({
                     id: s.id,
+                    architectId: user.id,
                     date: s.created_at,
                     reference: s.proposal_id ? s.proposal_id.slice(0, 8) : 'MANUAL',
                     clientName: (s as any).client_name || 'Venda Assistida',
@@ -76,6 +71,7 @@ export const Earnings: React.FC = () => {
             if (magazordData) {
                 combined = [...combined, ...magazordData.map((m: MagazordCommission) => ({
                     id: m.id,
+                    architectId: user.id,
                     date: m.created_at,
                     reference: `ORD-${m.magazord_order_id}`,
                     clientName: 'E-commerce (MagaZord)',
@@ -85,6 +81,13 @@ export const Earnings: React.FC = () => {
                     status: (m.status === 'PAID' ? 'paid' : m.status === 'CANCELED' ? 'cancelled' : m.status === 'AWAITING' ? 'awaiting' : 'pending') as 'awaiting' | 'pending' | 'paid' | 'cancelled'
                 }))];
             }
+
+            // Recalcula cada repasse pela faixa do mês (progressão mensal).
+            combined = applyMonthlyCommission(combined);
+
+            // Faixa atual = faixa do mês corrente pelo faturamento do arquiteto.
+            const nowRef = new Date();
+            setCurrentRate(currentMonthRate(combined, user.id, nowRef.getFullYear(), nowRef.getMonth()));
 
             combined.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
