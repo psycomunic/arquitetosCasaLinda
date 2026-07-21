@@ -19,12 +19,17 @@ export const formatCurrency = (value: number) => {
 
 // ── Cálculo dinâmico por mês ──────────────────────────────────────────────
 // Uma venda para efeito de faixa: precisa do arquiteto, da data e do valor.
+// commissionValue é o valor já armazenado/pago (preservado quando status = pago).
 export interface SaleLike {
     architectId: string;
     date: string;
     saleValue: number;
     status: string;
+    commissionValue?: number;
+    commissionRate?: number;
 }
+
+const isPaidStatus = (status: string) => status === 'paid' || status === 'PAID';
 
 // Chave de agrupamento: arquiteto + ano/mês (a progressão é mensal e por arquiteto).
 const bucketKey = (architectId: string, dateStr: string): string => {
@@ -50,6 +55,16 @@ export const applyMonthlyCommission = <T extends SaleLike>(
 ): (T & { commissionRate: number; commissionValue: number })[] => {
     const totals = monthlyRevenueMap(items);
     return items.map(it => {
+        // Congela o que já foi pago: mantém o valor e a % realmente transferidos.
+        if (isPaidStatus(it.status)) {
+            const paidValue = Number(it.commissionValue) || 0;
+            const saleValue = Number(it.saleValue) || 0;
+            const paidRate = saleValue > 0
+                ? Math.round((paidValue / saleValue) * 100)
+                : (Number(it.commissionRate) || 0);
+            return { ...it, commissionRate: paidRate, commissionValue: paidValue };
+        }
+        // Pendentes/futuras: faixa pela progressão mensal (mês inteiro na faixa final).
         const rate = calculateCommissionRate(totals[bucketKey(it.architectId, it.date)] || 0);
         return {
             ...it,
